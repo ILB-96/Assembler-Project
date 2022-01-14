@@ -1,19 +1,13 @@
 #include "assembler.h"
 
-
-int main(int argc, char *argv[]){
-    FILE *fptr;
-    char *file;
+int main(int argc, char *argv[])
+{
+    /* FILE *fptr;
+     char *file;*/
     argv++;
-    while(--argc > 0){
-        file = process(*argv++);
-        firstProcess(file);
-        
+    while (--argc > 0)
+    {
+        process(*argv++);
     }
-
-
     return 0;
 }
-
-
-
