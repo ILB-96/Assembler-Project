@@ -9,5 +9,7 @@ int main(int argc, char *argv[])
     {
         process(*argv++);
     }
+    
+    remove("macros-file.txt");
     return 0;
 }
