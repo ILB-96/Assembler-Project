@@ -21,19 +21,14 @@ int preAssembler(char *expanded_name, char *file)
         fprintf(stderr, "Error: File '%s' open failed.\n", expanded_name);
         exit(EXIT_FAILURE);
     }
-    if (!expandMacros(fptr, exp_fptr))
-    {
-        fclose(exp_fptr);
-        fclose(fptr);
-        return 0;
-    }
-
+    
+    expandMacros(fptr, exp_fptr))
     fclose(exp_fptr);
     fclose(fptr);
     return 1;
 }
 
-int expandMacros(FILE *fptr, FILE *exp_fptr)
+void expandMacros(FILE *fptr, FILE *exp_fptr)
 {
     FILE *macros_fptr;
     char line[MAX_LINE] = "", word[MAX_LINE] = "";
@@ -59,12 +54,6 @@ int expandMacros(FILE *fptr, FILE *exp_fptr)
                 {
                     is_part_of_macro = 1;
                     macroName(line, word);
-                    if (!isValidMacroName(word))
-                    {
-                        fprintf(stderr, "Error: Invalid macro name.\n");
-                        fclose(macros_fptr);
-                        return 0;
-                    }
                     fprintf(macros_fptr, "%s\n", word);
                 }
                 else
@@ -146,15 +135,7 @@ int isMacroName(char *word, FILE *macros_fptr)
     }
     return 0;
 }
-int isValidMacroName(char *word)
-{
-    char *illegal_names[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr", "red", "prn", "rts", "stop", ".data", ".string", ".entry", ".extern"};
-    int i;
-    for (i = 0; i <= 19; i++)
-        if (!strcmp(illegal_names[i], word))
-            return 0;
-    return 1;
-}
+
 
 void insertMacro(FILE *expanded_macros_fptr, FILE *macros_fptr, char *word)
 {
