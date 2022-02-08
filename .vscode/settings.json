@@ -1,9 +1,11 @@
 {
-    "files.associations": {
-        "*.ejs": "html",
-        "pre-assembler": "c",
-        "random": "c",
-        "string.h": "c",
-        "assembler.h": "c"
-    }
+  "files.associations": {
+    "*.ejs": "html",
+    "pre-assembler": "c",
+    "random": "c",
+    "string.h": "c",
+    "assembler.h": "c",
+    "stdlib.h": "c"
+  },
+  "cmake.configureOnOpen": false
 }

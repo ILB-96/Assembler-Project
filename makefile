@@ -1,9 +1,11 @@
-all: pre-assembler assembler
-pre-assembler: pre-assembler.c assembler.h
-	gcc -pedantic -ansi -Wall -g pre-assembler.c -c -lm
-assembler: assembler.c assembler.h
-	gcc -pedantic -ansi -Wall -g pre-assembler.o assembler.c -o assembler -lm
+CC = gcc
+CFLAGS = -ansi -pedantic -Wall -g
+
+main: main.o pre-assembler.o
+	$(CC) $(CFLAGS) -o main main.o pre-assembler.o
+test: test.o pre-assembler.o
+	$(CC) $(CFLAGS) -o test test.o pre-assembler.o
+pre-assembler.o: assembler.h pre-assembler.c 
+	$(CC) $(CFLAGS) -c pre-assembler.c
 clean:
-	rm -f pre-assembler
-	rm -f assembler
-	
+	rm -f core *.o main test

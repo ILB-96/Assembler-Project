@@ -1,39 +1,51 @@
 #include "assembler.h"
 
-void preAssembler(char *file)
+int preAssembler(char *expanded_name, char *file)
 {
     char as[] = ".as";
     FILE *fptr;
-    strcat(file, as);
-    if (!(fptr = fopen(file, "r")))
+    FILE *exp_fptr;
+    strcpy(expanded_name, file);
+    strcat(expanded_name, as);
+    if (!(fptr = fopen(expanded_name, "r")))
     {
-        fprintf(stderr, "error: file '%s' open failed.\n", file);
-        exit(1);
+        fprintf(stderr, "Error: File '%s' open failed.\n", expanded_name);
+        return 0;
     }
-    findMacros(fptr);
+    strcpy(expanded_name, "expanded-");
+    strcat(expanded_name, file);
+    strcat(expanded_name, as);
+    if (!(exp_fptr = fopen(expanded_name, "w")))
+    {
+        fclose(fptr);
+        fprintf(stderr, "Error: File '%s' open failed.\n", expanded_name);
+        exit(EXIT_FAILURE);
+    }
+    if (!expandMacros(fptr, exp_fptr))
+    {
+        fclose(exp_fptr);
+        fclose(fptr);
+        return 0;
+    }
+
+    fclose(exp_fptr);
     fclose(fptr);
+    return 1;
 }
 
-void findMacros(FILE *fptr)
+int expandMacros(FILE *fptr, FILE *exp_fptr)
 {
-    FILE *expanded_macros_fptr;
     FILE *macros_fptr;
-    int macros_counter = 0;
-    char line[MAX_LINE] = "", *word;
+    char line[MAX_LINE] = "", word[MAX_LINE] = "";
     int is_part_of_macro = 0;
     if (!(macros_fptr = fopen("macros-file.txt", "w+")))
     {
-        fprintf(stderr, "error: file 'macros-file.txt' open failed.\n");
-        exit(1);
-    }
-    if (!(expanded_macros_fptr = fopen("expanded-macros.as", "w")))
-    {
-        fprintf(stderr, "error: file 'expanded-macros.as' open failed.\n");
-        exit(1);
+        fprintf(stderr, "Error: File '%s' open failed.\n", "macros-file.txt");
+        exit(EXIT_FAILURE);
     }
     while (fgets(line, sizeof(line), fptr) != NULL)
     {
-        word = firstWord(line);
+        firstWord(line, word);
         if (!strcmp(word, "macro") || is_part_of_macro)
         {
             if (!strcmp(word, "endm"))
@@ -46,8 +58,13 @@ void findMacros(FILE *fptr)
                 if (!strcmp(word, "macro"))
                 {
                     is_part_of_macro = 1;
-                    macros_counter++;
-                    word = macroName(line);
+                    macroName(line, word);
+                    if (!isValidMacroName(word))
+                    {
+                        fprintf(stderr, "Error: Invalid macro name.\n");
+                        fclose(macros_fptr);
+                        return 0;
+                    }
                     fprintf(macros_fptr, "%s\n", word);
                 }
                 else
@@ -58,16 +75,56 @@ void findMacros(FILE *fptr)
         {
             if (isMacroName(word, macros_fptr))
             {
-                insertMacro(expanded_macros_fptr, macros_fptr, word);
-                printf("good\n");
+                insertMacro(exp_fptr, macros_fptr, word);
             }
             else
-                fprintf(expanded_macros_fptr, "%s", line);
+                fprintf(exp_fptr, "%s", line);
             fseek(macros_fptr, 0, SEEK_END);
         }
     }
     fclose(macros_fptr);
-    fclose(expanded_macros_fptr);
+    return 1;
+}
+
+void firstWord(char *line, char *word)
+{
+    int i = 0, j = 0;
+    while (isspace(line[i]) && line[i] != '\0')
+    {
+        i++;
+    }
+    while (!isspace(line[i]) && line[i] != '0')
+    {
+        word[j++] = line[i++];
+    }
+    word[j] = '\0';
+}
+void macroName(char *line, char *word)
+{
+    int i = 0, j = 0;
+    while (isspace(line[i]) && line[i] != '\0')
+    {
+        i++;
+    }
+    i = nextWordIndex(line, i);
+    while (!isspace(line[i]) && line[i] != '0')
+    {
+        word[j++] = line[i++];
+    }
+
+    word[j] = '\0';
+}
+int nextWordIndex(char *line, int index)
+{
+    while (!isspace(line[index]) && line[index] != '\0')
+    {
+        index++;
+    }
+    while (isspace(line[index]) && line[index] != '\0')
+    {
+        index++;
+    }
+    return index;
 }
 int isMacroName(char *word, FILE *macros_fptr)
 {
@@ -89,77 +146,34 @@ int isMacroName(char *word, FILE *macros_fptr)
     }
     return 0;
 }
-void insertMacro(FILE *expanded_macros_fptr, FILE * macros_fptr, char *word){
-    char line[MAX_LINE] = "";
+int isValidMacroName(char *word)
+{
+    char *illegal_names[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr", "red", "prn", "rts", "stop", ".data", ".string", ".entry", ".extern"};
+    int i;
+    for (i = 0; i <= 19; i++)
+        if (!strcmp(illegal_names[i], word))
+            return 0;
+    return 1;
+}
+
+void insertMacro(FILE *expanded_macros_fptr, FILE *macros_fptr, char *word)
+{
+    char line[MAX_LINE] = "", fword[MAX_LINE] = "";
     int inserted = 0, insert = 0;
     fseek(macros_fptr, 0, SEEK_SET);
-    while(fgets(line, MAX_LINE, macros_fptr) != NULL && !inserted){
-
-        if(!strcmp(firstWord(line), "endm") && insert){
+    while (fgets(line, MAX_LINE, macros_fptr) != NULL && !inserted)
+    {
+        firstWord(line, fword);
+        if (!strcmp(fword, "endm") && insert)
+        {
             insert = 0;
             inserted = 1;
         }
-        if(insert){
+        if (insert)
+        {
             fprintf(expanded_macros_fptr, "%s", line);
         }
-        if(!strcmp(firstWord(line), word) && !insert)
+        if (!strcmp(fword, word) && !insert)
             insert = 1;
     }
-}
-char *firstWord(char *line)
-{
-    int i = 0;
-    int j = 0;
-    char *word;
-    if ((word = (char *)malloc(strlen(line) * sizeof(char))) == NULL)
-    {
-        printf("ERROR: Out of Memory\n");
-        exit(1);
-    }
-    while (isspace(line[i]) && line[i] != '\0')
-    {
-        i++;
-    }
-    while (!isspace(line[i]) && line[i] != '0')
-    {
-        word[j++] = line[i++];
-    }
-    word[j] = '\0';
-    return &word[0];
-}
-
-char *macroName(char *line)
-{
-    int i = 0;
-    int j = 0;
-    char *word;
-    if ((word = (char *)malloc(strlen(line) * sizeof(char))) == NULL)
-    {
-        printf("ERROR: Out of Memory\n");
-        exit(1);
-    }
-    while (isspace(line[i]) && line[i] != '\0')
-    {
-        i++;
-    }
-    i = nextWordIndex(line, i);
-    while (!isspace(line[i]) && line[i] != '0')
-    {
-        word[j++] = line[i++];
-    }
-
-    word[j] = '\0';
-    return &word[0];
-}
-int nextWordIndex(char *line, int index)
-{
-    while (!isspace(line[index]) && line[index] != '\0')
-    {
-        index++;
-    }
-    while (isspace(line[index]) && line[index] != '\0')
-    {
-        index++;
-    }
-    return index;
 }

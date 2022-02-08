@@ -5,13 +5,15 @@
 #include <math.h>
 #include <ctype.h>
 #include <stdlib.h>
-#define MAX_LINE 80
+#define MAX_LINE 81
 
-void preAssembler(char *file);
-void findMacros(FILE *fptr);
+void assembler(char *file_name);
+int preAssembler(char *expanded_name, char *file);
+int expandMacros(FILE *fptr, FILE *exp_fptr);
 int isMacroName(char *word, FILE *macros_fptr);
-void insertMacro(FILE *expanded_macros_fptr, FILE * macros_fptr, char *word);
-char *firstWord(char *line);
-char *macroName(char *line);
+void insertMacro(FILE *expanded_macros_fptr, FILE *macros_fptr, char *word);
+void firstWord(char *line, char *word);
+void macroName(char *line, char *word);
 int nextWordIndex(char *line, int index);
+int isValidMacroName(char *word);
 #endif
