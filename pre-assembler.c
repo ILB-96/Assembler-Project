@@ -9,7 +9,7 @@ int preAssembler(char *expanded_name, char *file)
     strcat(expanded_name, as);
     if (!(fptr = fopen(expanded_name, "r")))
     {
-        fprintf(stderr, "Error: File '%s' open failed.\n", expanded_name);
+        fprintf(stderr, RED "FAILED.\n" NRM "   Error: File '%s' open failed.\n", expanded_name);
         return 0;
     }
     strcpy(expanded_name, "expanded-");
@@ -18,7 +18,7 @@ int preAssembler(char *expanded_name, char *file)
     if (!(exp_fptr = fopen(expanded_name, "w")))
     {
         fclose(fptr);
-        fprintf(stderr, "Error: File '%s' open failed.\n", expanded_name);
+        fprintf(stderr, RED "FAILED.\n" NRM "   Error: File '%s' open failed.\n", expanded_name);
         exit(EXIT_FAILURE);
     }
     
@@ -35,7 +35,7 @@ void expandMacros(FILE *fptr, FILE *exp_fptr)
     int is_part_of_macro = 0;
     if (!(macros_fptr = fopen("macros-file.txt", "w+")))
     {
-        fprintf(stderr, "Error: File '%s' open failed.\n", "macros-file.txt");
+        fprintf(stderr, RED "FAILED.\n" NRM "   Error: File '%s' open failed.\n", "macros-file.txt");
         exit(EXIT_FAILURE);
     }
     while (fgets(line, sizeof(line), fptr) != NULL)

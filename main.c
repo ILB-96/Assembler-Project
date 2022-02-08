@@ -1,5 +1,6 @@
 #include "assembler.h"
 
+
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -26,20 +27,22 @@ void assembler(char *file_name)
         fprintf(stderr, "Error: Out of memory\n");
         exit(EXIT_FAILURE);
     }
-    printf("Pre Assembly process at work...");
+    printf("   Pre Assembly process at work...");
+    fflush(stdout);
     if (!preAssembler(expanded_file_name, file_name))
     {
         free(expanded_file_name);
-        printf("Failed.\n");
         return;
     }
-    printf("Finished.\n");
+    printf(GRN "OK.\n" NRM);
     if (!(exp_fptr = fopen(expanded_file_name, "r")))
     {
         free(expanded_file_name);
-        fprintf(stderr, "Error: File '%s' open failed.\n", expanded_file_name);
+        fprintf(stderr, "   Error: File '%s' open failed.\n", expanded_file_name);
         exit(EXIT_FAILURE);
     }
+    /*TODO: add function to check if expanded file doesn't contain errors.*/
+    
     fclose(exp_fptr);
     free(expanded_file_name);
 }

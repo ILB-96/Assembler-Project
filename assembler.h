@@ -6,6 +6,9 @@
 #include <ctype.h>
 #include <stdlib.h>
 #define MAX_LINE 81
+#define NRM  "\x1B[0m"
+#define RED  "\x1B[31m"
+#define GRN  "\x1B[32m"
 
 void assembler(char *file_name);
 int preAssembler(char *expanded_name, char *file);

@@ -3,7 +3,7 @@
 .extern W
 MAIN: add r3, LIST
 LOOP: prn #48
-macro jmp
+macro m1
  inc r6
  mov r3, W
 endm
