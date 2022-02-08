@@ -1,6 +1,5 @@
 #include "assembler.h"
 
-
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -10,9 +9,9 @@ int main(int argc, char *argv[])
     }
     while (--argc > 0)
     {
-        printf("===Assembly process for %s.as started===\n", *++argv);
-        assembler(*argv);
-        printf("===Assembly process for %s.as finshed===\n\n", *argv);
+
+        assembler(*++argv);
+
         remove("macros-file.txt");
     }
     return 0;
@@ -35,6 +34,7 @@ void assembler(char *file_name)
         return;
     }
     printf(GRN "OK.\n" NRM);
+    printf("===Assembly process for %s.as started===\n", file_name);
     if (!(exp_fptr = fopen(expanded_file_name, "r")))
     {
         free(expanded_file_name);
@@ -43,9 +43,15 @@ void assembler(char *file_name)
     }
     printf("Checking for errors in code...");
     fflush(stdout);
+    if (!errorsCheck(exp_fptr))
+    {
+        free(expanded_file_name);
+        fclose(exp_fptr);
+        return;
+    }
     printf(GRN "OK.\n" NRM);
     /*TODO: add function to check if expanded file doesn't contain errors.*/
-    
     fclose(exp_fptr);
     free(expanded_file_name);
+    printf("===Assembly process for %s.as finshed===\n\n", file_name);
 }

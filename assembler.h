@@ -6,9 +6,21 @@
 #include <ctype.h>
 #include <stdlib.h>
 #define MAX_LINE 81
-#define NRM  "\x1B[0m"
-#define RED  "\x1B[31m"
-#define GRN  "\x1B[32m"
+#define NRM "\x1B[0m"
+#define GRN "\x1B[32m"
+#define RED "\x1B[31m"
+
+typedef struct label
+{
+    char name[32];
+    struct label *next;
+    struct label *prev;
+} label;
+
+typedef struct list
+{
+    label *head;
+} list;
 
 void assembler(char *file_name);
 int preAssembler(char *expanded_name, char *file);
@@ -19,4 +31,8 @@ void firstWord(char *line, char *word);
 void macroName(char *line, char *word);
 int nextWordIndex(char *line, int index);
 int isValidMacroName(char *word);
+int errorsCheck(FILE *fptr);
+void init(char *label_name, list *l);
+void add(list *l, char *label_name);
+void freeLabels(list *l);
 #endif

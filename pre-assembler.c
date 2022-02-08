@@ -21,7 +21,7 @@ int preAssembler(char *expanded_name, char *file)
         fprintf(stderr, RED "FAILED!\n" NRM "Error: File '%s' open failed.\n", expanded_name);
         exit(EXIT_FAILURE);
     }
-    
+
     expandMacros(fptr, exp_fptr);
     fclose(exp_fptr);
     fclose(fptr);
@@ -134,7 +134,6 @@ int isMacroName(char *word, FILE *macros_fptr)
     }
     return 0;
 }
-
 
 void insertMacro(FILE *expanded_macros_fptr, FILE *macros_fptr, char *word)
 {
