@@ -10,9 +10,9 @@ int main(int argc, char *argv[])
     }
     while (--argc > 0)
     {
-        printf("***Assembly process for %s.as started***\n", *++argv);
+        printf("===Assembly process for %s.as started===\n", *++argv);
         assembler(*argv);
-        printf("***Assembly process for %s.as finshed***\n\n", *argv);
+        printf("===Assembly process for %s.as finshed===\n\n", *argv);
         remove("macros-file.txt");
     }
     return 0;
@@ -27,7 +27,7 @@ void assembler(char *file_name)
         fprintf(stderr, "Error: Out of memory\n");
         exit(EXIT_FAILURE);
     }
-    printf("   Pre Assembly process at work...");
+    printf("Pre Assembly process at work...");
     fflush(stdout);
     if (!preAssembler(expanded_file_name, file_name))
     {
@@ -38,9 +38,12 @@ void assembler(char *file_name)
     if (!(exp_fptr = fopen(expanded_file_name, "r")))
     {
         free(expanded_file_name);
-        fprintf(stderr, "   Error: File '%s' open failed.\n", expanded_file_name);
+        fprintf(stderr, "Error: File '%s' open failed.\n", expanded_file_name);
         exit(EXIT_FAILURE);
     }
+    printf("Checking for errors in code...");
+    fflush(stdout);
+    printf(GRN "OK.\n" NRM);
     /*TODO: add function to check if expanded file doesn't contain errors.*/
     
     fclose(exp_fptr);
