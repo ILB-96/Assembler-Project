@@ -9,7 +9,7 @@
 
 void assembler(char *file_name);
 int preAssembler(char *expanded_name, char *file);
-int expandMacros(FILE *fptr, FILE *exp_fptr);
+void expandMacros(FILE *fptr, FILE *exp_fptr);
 int isMacroName(char *word, FILE *macros_fptr);
 void insertMacro(FILE *expanded_macros_fptr, FILE *macros_fptr, char *word);
 void firstWord(char *line, char *word);

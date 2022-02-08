@@ -3,8 +3,9 @@
 
 void test_next_word_index(void)
 {
-    TEST_CHECK_(nextWordIndex("Hello World", 0) == 6, "Second word index of 'Hello World', Expected: %d", 6);
-    TEST_CHECK_(nextWordIndex("", 0) == 0, "Second word index of '', Expected: %d", 0);
+    int actual = 0;
+    TEST_CHECK_( (actual = nextWordIndex("Hello World", 0)) == 6, "Second word index of 'Hello World', Expected: %d Actual: %d", 6, actual);
+    TEST_CHECK_((actual = nextWordIndex("", 0)) == 0, "Second word index of '', Expected: %d, Actual: %d", 0, actual);
 }
 
 

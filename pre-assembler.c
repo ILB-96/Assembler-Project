@@ -22,7 +22,7 @@ int preAssembler(char *expanded_name, char *file)
         exit(EXIT_FAILURE);
     }
     
-    expandMacros(fptr, exp_fptr))
+    expandMacros(fptr, exp_fptr);
     fclose(exp_fptr);
     fclose(fptr);
     return 1;
@@ -72,7 +72,6 @@ void expandMacros(FILE *fptr, FILE *exp_fptr)
         }
     }
     fclose(macros_fptr);
-    return 1;
 }
 
 void firstWord(char *line, char *word)
