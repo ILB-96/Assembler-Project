@@ -1,44 +1,43 @@
 #include "assembler.h"
 
-int preAssembler(char *expanded_name, char *file)
+int preAssembler(char *expanded_name, char *file_name)
 {
     char as[] = ".as";
-    FILE *fptr;
-    FILE *exp_fptr;
-    strcpy(expanded_name, file);
+    FILE *file_ptr;
+    FILE *expanded_file_ptr;
+    strcpy(expanded_name, file_name);
     strcat(expanded_name, as);
-    if (!(fptr = fopen(expanded_name, "r")))
+    if (!(file_ptr = fopen(expanded_name, "r")))
     {
-        fprintf(stderr, RED "FAILED!\n" NRM "Error: File '%s' open failed.\n", expanded_name);
+        fprintf(stderr, RED "FAILED!\n" NRM "Error: File '%s' open failed.\n\n", expanded_name);
         return 0;
     }
     strcpy(expanded_name, "expanded-");
-    strcat(expanded_name, file);
+    strcat(expanded_name, file_name);
     strcat(expanded_name, as);
-    if (!(exp_fptr = fopen(expanded_name, "w")))
+    if (!(expanded_file_ptr = fopen(expanded_name, "w")))
     {
-        fclose(fptr);
-        fprintf(stderr, RED "FAILED!\n" NRM "Error: File '%s' open failed.\n", expanded_name);
+        fprintf(stderr, RED "FAILED!\n" NRM "Error: File '%s' open failed.\n\n", expanded_name);
         exit(EXIT_FAILURE);
     }
 
-    expandMacros(fptr, exp_fptr);
-    fclose(exp_fptr);
-    fclose(fptr);
+    expandMacros(file_ptr, expanded_file_ptr);
+    fclose(expanded_file_ptr);
+    fclose(file_ptr);
     return 1;
 }
 
-void expandMacros(FILE *fptr, FILE *exp_fptr)
+void expandMacros(FILE *file_ptr, FILE *expanded_file_ptr)
 {
-    FILE *macros_fptr;
+    FILE *macros_file_ptr;
     char line[MAX_LINE] = "", word[MAX_LINE] = "";
     int is_part_of_macro = 0;
-    if (!(macros_fptr = fopen("macros-file.txt", "w+")))
+    if (!(macros_file_ptr = fopen("macros-file.txt", "w+")))
     {
-        fprintf(stderr, RED "FAILED!\n" NRM "Error: File '%s' open failed.\n", "macros-file.txt");
+        fprintf(stderr, RED "FAILED!\n" NRM "Error: File '%s' open failed.\n\n", "macros-file.txt");
         exit(EXIT_FAILURE);
     }
-    while (fgets(line, sizeof(line), fptr) != NULL)
+    while (fgets(line, sizeof(line), file_ptr) != NULL)
     {
         firstWord(line, word);
         if (!strcmp(word, "macro") || is_part_of_macro)
@@ -46,7 +45,7 @@ void expandMacros(FILE *fptr, FILE *exp_fptr)
             if (!strcmp(word, "endm"))
             {
                 is_part_of_macro = 0;
-                fprintf(macros_fptr, "%s\n", word);
+                fprintf(macros_file_ptr, "%s\n", word);
             }
             else
             {
@@ -54,24 +53,24 @@ void expandMacros(FILE *fptr, FILE *exp_fptr)
                 {
                     is_part_of_macro = 1;
                     macroName(line, word);
-                    fprintf(macros_fptr, "%s\n", word);
+                    fprintf(macros_file_ptr, "%s\n", word);
                 }
                 else
-                    fprintf(macros_fptr, "%s", line);
+                    fprintf(macros_file_ptr, "%s", line);
             }
         }
         else
         {
-            if (isMacroName(word, macros_fptr))
+            if (isMacroName(word, macros_file_ptr))
             {
-                insertMacro(exp_fptr, macros_fptr, word);
+                insertMacro(expanded_file_ptr, macros_file_ptr, word);
             }
             else
-                fprintf(exp_fptr, "%s", line);
-            fseek(macros_fptr, 0, SEEK_END);
+                fprintf(expanded_file_ptr, "%s", line);
+            fseek(macros_file_ptr, 0, SEEK_END);
         }
     }
-    fclose(macros_fptr);
+    fclose(macros_file_ptr);
 }
 
 void firstWord(char *line, char *word)
@@ -114,12 +113,12 @@ int nextWordIndex(char *line, int index)
     }
     return index;
 }
-int isMacroName(char *word, FILE *macros_fptr)
+int isMacroName(char *word, FILE *macros_file_ptr)
 {
     char line[MAX_LINE] = "", *macro_name;
     int next_is_macro = 1;
-    fseek(macros_fptr, 0, SEEK_SET);
-    while (fgets(line, MAX_LINE, macros_fptr) != NULL)
+    fseek(macros_file_ptr, 0, SEEK_SET);
+    while (fgets(line, MAX_LINE, macros_file_ptr) != NULL)
     {
         macro_name = strtok(line, " \n");
         if (next_is_macro)
@@ -135,12 +134,12 @@ int isMacroName(char *word, FILE *macros_fptr)
     return 0;
 }
 
-void insertMacro(FILE *expanded_macros_fptr, FILE *macros_fptr, char *word)
+void insertMacro(FILE *expanded_file_ptr, FILE *macros_file_ptr, char *word)
 {
     char line[MAX_LINE] = "", fword[MAX_LINE] = "";
     int inserted = 0, insert = 0;
-    fseek(macros_fptr, 0, SEEK_SET);
-    while (fgets(line, MAX_LINE, macros_fptr) != NULL && !inserted)
+    fseek(macros_file_ptr, 0, SEEK_SET);
+    while (fgets(line, MAX_LINE, macros_file_ptr) != NULL && !inserted)
     {
         firstWord(line, fword);
         if (!strcmp(fword, "endm") && insert)
@@ -150,7 +149,7 @@ void insertMacro(FILE *expanded_macros_fptr, FILE *macros_fptr, char *word)
         }
         if (insert)
         {
-            fprintf(expanded_macros_fptr, "%s", line);
+            fprintf(expanded_file_ptr, "%s", line);
         }
         if (!strcmp(fword, word) && !insert)
             insert = 1;

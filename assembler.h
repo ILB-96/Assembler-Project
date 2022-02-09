@@ -9,30 +9,28 @@
 #define NRM "\x1B[0m"
 #define GRN "\x1B[32m"
 #define RED "\x1B[31m"
-
-typedef struct label
+#define LABEL_INIT(label_array)                                        \
+    if ((label_array = calloc(1, sizeof(TypeLabel))) == NULL)          \
+    {                                                                  \
+        fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n"); \
+        exit(EXIT_FAILURE);                                            \
+    }
+typedef struct TypeLabel
 {
-    char name[32];
-    struct label *next;
-    struct label *prev;
-} label;
+    char *name;
+    int address;
+} TypeLabel;
 
-typedef struct list
-{
-    label *head;
-} list;
-
-void assembler(char *file_name);
-int preAssembler(char *expanded_name, char *file);
-void expandMacros(FILE *fptr, FILE *exp_fptr);
-int isMacroName(char *word, FILE *macros_fptr);
-void insertMacro(FILE *expanded_macros_fptr, FILE *macros_fptr, char *word);
-void firstWord(char *line, char *word);
-void macroName(char *line, char *word);
-int nextWordIndex(char *line, int index);
-int isValidMacroName(char *word);
-int errorsCheck(FILE *fptr);
-void init(char *label_name, list *l);
-void add(list *l, char *label_name);
-void freeLabels(list *l);
+void assembler(char *);
+int preAssembler(char *, char *);
+void expandMacros(FILE *, FILE *);
+int isMacroName(char *, FILE *);
+void insertMacro(FILE *, FILE *, char *);
+void firstWord(char *, char *);
+void macroName(char *, char *);
+int nextWordIndex(char *, int);
+int isValidMacroName(char *);
+int errorsCheck(FILE *);
+void createLabelsTable(FILE *, TypeLabel *);
+int isValidLabelName(char *);
 #endif
