@@ -1,15 +1,19 @@
 CC = gcc
 CFLAGS = -ansi -pedantic -Wall -g
-
-main: main.o pre-assembler.o labels-table.o
-	$(CC) $(CFLAGS) -o main main.o pre-assembler.o labels-table.o
-test: test.o acutest.h
-	$(CC) -o test test.o pre-assembler.o labels-table.o
-test.o: test.c
-	$(CC) -c test.c
-pre-assembler.o: assembler.h pre-assembler.c 
+TFLAGS =
+main: main.o pre-assembler.o first-pass.o
+	$(CC) $(CFLAGS) -o main main.o pre-assembler.o first-pass.o 
+main.o: main.c assembler.h
+	$(CC) $(CFLAGS) -c main.c
+pre-assembler.o: pre-assembler.c assembler.h
 	$(CC) $(CFLAGS) -c pre-assembler.c
-labels-table.o: assembler.h labels-table.c
-	$(CC) $(CFLAGS) -c labels-table.c
+first-pass.o: first-pass.c assembler.h
+	$(CC) $(CFLAGS) -c first-pass.c
+
+
+test: test.o  pre-assembler.o first-pass.o
+	$(CC) $(TFLAGS) -o test test.o pre-assembler.o first-pass.o
+test.o: test.c assembler.h
+	$(CC) $(TFLAGS) -c test.c
 clean:
 	rm -f core *.o main test

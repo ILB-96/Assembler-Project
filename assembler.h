@@ -6,31 +6,30 @@
 #include <ctype.h>
 #include <stdlib.h>
 #define MAX_LINE 81
+#define MAX_ADDRESS 8191
 #define NRM "\x1B[0m"
 #define GRN "\x1B[32m"
 #define RED "\x1B[31m"
-#define LABEL_INIT(label_array)                                        \
-    if ((label_array = calloc(1, sizeof(TypeLabel))) == NULL)          \
-    {                                                                  \
-        fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n"); \
-        exit(EXIT_FAILURE);                                            \
-    }
+
+/*Defines and store Labels Table*/
 typedef struct TypeLabel
 {
     char *name;
     int address;
+    int base_address;
+    int offset;
+    char *attribute;
 } TypeLabel;
+extern TypeLabel *labels_array;
 
-void assembler(char *);
+/*Functions from pre-assembler.c*/
 int preAssembler(char *, char *);
-void expandMacros(FILE *, FILE *);
-int isMacroName(char *, FILE *);
-void insertMacro(FILE *, FILE *, char *);
 void firstWord(char *, char *);
-void macroName(char *, char *);
 int nextWordIndex(char *, int);
-int isValidMacroName(char *);
-int errorsCheck(FILE *);
-void createLabelsTable(FILE *, TypeLabel *);
-int isValidLabelName(char *);
+/*Functions from first-pass.c*/
+int firstPass(FILE *);
+int isCommentLine(char *line);
+int isSpaceLine(char *line);
+/*Functions from second-pass.c*/
+
 #endif

@@ -1,5 +1,5 @@
 #include "assembler.h"
-
+void assembler(char *);
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -9,10 +9,8 @@ int main(int argc, char *argv[])
     }
     while (--argc > 0)
     {
-
         assembler(*++argv);
-
-        remove("macros-file.txt");
+        free(labels_array);
     }
     return 0;
 }
@@ -21,7 +19,6 @@ void assembler(char *file_name)
 {
     FILE *expanded_file_ptr;
     char *expanded_file_name;
-    TypeLabel *label_array;
     if ((expanded_file_name = (char *)malloc(sizeof(char) * (strlen(file_name) + 13))) == NULL)
     {
         fprintf(stderr, "Error: Out of memory\n");
@@ -41,22 +38,24 @@ void assembler(char *file_name)
         fprintf(stderr, "Error: File '%s' open failed.\n", expanded_file_name);
         exit(EXIT_FAILURE);
     }
-    printf("Creating labels table...");
+    printf("Assembly first Pass at work...");
     fflush(stdout);
-    LABEL_INIT(label_array)
-    createLabelsTable(expanded_file_ptr, label_array);
-    printf(GRN "OK.\n" NRM);
-    printf("Checking for errors in code...");
-    fflush(stdout);
-    /*if (!errorsCheck(expanded_file_ptr))
+    if (!firstPass(expanded_file_ptr))
     {
-        free(expanded_file_name);
+
         fclose(expanded_file_ptr);
+        free(expanded_file_name);
+        free(labels_array);
         return;
-    }*/
+    }
+    printf(GRN "OK.\n" NRM);
+
+    printf("Assembly Second Pass at work...");
+    fflush(stdout);
+
     printf(GRN "OK.\n" NRM);
     fclose(expanded_file_ptr);
-    free(label_array);
     free(expanded_file_name);
+    free(labels_array);
     printf("===Assembly process for %s.as finshed===\n\n", file_name);
 }

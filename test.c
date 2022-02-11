@@ -1,21 +1,23 @@
 #include "acutest.h"
 #include "assembler.h"
-
+int isValidLabelName(char *word);
+int nextWordIndex(char *line, int index);
 void test_next_word_index(void)
 {
-    int actual = 0;
+    unsigned int actual = 0;
     TEST_CHECK_((actual = nextWordIndex("Hello World", 0)) == 6, "Second word index of 'Hello World', Expected: %d Actual: %d", 6, actual);
     TEST_CHECK_((actual = nextWordIndex("", 0)) == 0, "Second word index of '', Expected: %d, Actual: %d", 0, actual);
 }
+
 void test_is_valid_label_name(void)
 {
-    int expected = 0;
-    int actual = 0;
-    TEST_CHECK_((actual = isValidLabel("HelloWorld:")) == (expected = 0), "label name 'HelloWorld:' Expected: %d Actual: %d", expected, actual);
-    TEST_CHECK_((actual = isValidLabel("jmp:")) == (expected = 0), "label name 'jmp:' Expected: %d Actual: %d", expected, actual);
-    TEST_CHECK_((actual = isValidLabel(".bas:")) == (expected = 0), "label name 'jmp:' Expected: %d Actual: %d", expected, actual);
-    TEST_CHECK_((actual = isValidLabel("TRACK:")) == (expected = 1), "label name 'HelloWorld:' Expected: %d Actual: %d", expected, actual);
-    TEST_CHECK_((actual = isValidLabel("SQls:")) == (expected = 1), "label name 'HelloWorld:' Expected: %d Actual: %d", expected, actual);
+    unsigned int expected = 0;
+    unsigned int actual = 0;
+    TEST_CHECK_((actual = isValidLabelName("HelloWorld")) == (expected = 1), "label name 'HelloWorld' Expected: %d Actual: %d", expected, actual);
+    TEST_CHECK_((actual = isValidLabelName("jmp")) == (expected = 0), "label name 'jmp' Expected: %d Actual: %d", expected, actual);
+    TEST_CHECK_((actual = isValidLabelName(".bas")) == (expected = 0), "label name 'jmp' Expected: %d Actual: %d", expected, actual);
+    TEST_CHECK_((actual = isValidLabelName("TRACK")) == (expected = 1), "label name 'TRACK' Expected: %d Actual: %d", expected, actual);
+    TEST_CHECK_((actual = isValidLabelName("SQls")) == (expected = 1), "label name 'SQLs' Expected: %d Actual: %d", expected, actual);
 }
 
 TEST_LIST = {

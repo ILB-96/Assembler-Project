@@ -1,4 +1,9 @@
 #include "assembler.h"
+void expandMacros(FILE *, FILE *);
+int isMacroName(char *, FILE *);
+void insertMacro(FILE *, FILE *, char *);
+void macroName(char *, char *);
+int isValidMacroName(char *);
 
 int preAssembler(char *expanded_name, char *file_name)
 {
@@ -22,6 +27,7 @@ int preAssembler(char *expanded_name, char *file_name)
     }
 
     expandMacros(file_ptr, expanded_file_ptr);
+
     fclose(expanded_file_ptr);
     fclose(file_ptr);
     return 1;
@@ -31,7 +37,7 @@ void expandMacros(FILE *file_ptr, FILE *expanded_file_ptr)
 {
     FILE *macros_file_ptr;
     char line[MAX_LINE] = "", word[MAX_LINE] = "";
-    int is_part_of_macro = 0;
+    unsigned int is_part_of_macro = 0;
     if (!(macros_file_ptr = fopen("macros-file.txt", "w+")))
     {
         fprintf(stderr, RED "FAILED!\n" NRM "Error: File '%s' open failed.\n\n", "macros-file.txt");
@@ -70,12 +76,13 @@ void expandMacros(FILE *file_ptr, FILE *expanded_file_ptr)
             fseek(macros_file_ptr, 0, SEEK_END);
         }
     }
+    remove("macros-file.txt");
     fclose(macros_file_ptr);
 }
 
 void firstWord(char *line, char *word)
 {
-    int i = 0, j = 0;
+    unsigned int i = 0, j = 0;
     while (isspace(line[i]) && line[i] != '\0')
     {
         i++;
@@ -88,7 +95,7 @@ void firstWord(char *line, char *word)
 }
 void macroName(char *line, char *word)
 {
-    int i = 0, j = 0;
+    unsigned int i = 0, j = 0;
     while (isspace(line[i]) && line[i] != '\0')
     {
         i++;
@@ -116,7 +123,7 @@ int nextWordIndex(char *line, int index)
 int isMacroName(char *word, FILE *macros_file_ptr)
 {
     char line[MAX_LINE] = "", *macro_name;
-    int next_is_macro = 1;
+    unsigned int next_is_macro = 1;
     fseek(macros_file_ptr, 0, SEEK_SET);
     while (fgets(line, MAX_LINE, macros_file_ptr) != NULL)
     {
@@ -137,7 +144,7 @@ int isMacroName(char *word, FILE *macros_file_ptr)
 void insertMacro(FILE *expanded_file_ptr, FILE *macros_file_ptr, char *word)
 {
     char line[MAX_LINE] = "", fword[MAX_LINE] = "";
-    int inserted = 0, insert = 0;
+    unsigned int inserted = 0, insert = 0;
     fseek(macros_file_ptr, 0, SEEK_SET);
     while (fgets(line, MAX_LINE, macros_file_ptr) != NULL && !inserted)
     {
