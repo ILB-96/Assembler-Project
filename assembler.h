@@ -26,10 +26,11 @@ extern TypeLabel *labels_array;
 int preAssembler(char *, char *);
 void firstWord(char *, char *);
 int nextWordIndex(char *, int);
+int isCommentLine(char *);
+int isSpaceLine(char *);
 /*Functions from first-pass.c*/
 int firstPass(FILE *);
-int isCommentLine(char *line);
-int isSpaceLine(char *line);
+int countWords(char *);
 /*Functions from second-pass.c*/
 
 #endif

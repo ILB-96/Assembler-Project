@@ -1,5 +1,6 @@
 #include "assembler.h"
 void assembler(char *);
+void freeStr(TypeLabel *);
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -10,7 +11,6 @@ int main(int argc, char *argv[])
     while (--argc > 0)
     {
         assembler(*++argv);
-        free(labels_array);
     }
     return 0;
 }
@@ -40,11 +40,13 @@ void assembler(char *file_name)
     }
     printf("Assembly first Pass at work...");
     fflush(stdout);
+
     if (!firstPass(expanded_file_ptr))
     {
 
         fclose(expanded_file_ptr);
         free(expanded_file_name);
+        freeStr(labels_array);
         free(labels_array);
         return;
     }
@@ -54,8 +56,18 @@ void assembler(char *file_name)
     fflush(stdout);
 
     printf(GRN "OK.\n" NRM);
+    freeStr(labels_array);
+    free(labels_array);
     fclose(expanded_file_ptr);
     free(expanded_file_name);
-    free(labels_array);
     printf("===Assembly process for %s.as finshed===\n\n", file_name);
+}
+void freeStr(TypeLabel *labels_array)
+{
+    unsigned int i = 0;
+    while (labels_array[i].address != 0)
+    {
+        free(labels_array[i].name);
+        free(labels_array[i++].attribute);
+    }
 }

@@ -6,9 +6,15 @@
     {                                                                  \
         fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n"); \
         exit(EXIT_FAILURE);                                            \
-    }
+    }                                                                  \
+    labels_array[0].address = 0;
 #define LABEL_ADD(labels_array, count, word, address, array_size)                         \
     if ((labels_array[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)            \
+    {                                                                                     \
+        fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n");                    \
+        exit(EXIT_FAILURE);                                                               \
+    }                                                                                     \
+    if ((labels_array[count].attribute = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)       \
     {                                                                                     \
         fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n");                    \
         exit(EXIT_FAILURE);                                                               \
@@ -21,10 +27,15 @@
         exit(EXIT_FAILURE);                                                               \
     }                                                                                     \
     labels_array[count].address = 0;
-TypeLabel *labels_array;
+
 void removeColon(char *);
 int isValidLabelName(char *);
-int labelExist(char *);
+int isLabelExist(char *);
+
+TypeLabel *labels_array;
+const char *registers_array[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"};
+const char *operations_array[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr", "red", "prn", "rts", "stop"};
+const char *guiders_array[] = {".data", ".string", ".entry", ".extern"};
 
 int firstPass(FILE *expanded_file_ptr)
 {
@@ -32,11 +43,10 @@ int firstPass(FILE *expanded_file_ptr)
     size_t array_size = 1;
     char line[MAX_LINE] = "", word[MAX_LINE] = "";
     LABEL_INIT(labels_array)
-
     while (fgets(line, MAX_LINE, expanded_file_ptr) != NULL)
     {
         firstWord(line, word);
-        if (word[strlen(word) - 1] == ':' && !isCommentLine(line))
+        if (word[strlen(word) - 1] == ':')
         {
             removeColon(word);
             if (!isValidLabelName(word))
@@ -49,15 +59,10 @@ int firstPass(FILE *expanded_file_ptr)
                 fprintf(stderr, RED "FAILED!\n" NRM "Error: %s label already exists\n", word);
                 return 0;
             }
-            if ((labels_array[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
-            {
-                fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n");
-                exit(EXIT_FAILURE);
-            }
+
             LABEL_ADD(labels_array, count, word, address, array_size)
         }
-        if (!isSpaceLine(line) && !isCommentLine())
-            address += countWords(line);
+        address += countWords(line);
         if (address > MAX_ADDRESS)
         {
             fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n");
@@ -66,26 +71,11 @@ int firstPass(FILE *expanded_file_ptr)
     }
     return 1;
 }
-int countWords(line)
+int countWords(char *line)
 {
-}
-int isSpaceLine(char *line)
-{
-    unsigned int i = 0;
-    while (line[i] != '\0')
-        if (!isspace(line[i++]))
-            return 0;
     return 1;
 }
-int isCommentLine(char *line)
-{
-    unsigned int i = 0;
-    while (isspace(line[i++]))
-        ;
-    if (line[--i] == ';')
-        return 1;
-    return 0;
-}
+
 void removeColon(char *word)
 {
     unsigned int i = 0;
@@ -97,8 +87,7 @@ int isValidLabelName(char *word)
 {
     unsigned int i;
     unsigned int arrays_length = 16;
-    const char *registers_array[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"};
-    const char *operations_array[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr", "red", "prn", "rts", "stop"};
+
     if (!isalpha(word[0]))
         return 0;
     if (strlen(word) > MAX_LABEL_LENGTH)
@@ -113,7 +102,7 @@ int isValidLabelName(char *word)
     return 1;
 }
 
-int labelExist(char *word)
+int isLabelExist(char *word)
 {
     unsigned int i;
     for (i = 0; labels_array[i].address != 0; i++)

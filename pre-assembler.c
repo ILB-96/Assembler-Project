@@ -61,7 +61,7 @@ void expandMacros(FILE *file_ptr, FILE *expanded_file_ptr)
                     macroName(line, word);
                     fprintf(macros_file_ptr, "%s\n", word);
                 }
-                else
+                else if (!isSpaceLine(line) && !isCommentLine(line))
                     fprintf(macros_file_ptr, "%s", line);
             }
         }
@@ -71,7 +71,7 @@ void expandMacros(FILE *file_ptr, FILE *expanded_file_ptr)
             {
                 insertMacro(expanded_file_ptr, macros_file_ptr, word);
             }
-            else
+            else if (!isSpaceLine(line) && !isCommentLine(line))
                 fprintf(expanded_file_ptr, "%s", line);
             fseek(macros_file_ptr, 0, SEEK_END);
         }
@@ -80,6 +80,23 @@ void expandMacros(FILE *file_ptr, FILE *expanded_file_ptr)
     fclose(macros_file_ptr);
 }
 
+int isSpaceLine(char *line)
+{
+    unsigned int i = 0;
+    while (line[i] != '\0')
+        if (!isspace(line[i++]))
+            return 0;
+    return 1;
+}
+int isCommentLine(char *line)
+{
+    unsigned int i = 0;
+    while (isspace(line[i++]))
+        ;
+    if (line[--i] == ';')
+        return 1;
+    return 0;
+}
 void firstWord(char *line, char *word)
 {
     unsigned int i = 0, j = 0;
