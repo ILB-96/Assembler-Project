@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #define MAX_LINE 81
 #define MAX_ADDRESS 8191
+#define BASE_MODE 16
 #define NRM "\x1B[0m"
 #define GRN "\x1B[32m"
 #define RED "\x1B[31m"
@@ -25,12 +26,13 @@ extern TypeLabel *labels_array;
 /*Functions from pre-assembler.c*/
 int preAssembler(char *, char *);
 void firstWord(char *, char *);
-int nextWordIndex(char *, int);
+unsigned int nextWordIndex(char *, int);
 int isCommentLine(char *);
 int isSpaceLine(char *);
 /*Functions from first-pass.c*/
 int firstPass(FILE *);
-int countWords(char *);
+int countWords(char *, char *);
 /*Functions from second-pass.c*/
+int secondPass(FILE *expanded_file_handler);
 
 #endif

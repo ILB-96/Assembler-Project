@@ -30,6 +30,7 @@ int preAssembler(char *expanded_name, char *file_name)
 
     fclose(expanded_file_handler);
     fclose(file_handler);
+    printf(GRN "OK.\n" NRM);
     return 1;
 }
 
@@ -125,8 +126,12 @@ void macroName(char *line, char *word)
 
     word[j] = '\0';
 }
-int nextWordIndex(char *line, int index)
+unsigned int nextWordIndex(char *line, int index)
 {
+    while (isspace(line[index]) && line[index] != '\0')
+    {
+        index++;
+    }
     while (!isspace(line[index]) && line[index] != '\0')
     {
         index++;

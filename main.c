@@ -26,12 +26,11 @@ void assembler(char *file_name)
     }
     printf("Pre Assembly process at work...");
     fflush(stdout);
-    if (!preAssembler(expanded_file_name, file_name))
+    if (!preAssembler(expanded_file_name, file_name)) /*go to pre-assembler.c for more info*/
     {
         free(expanded_file_name);
         return;
     }
-    printf(GRN "OK.\n" NRM);
     printf("===Assembly process for %s.as started===\n", file_name);
     if (!(expanded_file_handler = fopen(expanded_file_name, "r")))
     {
@@ -41,21 +40,26 @@ void assembler(char *file_name)
     printf("Assembly first Pass at work...");
     fflush(stdout);
 
-    if (!firstPass(expanded_file_handler))
+    if (!firstPass(expanded_file_handler)) /*go to first-pass.c for more info*/
     {
-
         fclose(expanded_file_handler);
         free(expanded_file_name);
         freeStr(labels_array);
         free(labels_array);
         return;
     }
-    printf(GRN "OK.\n" NRM);
 
     printf("Assembly Second Pass at work...");
     fflush(stdout);
+    if (!secondPass(expanded_file_handler))
+    {
+        fclose(expanded_file_handler);
+        free(expanded_file_name);
+        freeStr(labels_array);
+        free(labels_array);
+        return;
+    }
 
-    printf(GRN "OK.\n" NRM);
     freeStr(labels_array);
     free(labels_array);
     fclose(expanded_file_handler);
@@ -65,9 +69,11 @@ void assembler(char *file_name)
 void freeStr(TypeLabel *labels_array)
 {
     unsigned int i = 0;
-    while (labels_array[i].address != 0)
+    while (strcmp(labels_array[i].name, ""))
     {
         free(labels_array[i].name);
         free(labels_array[i++].attribute);
     }
+    free(labels_array[i].name);
+    free(labels_array[i].attribute);
 }
