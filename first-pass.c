@@ -37,13 +37,13 @@ const char *registers_array[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",
 const char *operations_array[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr", "red", "prn", "rts", "stop"};
 const char *guiders_array[] = {".data", ".string", ".entry", ".extern"};
 
-int firstPass(FILE *expanded_file_ptr)
+int firstPass(FILE *expanded_file_handler)
 {
     int count = 0, address = 100;
     size_t array_size = 1;
     char line[MAX_LINE] = "", word[MAX_LINE] = "";
     LABEL_INIT(labels_array)
-    while (fgets(line, MAX_LINE, expanded_file_ptr) != NULL)
+    while (fgets(line, MAX_LINE, expanded_file_handler) != NULL)
     {
         firstWord(line, word);
         if (word[strlen(word) - 1] == ':')

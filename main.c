@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 
 void assembler(char *file_name)
 {
-    FILE *expanded_file_ptr;
+    FILE *expanded_file_handler;
     char *expanded_file_name;
     if ((expanded_file_name = (char *)malloc(sizeof(char) * (strlen(file_name) + 13))) == NULL)
     {
@@ -33,7 +33,7 @@ void assembler(char *file_name)
     }
     printf(GRN "OK.\n" NRM);
     printf("===Assembly process for %s.as started===\n", file_name);
-    if (!(expanded_file_ptr = fopen(expanded_file_name, "r")))
+    if (!(expanded_file_handler = fopen(expanded_file_name, "r")))
     {
         fprintf(stderr, "Error: File '%s' open failed.\n", expanded_file_name);
         exit(EXIT_FAILURE);
@@ -41,10 +41,10 @@ void assembler(char *file_name)
     printf("Assembly first Pass at work...");
     fflush(stdout);
 
-    if (!firstPass(expanded_file_ptr))
+    if (!firstPass(expanded_file_handler))
     {
 
-        fclose(expanded_file_ptr);
+        fclose(expanded_file_handler);
         free(expanded_file_name);
         freeStr(labels_array);
         free(labels_array);
@@ -58,7 +58,7 @@ void assembler(char *file_name)
     printf(GRN "OK.\n" NRM);
     freeStr(labels_array);
     free(labels_array);
-    fclose(expanded_file_ptr);
+    fclose(expanded_file_handler);
     free(expanded_file_name);
     printf("===Assembly process for %s.as finshed===\n\n", file_name);
 }
