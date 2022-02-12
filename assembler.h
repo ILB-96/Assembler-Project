@@ -8,9 +8,6 @@
 #define MAX_LINE 81
 #define MAX_ADDRESS 8191
 #define BASE_MODE 16
-#define NRM "\x1B[0m"
-#define GRN "\x1B[32m"
-#define RED "\x1B[31m"
 
 /*Defines and store Labels Table*/
 typedef struct TypeLabel
@@ -21,8 +18,10 @@ typedef struct TypeLabel
     int offset;
     char *attribute;
 } TypeLabel;
-extern TypeLabel *labels_array;
 
+extern unsigned int instruction_counter;
+extern unsigned int data_counter;
+extern TypeLabel *symbol_table;
 /*Functions from pre-assembler.c*/
 int preAssembler(char *, char *);
 void firstWord(char *, char *);

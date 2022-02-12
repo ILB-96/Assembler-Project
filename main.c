@@ -19,7 +19,7 @@ void assembler(char *file_name)
 {
     FILE *expanded_file_handler;
     char *expanded_file_name;
-    if ((expanded_file_name = (char *)malloc(sizeof(char) * (strlen(file_name) + 13))) == NULL)
+    if ((expanded_file_name = (char *)malloc(sizeof(char) * (strlen(file_name) + 14))) == NULL)
     {
         fprintf(stderr, "Error: Out of memory\n");
         exit(EXIT_FAILURE);
@@ -37,43 +37,42 @@ void assembler(char *file_name)
         fprintf(stderr, "Error: File '%s' open failed.\n", expanded_file_name);
         exit(EXIT_FAILURE);
     }
-    printf("Assembly first Pass at work...");
+    printf("Assembly First Pass at work...");
     fflush(stdout);
 
     if (!firstPass(expanded_file_handler)) /*go to first-pass.c for more info*/
     {
         fclose(expanded_file_handler);
         free(expanded_file_name);
-        freeStr(labels_array);
-        free(labels_array);
+        freeStr(symbol_table);
+        free(symbol_table);
         return;
     }
-
     printf("Assembly Second Pass at work...");
     fflush(stdout);
     if (!secondPass(expanded_file_handler))
     {
         fclose(expanded_file_handler);
         free(expanded_file_name);
-        freeStr(labels_array);
-        free(labels_array);
+        freeStr(symbol_table);
+        free(symbol_table);
         return;
     }
 
-    freeStr(labels_array);
-    free(labels_array);
+    freeStr(symbol_table);
+    free(symbol_table);
     fclose(expanded_file_handler);
     free(expanded_file_name);
     printf("===Assembly process for %s.as finshed===\n\n", file_name);
 }
-void freeStr(TypeLabel *labels_array)
+void freeStr(TypeLabel *symbol_table)
 {
     unsigned int i = 0;
-    while (strcmp(labels_array[i].name, ""))
+    while (strcmp(symbol_table[i].name, ""))
     {
-        free(labels_array[i].name);
-        free(labels_array[i++].attribute);
+        free(symbol_table[i].name);
+        free(symbol_table[i++].attribute);
     }
-    free(labels_array[i].name);
-    free(labels_array[i].attribute);
+    free(symbol_table[i].name);
+    free(symbol_table[i].attribute);
 }

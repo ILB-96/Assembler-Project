@@ -12,18 +12,23 @@ void labelAdd(unsigned int, char *, unsigned int, char *, size_t);
 void printLabels();
 int isDefinedExternal(char *);
 /*Global Veriabls*/
-TypeLabel *labels_array;
+TypeLabel *symbol_table;
+unsigned int instruction_counter = 100;
+unsigned int data_counter = 0;
 const char *registers_array[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"};
 const char *operations_array[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr", "red", "prn", "rts", "stop"};
 const char *guiders_array[] = {".data", ".string", ".entry", ".extern"};
 
 int firstPass(FILE *expanded_file_handler)
 {
-    unsigned int count = 0, address = 100;
+    unsigned int label_counter = 0, error = 1;
     size_t array_size = 1;
     char line[MAX_LINE] = "", word[MAX_LINE] = "";
-    char label_name[MAX_LABEL_LENGTH] = "";
+    char label_name[MAX_LINE] = "";
+
     labelInit(0);
+
+    /*TODO: use error flag to continue looking for errors in the program and stop the program after that*/
     while (fgets(line, MAX_LINE, expanded_file_handler) != NULL)
     {
         firstWord(line, word);
@@ -33,15 +38,17 @@ int firstPass(FILE *expanded_file_handler)
             nextWord(line, word, nextWordIndex(line, 0));
             if (!isValidLabelName(word))
             {
-                fprintf(stderr, RED "FAILED!\n" NRM "Error: %s is an illigal label name\n", word);
-                return 0;
+                error = 0;
+                fprintf(stderr, "FAILED!\nError: '%s' is an illigal label name\n", word);
+                return 0; /*TODO: add the line of the error in the file?*/
             }
             else if (isLabelExist(word) && !isDefinedExternal(word))
             {
-                fprintf(stderr, RED "FAILED!\n" NRM "Error: %s label already exists\n", word);
+                error = 0;
+                fprintf(stderr, "FAILED!\nError: '%s' label already exists\n", word);
                 return 0;
             }
-            labelAdd(count++, word, 0, "external", ++array_size);
+            labelAdd(label_counter++, word, 0, "external", ++array_size);
             nextWord(line, word, nextWordIndex(line, 0));
         }
         /*Case for inner labels*/
@@ -51,40 +58,43 @@ int firstPass(FILE *expanded_file_handler)
             removeColon(label_name);
             if (!isValidLabelName(label_name))
             {
-                fprintf(stderr, RED "FAILED!\n" NRM "Error: %s is an illigal label name\n", word);
+                fprintf(stderr, "FAILED!\nError: '%s' at '%s' an illigal label name\n", label_name, line);
+                error = 0;
                 return 0;
             }
             else if (isLabelExist(label_name))
             {
-                fprintf(stderr, RED "FAILED!\n" NRM "Error: %s label already exists\n", word);
+                fprintf(stderr, "FAILED!\nError: '%s' label from  '%s' already exists\n", label_name, line);
+                error = 0;
                 return 0;
             }
             nextWord(line, word, nextWordIndex(line, 0));
             if (!strcmp(word, ".data") || !strcmp(word, ".string"))
             {
-                labelAdd(count++, label_name, address, "data", ++array_size);
+                labelAdd(label_counter++, label_name, instruction_counter, "data", ++array_size);
             }
             else
-                labelAdd(count++, label_name, address, "code", ++array_size);
+                labelAdd(label_counter++, label_name, instruction_counter, "code", ++array_size);
         }
-        if (!isSpaceLine(line))
-            address += countWords(line, word); /*TODO: this function should move the current address to the address of the command*/
-        if (address > MAX_ADDRESS)
+        if (!isSpaceLine(line))                            /*check to empty*/
+            instruction_counter += countWords(line, word); /*TODO: this function should move the current address to the address of the command*/
+        if (instruction_counter > MAX_ADDRESS)
         {
-            fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n");
+            fprintf(stderr, "FAILED!\nError: Out of memory\n");
             exit(EXIT_FAILURE);
         }
     }
-    printf(GRN "OK.\n" NRM);
+    if (error == 1)
+        printf("OK.\n");
     printLabels();
-    return 1;
+    return error;
 }
 int isDefinedExternal(char *word)
 {
     unsigned int i = 0;
-    while (strcmp(labels_array[i].name, ""))
+    while (strcmp(symbol_table[i].name, ""))
     {
-        if (!strcmp(labels_array[i].name, word) && !strcmp(labels_array[i].attribute, "external"))
+        if (!strcmp(symbol_table[i].name, word) && !strcmp(symbol_table[i].attribute, "external"))
             return 1;
     }
     return 0;
@@ -92,40 +102,40 @@ int isDefinedExternal(char *word)
 void labelInit(unsigned int count)
 {
     if (count == 0)
-        if ((labels_array = calloc(1, sizeof(TypeLabel))) == NULL)
+        if ((symbol_table = calloc(1, sizeof(TypeLabel))) == NULL)
         {
-            fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n");
+            fprintf(stderr, "FAILED!\nError: Out of memory\n");
             exit(EXIT_FAILURE);
         }
 
-    if ((labels_array[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
+    if ((symbol_table[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
     {
-        fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n");
+        fprintf(stderr, "FAILED!\nError: Out of memory\n");
         exit(EXIT_FAILURE);
     }
-    if ((labels_array[count].attribute = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
+    if ((symbol_table[count].attribute = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
     {
-        fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n");
+        fprintf(stderr, "FAILED!\nError: Out of memory\n");
         exit(EXIT_FAILURE);
     }
-    strcpy(labels_array[count].name, "");
-    strcpy(labels_array[count].attribute, "");
-    labels_array[count].address = 0;
-    labels_array[count].base_address = 0;
-    labels_array[count].offset = 0;
+    strcpy(symbol_table[count].name, "");
+    strcpy(symbol_table[count].attribute, "");
+    symbol_table[count].address = 0;
+    symbol_table[count].base_address = 0;
+    symbol_table[count].offset = 0;
 }
 void labelAdd(unsigned int count, char *word, unsigned int address, char *attribute, size_t array_size)
 {
 
-    strcpy(labels_array[count].name, word);
-    strcpy(labels_array[count].attribute, attribute);
-    labels_array[count].address = address;
-    labels_array[count].base_address = baseAddress(address);
-    labels_array[count].offset = (address % BASE_MODE);
+    strcpy(symbol_table[count].name, word);
+    strcpy(symbol_table[count].attribute, attribute);
+    symbol_table[count].address = address;
+    symbol_table[count].base_address = baseAddress(address);
+    symbol_table[count].offset = (address % BASE_MODE);
 
-    if ((labels_array = realloc(labels_array, array_size * sizeof(TypeLabel))) == NULL)
+    if ((symbol_table = realloc(symbol_table, array_size * sizeof(TypeLabel))) == NULL)
     {
-        fprintf(stderr, RED "FAILED!\n" NRM "Error: Out of memory\n");
+        fprintf(stderr, "FAILED!\nError: Out of memory\n");
         exit(EXIT_FAILURE);
     }
     labelInit(++count);
@@ -188,9 +198,9 @@ int isValidLabelName(char *word)
 int isLabelExist(char *word)
 {
     unsigned int i;
-    for (i = 0; strcmp(labels_array[i].name, ""); i++)
+    for (i = 0; strcmp(symbol_table[i].name, ""); i++)
     {
-        if (!strcmp(labels_array[i].name, word))
+        if (!strcmp(symbol_table[i].name, word))
             return 1;
     }
     return 0;
@@ -200,8 +210,8 @@ void printLabels()
     unsigned int i;
     printf("Name\t|\taddress\t|\tbase\t|\toffset\t|\tattributes\n");
     printf("--------|---------------|---------------|---------------|-------------------\n");
-    for (i = 0; strcmp(labels_array[i].name, ""); i++)
+    for (i = 0; strcmp(symbol_table[i].name, ""); i++)
     {
-        printf("%s\t|\t%d\t|\t%d\t|\t%d\t|\t%s\n", labels_array[i].name, labels_array[i].address, labels_array[i].base_address, labels_array[i].offset, labels_array[i].attribute);
+        printf("%s\t|\t%d\t|\t%d\t|\t%d\t|\t%s\n", symbol_table[i].name, symbol_table[i].address, symbol_table[i].base_address, symbol_table[i].offset, symbol_table[i].attribute);
     }
 }

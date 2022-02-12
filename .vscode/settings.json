@@ -7,5 +7,15 @@
     "assembler.h": "c",
     "stdlib.h": "c"
   },
-  "cmake.configureOnOpen": false
+  "cmake.configureOnOpen": false,
+  "files.exclude": {
+    ".trunk": true,
+    "**.o": true,
+    "main.o": true,
+    "README.md": true,
+    ".vscode/*README": true,
+    ".vscode/*README.*": true,
+    "acutest.h": true,
+    "backup.c": true
+  }
 }

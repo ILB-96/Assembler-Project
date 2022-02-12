@@ -2,6 +2,6 @@
 
 int secondPass(FILE *expanded_file_handler)
 {
-    printf(GRN "OK.\n" NRM);
+    printf("OK.\n");
     return 1;
 }

@@ -4,25 +4,25 @@ int isMacroName(char *, FILE *);
 void insertMacro(FILE *, FILE *, char *);
 void macroName(char *, char *);
 int isValidMacroName(char *);
-
+#define AS ".as"
 int preAssembler(char *expanded_name, char *file_name)
 {
-    char as[] = ".as";
+
     FILE *file_handler;
     FILE *expanded_file_handler;
     strcpy(expanded_name, file_name);
-    strcat(expanded_name, as);
+    strcat(expanded_name, AS);
     if (!(file_handler = fopen(expanded_name, "r")))
     {
-        fprintf(stderr, RED "FAILED!\n" NRM "Error: File '%s' open failed.\n\n", expanded_name);
+        fprintf(stderr, "FAILED!\nError: File '%s' open failed.\n\n", expanded_name);
         return 0;
     }
     strcpy(expanded_name, "expanded-");
     strcat(expanded_name, file_name);
-    strcat(expanded_name, as);
+    strcat(expanded_name, AS);
     if (!(expanded_file_handler = fopen(expanded_name, "w")))
     {
-        fprintf(stderr, RED "FAILED!\n" NRM "Error: File '%s' open failed.\n\n", expanded_name);
+        fprintf(stderr, "FAILED!\nError: File '%s' open failed.\n\n", expanded_name);
         exit(EXIT_FAILURE);
     }
 
@@ -30,7 +30,8 @@ int preAssembler(char *expanded_name, char *file_name)
 
     fclose(expanded_file_handler);
     fclose(file_handler);
-    printf(GRN "OK.\n" NRM);
+    remove("macros-file.txt");
+    printf("OK.\n");
     return 1;
 }
 
@@ -41,7 +42,7 @@ void expandMacros(FILE *file_handler, FILE *expanded_file_handler)
     unsigned int is_part_of_macro = 0;
     if (!(macros_file_handler = fopen("macros-file.txt", "w+")))
     {
-        fprintf(stderr, RED "FAILED!\n" NRM "Error: File '%s' open failed.\n\n", "macros-file.txt");
+        fprintf(stderr, "FAILED!\nError: File '%s' open failed.\n\n", "macros-file.txt");
         exit(EXIT_FAILURE);
     }
     while (fgets(line, sizeof(line), file_handler) != NULL)
@@ -77,7 +78,7 @@ void expandMacros(FILE *file_handler, FILE *expanded_file_handler)
             fseek(macros_file_handler, 0, SEEK_END);
         }
     }
-    remove("macros-file.txt");
+
     fclose(macros_file_handler);
 }
 
