@@ -1,4 +1,6 @@
 #include "assembler.h"
+#define EXPENDED_EXTENTION_LENGTH 13 /*"expanded-.as\0" = 13 chars"*/
+
 /*Private functions meant to be used only inside this source*/
 void assembler(char *);
 void freeStr(TypeLabel *);
@@ -12,7 +14,7 @@ int main(int argc, char *argv[])
     }
     while (--argc > 0)
     {
-        assembler(*++argv);
+        assembler(*++argv); /*assembler process for each file starts here*/
     }
     return 0;
 }
@@ -23,8 +25,9 @@ void assembler(char *file_name)
     /*veriables to handle the expanded file that we will use*/
     FILE *expanded_file_handler;
     char *expanded_file_name;
+
     /*assigned space for the new name*/
-    if ((expanded_file_name = (char *)malloc(sizeof(char) * (strlen(file_name) + 14))) == NULL)
+    if ((expanded_file_name = (char *)malloc(sizeof(char) * (strlen(file_name) + EXPENDED_EXTENTION_LENGTH))) == NULL)
     {
         fprintf(stderr, "Error: Out of memory\n");
         exit(EXIT_FAILURE);
@@ -37,6 +40,7 @@ void assembler(char *file_name)
         free(expanded_file_name);
         return;
     }
+
     printf("===Assembly process for %s.as started===\n", file_name);
     /*Here we open the expanded file completed from the pre assembler*/
     if (!(expanded_file_handler = fopen(expanded_file_name, "r")))

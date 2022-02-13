@@ -25,7 +25,7 @@ const char *guiders_array[] = {".data", ".string", ".entry", ".extern"};
 int firstPass(FILE *expanded_file_handler)
 {
     /*Variables*/
-    unsigned int label_counter = 0, error = 1;
+    unsigned int label_counter = 0, ok = 1; /*error flag*/
     size_t array_size = 1;
     char line[MAX_LINE] = "", word[MAX_LINE] = "";
     char label_name[MAX_LINE] = "";
@@ -44,13 +44,13 @@ int firstPass(FILE *expanded_file_handler)
             if (!isValidLabelName(word))                  /*Checks if label name is valid according to the instructions*/
             {
                 /*raises error flag but continue to search for more errors in the first pass*/
-                error = 0;
+                ok = 0;
                 fprintf(stderr, "FAILED!\nError: '%s' is an illigal label name\n", word);
                 /*TODO: maybe add the line number where the error happened in the file?*/
             }
             else if (isLabelExist(word) && !isDefinedExternal(word)) /*the file is allowed to define the same external more than once without causing an error*/
             {
-                error = 0;
+                ok = 0;
                 fprintf(stderr, "FAILED!\nError: '%s' label already exists\n", word);
             }
             /*If we reached here the label is a valid external label and we can add it to the symbols array*/
@@ -66,14 +66,12 @@ int firstPass(FILE *expanded_file_handler)
             if (!isValidLabelName(label_name))
             {
                 fprintf(stderr, "FAILED!\nError: '%s' at '%s' an illigal label name\n", label_name, line);
-                error = 0;
-                return 0;
+                ok = 0;
             }
             else if (isLabelExist(label_name))
             {
                 fprintf(stderr, "FAILED!\nError: '%s' label from  '%s' already exists\n", label_name, line);
-                error = 0;
-                return 0;
+                ok = 0;
             }
             nextWord(line, word, nextWordIndex(line, 0));
             if (!strcmp(word, ".data") || !strcmp(word, ".string"))
@@ -93,10 +91,10 @@ int firstPass(FILE *expanded_file_handler)
         }
     }
 
-    if (error == 1)
+    if (ok)
         printf("OK.\n");
     printLabels();
-    return error;
+    return ok;
 }
 
 /**********************************************************************************************

@@ -22,6 +22,7 @@ typedef struct TypeLabel
 extern unsigned int instruction_counter;
 extern unsigned int data_counter;
 extern TypeLabel *symbol_table;
+
 /*Functions from pre-assembler.c*/
 int preAssembler(char *, char *);
 void firstWord(char *, char *);
