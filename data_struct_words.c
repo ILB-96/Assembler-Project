@@ -100,5 +100,6 @@ int main()
     addStd_word(&prv, A, 12, 1, 3, 4, 3);
 
     print_listNode(head);
+
     return 0;
 }

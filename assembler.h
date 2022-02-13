@@ -27,7 +27,7 @@ int preAssembler(char *, char *);
 void firstWord(char *, char *);
 unsigned int nextWordIndex(char *, int);
 int isCommentLine(char *);
-int isSpaceLine(char *);
+int isEmptyLine(char *);
 /*Functions from first-pass.c*/
 int firstPass(FILE *);
 int countWords(char *, char *);

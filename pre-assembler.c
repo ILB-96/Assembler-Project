@@ -26,8 +26,8 @@ int preAssembler(char *expanded_name, char *file_name)
         exit(EXIT_FAILURE);
     }
 
+    /*TODO: maybe change macrofile to a dynamic array*/
     expandMacros(file_handler, expanded_file_handler);
-
     fclose(expanded_file_handler);
     fclose(file_handler);
     remove("macros-file.txt");
@@ -63,7 +63,7 @@ void expandMacros(FILE *file_handler, FILE *expanded_file_handler)
                     macroName(line, word);
                     fprintf(macros_file_handler, "%s\n", word);
                 }
-                else if (!isSpaceLine(line) && !isCommentLine(line))
+                else if (!isEmptyLine(line) && !isCommentLine(line))
                     fprintf(macros_file_handler, "%s", line);
             }
         }
@@ -73,7 +73,7 @@ void expandMacros(FILE *file_handler, FILE *expanded_file_handler)
             {
                 insertMacro(expanded_file_handler, macros_file_handler, word);
             }
-            else if (!isSpaceLine(line) && !isCommentLine(line))
+            else if (!isEmptyLine(line) && !isCommentLine(line))
                 fprintf(expanded_file_handler, "%s", line);
             fseek(macros_file_handler, 0, SEEK_END);
         }
@@ -82,7 +82,7 @@ void expandMacros(FILE *file_handler, FILE *expanded_file_handler)
     fclose(macros_file_handler);
 }
 
-int isSpaceLine(char *line)
+int isEmptyLine(char *line)
 {
     unsigned int i = 0;
     while (line[i] != '\0')

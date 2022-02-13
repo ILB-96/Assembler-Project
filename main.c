@@ -1,6 +1,8 @@
 #include "assembler.h"
+/*Private functions meant to be used only inside this source*/
 void assembler(char *);
 void freeStr(TypeLabel *);
+
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -15,15 +17,19 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+/*Primary Function to process all the steps of the assembler*/
 void assembler(char *file_name)
 {
+    /*veriables to handle the expanded file that we will use*/
     FILE *expanded_file_handler;
     char *expanded_file_name;
+    /*assigned space for the new name*/
     if ((expanded_file_name = (char *)malloc(sizeof(char) * (strlen(file_name) + 14))) == NULL)
     {
         fprintf(stderr, "Error: Out of memory\n");
         exit(EXIT_FAILURE);
     }
+
     printf("Pre Assembly process at work...");
     fflush(stdout);
     if (!preAssembler(expanded_file_name, file_name)) /*go to pre-assembler.c for more info*/
@@ -32,15 +38,16 @@ void assembler(char *file_name)
         return;
     }
     printf("===Assembly process for %s.as started===\n", file_name);
+    /*Here we open the expanded file completed from the pre assembler*/
     if (!(expanded_file_handler = fopen(expanded_file_name, "r")))
     {
         fprintf(stderr, "Error: File '%s' open failed.\n", expanded_file_name);
         exit(EXIT_FAILURE);
     }
+
     printf("Assembly First Pass at work...");
     fflush(stdout);
-
-    if (!firstPass(expanded_file_handler)) /*go to first-pass.c for more info*/
+    if (!firstPass(expanded_file_handler)) /*Go to first-pass.c for more info*/
     {
         fclose(expanded_file_handler);
         free(expanded_file_name);
@@ -50,7 +57,7 @@ void assembler(char *file_name)
     }
     printf("Assembly Second Pass at work...");
     fflush(stdout);
-    if (!secondPass(expanded_file_handler))
+    if (!secondPass(expanded_file_handler)) /*Go to second-pass.c for more info*/
     {
         fclose(expanded_file_handler);
         free(expanded_file_name);
@@ -59,12 +66,15 @@ void assembler(char *file_name)
         return;
     }
 
+    /*Frees every allocated memory and close the file handler*/
     freeStr(symbol_table);
     free(symbol_table);
     fclose(expanded_file_handler);
     free(expanded_file_name);
     printf("===Assembly process for %s.as finshed===\n\n", file_name);
 }
+
+/*This function frees all the strings inside the symbol array*/
 void freeStr(TypeLabel *symbol_table)
 {
     unsigned int i = 0;
