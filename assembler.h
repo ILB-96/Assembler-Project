@@ -31,7 +31,8 @@ int isCommentLine(char *);
 int isEmptyLine(char *);
 /*Functions from first-pass.c*/
 int firstPass(FILE *);
-int countWords(char *, char *);
+int countBinaryWords(char *, char *);
+int isOperationName(char *);
 /*Functions from second-pass.c*/
 int secondPass(FILE *expanded_file_handler);
 

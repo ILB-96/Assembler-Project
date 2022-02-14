@@ -78,17 +78,23 @@ int firstPass(FILE *expanded_file_handler)
             {
                 labelAdd(label_counter++, label_name, instruction_counter, "data", ++array_size);
             }
+            else if (!strcmp(word, ".entry") || !strcmp(word, ".extern"))
+                fprintf(stderr, "Warrning!\n undefined defention of Label '%s' is declared  at '%s'.\n", label_name, line);
             else
                 labelAdd(label_counter++, label_name, instruction_counter, "code", ++array_size);
         }
-        new_words = countWords(line, word);
-        if (new_words != 0)
-            /*if line is not empty we need to count the words and add them to the words list*/
-            instruction_counter += new_words; /*TODO: this function should move the current address to the address of the command*/
-        else if (!isEmptyLine(line))
+        if (!strcmp(word, ".data") || !strcmp(word, ".string"))
+            new_words = countBinaryWords(line, "data");
+        else if (isOperationName(word))
         {
-            ok = 0;
+            new_words = countBinaryWords(line, "code");
         }
+
+        if (!new_words && !isEmptyLine(line) && strcmp(word, ".entry") && strcmp(word, ".extern"))
+            ok = 0;
+
+        instruction_counter += new_words;
+        new_words = 0;
         if (instruction_counter > MAX_ADDRESS) /*checks if we didn't used too much memory*/
         {
             fprintf(stderr, "FAILED!\nError: Out of memory\n");
@@ -199,6 +205,7 @@ void printLabels()
         printf("%s\t|\t%d\t|\t%d\t|\t%d\t|\t%s\n", symbol_table[i].name, symbol_table[i].address, symbol_table[i].base_address, symbol_table[i].offset, symbol_table[i].attribute);
     }
 }
+
 /********************************************************************************************
  * The next functions are used to change and alternate the words and the lines from the file to meet our needs.
  * *****************************************************************************************/
@@ -229,9 +236,10 @@ void removeColon(char *word)
         ;
     word[--i] = '\0';
 }
+
 /********************************************************************************************
  * The next functions are used to count and calculate binary words and their address
- * *****************************************************************************************/
+ ******************************************************************************************/
 /*Function to calculate the base address from a given adress*/
 int baseAddress(int address)
 {
@@ -240,7 +248,24 @@ int baseAddress(int address)
     return (address - (address % BASE_MODE));
 }
 /*Function to count the number of binary words inside a line*/
-int countWords(char *line, char *word)
+int countBinaryWords(char *line, char *word)
 {
     return 1;
+}
+
+/*******************************************************************
+ * The next functions related to finding and checking commands
+ *******************************************************************/
+/*Function that checks if a given word is an operation*/
+int isOperationName(char *word)
+{
+    unsigned int i = 0, found = 0;
+    unsigned int arrays_length = 16;
+
+    while (i < arrays_length)
+    {
+        if (!strcmp(word, operations_array[i++]))
+            found = 1;
+    }
+    return found;
 }

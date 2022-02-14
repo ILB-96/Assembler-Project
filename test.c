@@ -30,14 +30,14 @@ void test_count_words(void)
     char *word;
     line = ".string \"asdf\"";
     firstWord(line, word);
-    TEST_CHECK_((actual = countWords(line, word)) == (expected = 5), "Number of Words In '%s' Expected: %d Actual: %d", line, expected, actual);
+    TEST_CHECK_((actual = countBinaryWords(line, "data")) == (expected = 5), "Number of Words In '%s' Expected: %d Actual: %d", line, expected, actual);
     line = "add#1,r1";
     firstWord(line, word);
-    TEST_CHECK_((actual = countWords(line, word)) == (expected = 4), "Number of Words '%s' Expected: %d Actual: %d", line, expected, actual);
+    TEST_CHECK_((actual = countBinaryWords(line, "code")) == (expected = 4), "Number of Words '%s' Expected: %d Actual: %d", line, expected, actual);
     line = ".data 6,-11";
     firstWord(line, word);
-    TEST_CHECK_((actual = countWords(line, word)) == (expected = 4), "Number of Words '%s' Expected: %d Actual: %d", line, expected, actual);
+    TEST_CHECK_((actual = countBinaryWords(line, "data")) == (expected = 4), "Number of Words '%s' Expected: %d Actual: %d", line, expected, actual);
 }
 
 TEST_LIST = {
-    {"int nextWordIndex(char *line, int index);", test_next_word_index}, {"int isValidLabelName(char *word)", test_is_valid_label_name}, {"int countWords(char *line, char *word);", test_count_words}, {0}};
+    {"int nextWordIndex(char *line, int index);", test_next_word_index}, {"int isValidLabelName(char *word)", test_is_valid_label_name}, {"int countBinaryWords(char *line, char *word);", test_count_words}, {0}};
