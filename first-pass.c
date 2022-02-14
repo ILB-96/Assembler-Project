@@ -25,7 +25,7 @@ const char *guiders_array[] = {".data", ".string", ".entry", ".extern"};
 int firstPass(FILE *expanded_file_handler)
 {
     /*Variables*/
-    unsigned int label_counter = 0, ok = 1, new_words = 0; /*error flag*/
+    unsigned int label_counter = 0, ok = 1, new_words = 0, line_number = 1;
     size_t array_size = 1;
     char line[MAX_LINE] = "", word[MAX_LINE] = "";
     char label_name[MAX_LINE] = "";
@@ -45,13 +45,12 @@ int firstPass(FILE *expanded_file_handler)
             {
                 /*raises error flag but continue to search for more errors in the first pass*/
                 ok = 0;
-                fprintf(stderr, "FAILED!\nError: '%s' is an illigal label name\n", word);
-                /*TODO: maybe add the line number where the error happened in the file?*/
+                fprintf(stderr, "Error at line %d: '%s' is an illigal label name\n", line_number, word);
             }
             else if (isLabelExist(word) && !isDefinedExternal(word)) /*the file is allowed to define the same external more than once without causing an error*/
             {
                 ok = 0;
-                fprintf(stderr, "FAILED!\nError: '%s' label already exists\n", word);
+                fprintf(stderr, "Error at line %d: '%s' label already exists\n", line_number, word);
             }
             /*If we reached here the label is a valid external label and we can add it to the symbols array*/
             labelAdd(label_counter++, word, 0, "external", ++array_size);
@@ -65,13 +64,13 @@ int firstPass(FILE *expanded_file_handler)
             removeColon(label_name);
             if (!isValidLabelName(label_name))
             {
-                fprintf(stderr, "FAILED!\nError: '%s' at '%s' an illigal label name\n", label_name, line);
                 ok = 0;
+                fprintf(stderr, "Error at line %d: '%s' is an illigal label name\n", line_number, label_name);
             }
             else if (isLabelExist(label_name))
             {
-                fprintf(stderr, "FAILED!\nError: '%s' label from  '%s' already exists\n", label_name, line);
                 ok = 0;
+                fprintf(stderr, "Error at line %d: '%s' label already exists\n", line_number, label_name);
             }
             nextWord(line, word, nextWordIndex(line, 0));
             if (!strcmp(word, ".data") || !strcmp(word, ".string"))
@@ -79,8 +78,8 @@ int firstPass(FILE *expanded_file_handler)
                 labelAdd(label_counter++, label_name, instruction_counter, "data", ++array_size);
             }
             else if (!strcmp(word, ".entry") || !strcmp(word, ".extern"))
-                fprintf(stderr, "Warrning!\n undefined defention of Label '%s' is declared  at '%s'.\n", label_name, line);
-            else
+                fprintf(stderr, "Warrning at line %d:  undefined defention of Label '%s'.\n", line_number, label_name);
+            else if (isOperationName(word))
                 labelAdd(label_counter++, label_name, instruction_counter, "code", ++array_size);
         }
         if (!strcmp(word, ".data") || !strcmp(word, ".string"))
@@ -97,13 +96,12 @@ int firstPass(FILE *expanded_file_handler)
         new_words = 0;
         if (instruction_counter > MAX_ADDRESS) /*checks if we didn't used too much memory*/
         {
-            fprintf(stderr, "FAILED!\nError: Out of memory\n");
+            fprintf(stderr, "Error: Out of memory\n");
             exit(EXIT_FAILURE);
         }
+        line_number++;
     }
 
-    if (ok)
-        printf("OK.\n");
     printLabels();
     return ok;
 }

@@ -49,8 +49,7 @@ void assembler(char *file_name)
         exit(EXIT_FAILURE);
     }
 
-    printf("Assembly First Pass at work...");
-    fflush(stdout);
+    printf("Assembly First Pass at work...\n");
     if (!firstPass(expanded_file_handler)) /*Go to first-pass.c for more info*/
     {
         fclose(expanded_file_handler);
@@ -59,8 +58,7 @@ void assembler(char *file_name)
         free(symbol_table);
         return;
     }
-    printf("Assembly Second Pass at work...");
-    fflush(stdout);
+    printf("Assembly Second Pass at work...\n");
     if (!secondPass(expanded_file_handler)) /*Go to second-pass.c for more info*/
     {
         fclose(expanded_file_handler);
