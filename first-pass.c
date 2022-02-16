@@ -14,8 +14,9 @@ int isDefinedExternal(char *);
 /*Symbols Tables is a global veriable to use in the Second Pass*/
 TypeLabel *symbol_table;
 /*Instruction and data counter are global veriable to use in the Second Pass*/
-unsigned int instruction_counter = 100;
-unsigned int data_counter = 0;
+unsigned int IC = 100;
+unsigned int DC = 0;
+unsigned int ok = 1;
 /*This arrays are saved words, better to have them globaly so we can always check if a variable is trying to use those name*/
 /*TODO: maybe we need to add more checks to see variables are not names after saved words?*/
 const char *registers_array[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"};
@@ -25,10 +26,10 @@ const char *guiders_array[] = {".data", ".string", ".entry", ".extern"};
 int firstPass(FILE *expanded_file_handler)
 {
     /*Variables*/
-    unsigned int label_counter = 0, ok = 1, new_words = 0, line_number = 1;
+    unsigned int label_counter = 0, new_words = 0, line_number = 1;
     size_t array_size = 1;
-    char line[MAX_LINE] = "", word[MAX_LINE] = "";
-    char label_name[MAX_LINE] = "";
+    char line[MAX_LINE], word[MAX_LINE];
+    char label_name[MAX_LINE];
     /*First initialize the symbols table dynamic array*/
     labelInit(0);
 
@@ -36,7 +37,7 @@ int firstPass(FILE *expanded_file_handler)
     /*This loop will go through the entire expanded file, creating the labels and adding every piece of data to it's correct location in the memory*/
     while (fgets(line, MAX_LINE, expanded_file_handler) != NULL)
     {
-        firstWord(line, word); /*TODO:change to strtok*/
+        firstWord(line, word);
 
         if (!strcmp(word, ".extern")) /*Case for extern labels*/
         {
@@ -55,7 +56,11 @@ int firstPass(FILE *expanded_file_handler)
             /*If we reached here the label is a valid external label and we can add it to the symbols array*/
             labelAdd(label_counter++, word, 0, "external", ++array_size);
             nextWord(line, word, nextWordIndex(line, 0));
-            /*TODO: after this nextWord call external should be an empty line or it's an error*/
+            if (line[0] != '\0')
+            {
+                ok = 0;
+                fprintf(stderr, "Error at line %d: Extended text after extern veriable\n", line_number);
+            }
         }
         /*Case for inner labels*/
         else if (word[strlen(word) - 1] == ':')
@@ -75,26 +80,36 @@ int firstPass(FILE *expanded_file_handler)
             nextWord(line, word, nextWordIndex(line, 0));
             if (!strcmp(word, ".data") || !strcmp(word, ".string"))
             {
-                labelAdd(label_counter++, label_name, instruction_counter, "data", ++array_size);
+                labelAdd(label_counter++, label_name, IC, "data", ++array_size);
             }
             else if (!strcmp(word, ".entry") || !strcmp(word, ".extern"))
                 fprintf(stderr, "Warrning at line %d:  undefined defention of Label '%s'.\n", line_number, label_name);
             else if (isOperationName(word))
-                labelAdd(label_counter++, label_name, instruction_counter, "code", ++array_size);
+                labelAdd(label_counter++, label_name, IC, "code", ++array_size);
+            else
+            {
+                ok = 0;
+                fprintf(stderr, "Error at line %d: undefined operation assigned to label '%s'.\n", line_number, label_name);
+            }
         }
+
+        /*The Next lines Process a line into binary words*/
         if (!strcmp(word, ".data") || !strcmp(word, ".string"))
             new_words = countBinaryWords(line, "data");
         else if (isOperationName(word))
         {
             new_words = countBinaryWords(line, "code");
         }
-
-        if (!new_words && !isEmptyLine(line) && strcmp(word, ".entry") && strcmp(word, ".extern"))
+        else if (line[0] != '\0' && strcmp(word, ".entry"))
+        {
             ok = 0;
+            new_words = 0;
+            fprintf(stderr, "Error at line %d: undefined operation.\n", line_number);
+        }
 
-        instruction_counter += new_words;
-        new_words = 0;
-        if (instruction_counter > MAX_ADDRESS) /*checks if we didn't used too much memory*/
+        IC += new_words;
+        DC += new_words;
+        if (IC > MAX_ADDRESS) /*checks if we didn't used too much memory*/
         {
             fprintf(stderr, "Error: Out of memory\n");
             exit(EXIT_FAILURE);
@@ -212,7 +227,7 @@ void printLabels()
 void nextWord(char *line, char *word, unsigned int i)
 {
     unsigned int j = 0;
-    while (line[i] != '\0')
+    while (line[i] != '\0' && line[i] != '\n')
     {
         line[j++] = line[i++];
     }

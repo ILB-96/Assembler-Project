@@ -19,8 +19,8 @@ typedef struct TypeLabel
     char *attribute;
 } TypeLabel;
 
-extern unsigned int instruction_counter;
-extern unsigned int data_counter;
+extern unsigned int IC;
+extern unsigned int DC;
 extern TypeLabel *symbol_table;
 
 /*Functions from pre-assembler.c*/
