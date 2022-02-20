@@ -17,5 +17,6 @@
     ".vscode/*README.*": true,
     "acutest.h": true,
     "backup.c": true
-  }
+  },
+  "cSpell.words": ["endm", "fword"]
 }

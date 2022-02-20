@@ -20,13 +20,12 @@ unsigned int DC = 0;
 unsigned int ok = 1;
 /*Those arrays are saved words, better to have them globally, so we can always check if a variable is trying to use those name*/
 /*TODO: maybe we need to add more checks to see variables are not names after saved words?*/
-const char *registers_array[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13","r14", "r15"};
-const char *operations_array[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr","red", "prn", "rts", "stop"};
+const char *registers_array[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"};
+const char *operations_array[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr", "red", "prn", "rts", "stop"};
 const char *guiders_array[] = {".data", ".string", ".entry", ".extern"};
 
-
-
-int firstPass(FILE *expanded_file_handler) {
+int firstPass(FILE *expanded_file_handler)
+{
     /*Variables*/
     unsigned int label_counter = 0, new_words = 0, line_number = 1;
     size_t array_size = 1;
@@ -37,21 +36,22 @@ int firstPass(FILE *expanded_file_handler) {
 
     /*TODO: use error flag to continue looking for errors in the program and stop the program after that*/
     /*This loop will go through the entire expanded file, creating the labels and adding every piece of data to it's correct location in the memory*/
-    while (fgets(line, MAX_LINE, expanded_file_handler) != NULL) {
+    while (fgets(line, MAX_LINE, expanded_file_handler) != NULL)
+    {
         firstWord(line, word);
 
         if (!strcmp(word, ".extern")) /*Case for extern labels*/
         {
-            nextWord(line, word, nextWordIndex(line,
-                                               0)); /*Moves the line and the word to the next word inside the line(if there is any)*/
+            nextWord(line, word, nextWordIndex(line, 0)); /*Moves the line and the word to the next word inside the line(if there is any)*/
             if (!isValidLabelName(
-                    word))                  /*Checks if label name is valid according to the instructions*/
+                    word)) /*Checks if label name is valid according to the instructions*/
             {
                 /*raises error flag but continue to search for more errors in the first pass*/
                 ok = 0;
-                fprintf(stderr, "Error at line %d: '%s' is an illigal label name\n", line_number, word);
-            } else if (isLabelExist(word) && !isDefinedExternal(
-                    word)) /*the file is allowed to define the same external more than once without causing an error*/
+                fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n", line_number, word);
+            }
+            else if (isLabelExist(word) && !isDefinedExternal(
+                                               word)) /*the file is allowed to define the same external more than once without causing an error*/
             {
                 ok = 0;
                 fprintf(stderr, "Error at line %d: '%s' label already exists\n", line_number, word);
@@ -59,30 +59,38 @@ int firstPass(FILE *expanded_file_handler) {
             /*If we reached here the label is a valid external label, and we can add it to the symbols array*/
             labelAdd(label_counter++, word, 0, "external", ++array_size);
             nextWord(line, word, nextWordIndex(line, 0));
-            if (line[0] != '\0') {
+            if (line[0] != '\0')
+            {
                 ok = 0;
-                fprintf(stderr, "Error at line %d: Extended text after extern veriable\n", line_number);
+                fprintf(stderr, "Error at line %d: Extended text after extern variable\n", line_number);
             }
         }
-            /*Case for inner labels*/
-        else if (word[strlen(word) - 1] == ':') {
+        /*Case for inner labels*/
+        else if (word[strlen(word) - 1] == ':')
+        {
             strcpy(label_name, word);
             removeColon(label_name);
-            if (!isValidLabelName(label_name)) {
+            if (!isValidLabelName(label_name))
+            {
                 ok = 0;
                 fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n", line_number, label_name);
-            } else if (isLabelExist(label_name)) {
+            }
+            else if (isLabelExist(label_name))
+            {
                 ok = 0;
                 fprintf(stderr, "Error at line %d: '%s' label already exists\n", line_number, label_name);
             }
             nextWord(line, word, nextWordIndex(line, 0));
-            if (!strcmp(word, ".data") || !strcmp(word, ".string")) {
+            if (!strcmp(word, ".data") || !strcmp(word, ".string"))
+            {
                 labelAdd(label_counter++, label_name, IC, "data", ++array_size);
-            } else if (!strcmp(word, ".entry") || !strcmp(word, ".extern"))
+            }
+            else if (!strcmp(word, ".entry") || !strcmp(word, ".extern"))
                 fprintf(stderr, "Warning at line %d:  undefined definition of Label '%s'.\n", line_number, label_name);
             else if (isOperationName(word))
                 labelAdd(label_counter++, label_name, IC, "code", ++array_size);
-            else {
+            else
+            {
                 ok = 0;
                 fprintf(stderr, "Error at line %d: undefined operation assigned to label '%s'.\n", line_number,
                         label_name);
@@ -92,9 +100,12 @@ int firstPass(FILE *expanded_file_handler) {
         /*The Next lines Process a line into binary words*/
         if (!strcmp(word, ".data") || !strcmp(word, ".string"))
             new_words = countBinaryWords(line, "data");
-        else if (isOperationName(word)) {
+        else if (isOperationName(word))
+        {
             new_words = countBinaryWords(line, "code");
-        } else if (line[0] != '\0' && strcmp(word, ".entry")) {
+        }
+        else if (line[0] != '\0' && strcmp(word, ".entry"))
+        {
             ok = 0;
             new_words = 0;
             fprintf(stderr, "Error at line %d: undefined operation.\n", line_number);
@@ -118,9 +129,11 @@ int firstPass(FILE *expanded_file_handler) {
  * The next functions are related to creating, defining and checking validity of symbols
  **********************************************************************************************/
 /*Function that accepts a name and checks if a symbol name is already defined and has "external" attribute with the same given name*/
-int isDefinedExternal(char *word) {
+int isDefinedExternal(char *word)
+{
     unsigned int i = 0;
-    while (strcmp(symbol_table[i].name, "")) {
+    while (strcmp(symbol_table[i].name, ""))
+    {
         if (!strcmp(symbol_table[i].name, word) && !strcmp(symbol_table[i].attribute, "external"))
             return 1;
     }
@@ -128,18 +141,22 @@ int isDefinedExternal(char *word) {
 }
 
 /*Function that accept the location in the symbols array to initialize a new symbol*/
-void labelInit(unsigned int count) {
+void labelInit(unsigned int count)
+{
     if (count == 0)
-        if ((symbol_table = calloc(1, sizeof(TypeLabel))) == NULL) {
+        if ((symbol_table = calloc(1, sizeof(TypeLabel))) == NULL)
+        {
             fprintf(stderr, "FAILED!\nError: Out of memory\n");
             exit(EXIT_FAILURE);
         }
 
-    if ((symbol_table[count].name = (char *) malloc(MAX_LABEL_LENGTH)) == NULL) {
+    if ((symbol_table[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
+    {
         fprintf(stderr, "FAILED!\nError: Out of memory\n");
         exit(EXIT_FAILURE);
     }
-    if ((symbol_table[count].attribute = (char *) malloc(MAX_LABEL_LENGTH)) == NULL) {
+    if ((symbol_table[count].attribute = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
+    {
         fprintf(stderr, "FAILED!\nError: Out of memory\n");
         exit(EXIT_FAILURE);
     }
@@ -151,14 +168,16 @@ void labelInit(unsigned int count) {
 }
 
 /*Function to add new symbol and initialize a new symbol in the next address*/
-void labelAdd(unsigned int count, char *word, unsigned int address, char *attribute, size_t array_size) {
+void labelAdd(unsigned int count, char *word, unsigned int address, char *attribute, size_t array_size)
+{
     strcpy(symbol_table[count].name, word);
     strcpy(symbol_table[count].attribute, attribute);
     symbol_table[count].address = address;
     symbol_table[count].base_address = baseAddress(address);
     symbol_table[count].offset = (address % BASE_MODE);
 
-    if ((symbol_table = realloc(symbol_table, array_size * sizeof(TypeLabel))) == NULL) {
+    if ((symbol_table = realloc(symbol_table, array_size * sizeof(TypeLabel))) == NULL)
+    {
         fprintf(stderr, "FAILED!\nError: Out of memory\n");
         exit(EXIT_FAILURE);
     }
@@ -166,7 +185,8 @@ void labelAdd(unsigned int count, char *word, unsigned int address, char *attrib
 }
 
 /*Function that checks if a given name of label is a valid name*/
-int isValidLabelName(char *word) {
+int isValidLabelName(char *word)
+{
     unsigned int i;
     unsigned int arrays_length = 16;
 
@@ -174,7 +194,8 @@ int isValidLabelName(char *word) {
         return 0;
     if (strlen(word) > MAX_LABEL_LENGTH)
         return 0;
-    for (i = 0; i < arrays_length; i++) {
+    for (i = 0; i < arrays_length; i++)
+    {
         if (!strcmp(word, registers_array[i]) || !strcmp(word, operations_array[i]))
             return 0;
     }
@@ -184,9 +205,11 @@ int isValidLabelName(char *word) {
 }
 
 /*Function that checks if a given name of label is already exist in the symbols array*/
-int isLabelExist(char *word) {
+int isLabelExist(char *word)
+{
     unsigned int i;
-    for (i = 0; strcmp(symbol_table[i].name, ""); i++) {
+    for (i = 0; strcmp(symbol_table[i].name, ""); i++)
+    {
         if (!strcmp(symbol_table[i].name, word))
             return 1;
     }
@@ -194,11 +217,13 @@ int isLabelExist(char *word) {
 }
 
 /*Function that prints labels(just for show).*/
-void printLabels() {
+void printLabels()
+{
     unsigned int i;
     printf("Name\t|\taddress\t|\tbase\t|\toffset\t|\tattributes\n");
     printf("--------|---------------|---------------|---------------|-------------------\n");
-    for (i = 0; strcmp(symbol_table[i].name, ""); i++) {
+    for (i = 0; strcmp(symbol_table[i].name, ""); i++)
+    {
         printf("%s\t|\t%d\t|\t%d\t|\t%d\t|\t%s\n", symbol_table[i].name, symbol_table[i].address,
                symbol_table[i].base_address, symbol_table[i].offset, symbol_table[i].attribute);
     }
@@ -209,40 +234,47 @@ void printLabels() {
  * *****************************************************************************************/
 /*Function that moves the line to the next word and insert the next word inside a variable(word)*/
 /*TODO: change the variable name "word" to not be confused with a binary word*/
-void nextWord(char *line, char *word, unsigned int i) {
+void nextWord(char *line, char *word, unsigned int i)
+{
     unsigned int j = 0;
-    while (line[i] != '\0' && line[i] != '\n') {
+    while (line[i] != '\0' && line[i] != '\n')
+    {
         line[j++] = line[i++];
     }
 
     line[j] = '\0';
     j = 0;
     i = 0;
-    while (!isspace(line[i])) {
+    while (!isspace(line[i]))
+    {
         word[j++] = line[i++];
     }
     word[j] = '\0';
 }
 
 /*Function that removes the ":" sign from a word*/
-void removeColon(char *word) {
+void removeColon(char *word)
+{
     unsigned int i = 0;
-    while (word[i++] != ':');
+    while (word[i++] != ':')
+        ;
     word[--i] = '\0';
 }
 
 /********************************************************************************************
  * The next functions are used to count and calculate binary words and their address
  ******************************************************************************************/
-/*Function to calculate the base address from a given adress*/
-int baseAddress(int address) {
+/*Function to calculate the base address from a given address*/
+int baseAddress(int address)
+{
     if (address == 0)
         return 0;
     return (address - (address % BASE_MODE));
 }
 
 /*Function to count the number of binary words inside a line*/
-int countBinaryWords(char *line, char *word) {
+int countBinaryWords(char *line, char *word)
+{
     return 1;
 }
 
@@ -250,11 +282,13 @@ int countBinaryWords(char *line, char *word) {
  * The next functions related to finding and checking commands
  *******************************************************************/
 /*Function that checks if a given word is an operation*/
-int isOperationName(char *word) {
+int isOperationName(char *word)
+{
     unsigned int i = 0, found = 0;
     unsigned int arrays_length = 16;
 
-    while (i < arrays_length) {
+    while (i < arrays_length)
+    {
         if (!strcmp(word, operations_array[i++]))
             found = 1;
     }
