@@ -1,22 +1,32 @@
 #include "assembler.h"
-#include "word-list.h"
-/*________________code________________*/
 
-void initialize_list(plw *h, plw *p)
+
+
+void initialize_list(plw *h, plw *p,int stock)
 {
     *h = (plw)malloc(sizeof(wordsNode));
     *p = *h;
     (*p)->word = -1;
-    (*p)->stock_index = BASE_STOCK - 1;
+    (*p)->stock_index = stock;
 }
-
+void add_numTo_list(plw *prv,ARE are, int n)
+{
+    int word;
+    SET_ARE(are);
+    int mask = 0;
+    mask = ~mask;
+    mask <<= 16;
+    mask = ~mask;
+    word = (mask&n)|are;
+    addTo_list(prv,word);
+    
+}
 void addTo_list(plw *prv, int n)
 {
     if ((*prv)->word == -1)
     {
         (*prv)->word = n;
         (*prv)->next = NULL;
-        (*prv)->stock_index = BASE_STOCK;
     }
     else
     {
@@ -49,7 +59,7 @@ int addBase_word(plw *p, ARE are, opcode o)
     addTo_list(p, word);
     return word;
 }
-int addStd_word(plw *prv, ARE are, int funct, int source_r, int source_sort, int target_r, int target_sort)
+int addStd_word(plw *prv, ARE are, Funct funct, registers source_r, sortType source_sort, registers target_r, sortType target_sort)
 {
     int word = 0;
 
@@ -88,18 +98,31 @@ void print_word(int word)
         mask >>= 1;
     }
 }
+void free_list(plw h)
+{
+    plw p = h->next;
+    while (p != NULL)
+    {
+       free(h);
+       h = p;
+       p = h->next;
 
-int main()
+    }
+}
+/*int main()
 {
 
     plw head;
     plw prv;
-    initialize_list(&head, &prv);
+    initialize_list( &head, &prv,BASE_STOCK);
 
     addBase_word(&prv, A, o_add);
     addStd_word(&prv, A, 12, 1, 3, 4, 3);
-
+   
+    add_numTo_list(&prv,R,-1);
     print_listNode(head);
+    
+    free_list(head);
 
     return 0;
-}
+}*/

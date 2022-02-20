@@ -32,14 +32,21 @@ int firstPass(FILE *expanded_file_handler)
     /*First initialize the symbols table dynamic array*/
     labelInit(0);
 
+    plw head_IC; /*need to be free in the end...*/
+    plw prv_IC;
+    initialize_list( &head_IC, &prv_IC,BASE_STOCK);
+
     /*TODO: use error flag to continue looking for errors in the program and stop the program after that*/
     /*This loop will go through the entire expanded file, creating the labels and adding every piece of data to it's correct location in the memory*/
     while (fgets(line, MAX_LINE, expanded_file_handler) != NULL)
     {
+        int iscode = 1;
+        
         firstWord(line, word); /*TODO:change to strtok*/
-
+        
         if (!strcmp(word, ".extern")) /*Case for extern labels*/
         {
+            iscode = 0;
             nextWord(line, word, nextWordIndex(line, 0)); /*Moves the line and the word to the next word inside the line(if there is any)*/
             if (!isValidLabelName(word))                  /*Checks if label name is valid according to the instructions*/
             {
@@ -76,11 +83,24 @@ int firstPass(FILE *expanded_file_handler)
             nextWord(line, word, nextWordIndex(line, 0));
             if (!strcmp(word, ".data") || !strcmp(word, ".string"))
             {
+                iscode = 0;
                 labelAdd(label_counter++, label_name, instruction_counter, "data", ++array_size);
             }
             else
+            {
+                
                 labelAdd(label_counter++, label_name, instruction_counter, "code", ++array_size);
+            }
         }
+
+        /*in this point the line contain only code*/
+        if(iscode == 1 && (strcmp(word, ".data") != 0 && strcmp(word, ".string") != 0) && strcmp(word, ".entry") != 0 && strcmp(word, ".extern"))
+        {
+            ok = command_code_pross(&prv_IC,line);
+            
+        }
+        
+
         if (!isEmptyLine(line))
             /*if line is not empty we need to count the words and add them to the words list*/
             instruction_counter += countWords(line, word); /*TODO: this function should move the current address to the address of the command*/
@@ -90,10 +110,14 @@ int firstPass(FILE *expanded_file_handler)
             exit(EXIT_FAILURE);
         }
     }
-
+    
     if (ok)
         printf("OK.\n");
-    printLabels();
+
+   /* printLabels();*/
+    
+    print_listNode(head_IC);
+    printf("\n");
     return ok;
 }
 
