@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 /*Primary Function to process all the steps of the assembler*/
 void assembler(char *file_name)
 {
-    /*veriables to handle the expanded file that we will use*/
+    /*variables to handle the expanded file that we will use*/
     FILE *expanded_file_handler;
     char *expanded_file_name;
 
@@ -73,7 +73,7 @@ void assembler(char *file_name)
     free(symbol_table);
     fclose(expanded_file_handler);
     free(expanded_file_name);
-    printf("===Assembly process for %s.as finshed===\n\n", file_name);
+    printf("===Assembly process for %s.as finished===\n\n", file_name);
 }
 
 /*This function frees all the strings inside the symbol array*/
