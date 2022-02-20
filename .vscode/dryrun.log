@@ -1,0 +1,11 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/yoni/Desktop/mm 14/project - v2/Assembler-Project'
+gcc -c command_process.c -o command_process.o
+gcc -c data_struct_words.c -o data_struct_words.o
+gcc -c main.c -o main.o
+gcc -c pre-assembler.c -o assembler.o
+gcc -c first-pass.c -o first-pass.o
+gcc -c second-pass.c -o second-pass.o
+gcc -g -Wall -ansi -pedantic command_process.o data_struct_words.o  main.o pre-assembler.o first-pass.o -o main
+make: Leaving directory '/home/yoni/Desktop/mm 14/project - v2/Assembler-Project'
+ 

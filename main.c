@@ -61,14 +61,14 @@ void assembler(char *file_name)
     }
     printf("Assembly Second Pass at work...");
     fflush(stdout);
-    if (!secondPass(expanded_file_handler)) /*Go to second-pass.c for more info*/
+    /*if (!secondPass(expanded_file_handler)) Go to second-pass.c for more info
     {
         fclose(expanded_file_handler);
         free(expanded_file_name);
         freeStr(symbol_table);
         free(symbol_table);
         return;
-    }
+    }*/
 
     /*Frees every allocated memory and close the file handler*/
     freeStr(symbol_table);
