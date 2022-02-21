@@ -25,7 +25,7 @@ const char *guiders_array[] = {".data", ".string", ".entry", ".extern"};
 int firstPass(FILE *expanded_file_handler)
 {
     /*Variables*/
-    unsigned int label_counter = 0, ok = 1, new_words = 0; /*error flag*/
+    unsigned int label_counter = 0, ok = 1; /*error flag*/
     size_t array_size = 1;
     char line[MAX_LINE] = "", word[MAX_LINE] = "";
     char label_name[MAX_LINE] = "";
@@ -99,13 +99,11 @@ int firstPass(FILE *expanded_file_handler)
             ok = command_code_pross(&prv_IC,line);
             
         }
+
+        if (!isEmptyLine(line))
             /*if line is not empty we need to count the words and add them to the words list*/
-            instruction_counter += new_words; /*TODO: this function should move the current address to the address of the command*/
-        else if (!isEmptyLine(line))
-        {
-            ok = 0;
-        }
-        if (instruction_counter > MAX_ADDRESS) /*checks if we didn't used too much memory*/
+            instruction_counter += countWords(line, word); /*TODO: this function should move the current address to the address of the command*/
+        if (instruction_counter > MAX_ADDRESS)             /*checks if we didn't used too much memory*/
         {
             fprintf(stderr, "FAILED!\nError: Out of memory\n");
             exit(EXIT_FAILURE);
@@ -118,6 +116,7 @@ int firstPass(FILE *expanded_file_handler)
    /* printLabels();*/
     
     print_listNode(head_IC);
+    free_list(head_IC);
     printf("\n");
     return ok;
 }

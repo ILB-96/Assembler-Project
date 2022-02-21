@@ -1,5 +1,20 @@
 #include "assembler.h"
 
+int_command_data_pross(plw *prv_DC,char *line)
+{
+
+}
+int isOnlyDigits(char *num)
+{
+    int i;
+    int result = 1;
+    for (i = 0; num[i] != '\0'; i++)
+    {
+        if(isdigit(num[i] != 1)) result = 0;
+    }
+    return result;
+}
+
 
 int command_code_pross(plw *prv_IC,char *line)/*TODO nead to get the number line for erorrs*/
 {
@@ -19,6 +34,7 @@ int command_code_pross(plw *prv_IC,char *line)/*TODO nead to get the number line
             ok = 1;
         }
     }
+            /*TODO - enum of operators*/
             switch (operator)
             {
             case 0:/*mov*/
@@ -76,6 +92,7 @@ int command_code_pross(plw *prv_IC,char *line)/*TODO nead to get the number line
                 break;
             }
     
+    free(s_line);
     return ok;
 }
 
