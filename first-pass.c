@@ -34,6 +34,9 @@ int firstPass(FILE *expanded_file_handler)
 
     plw head_IC; /*need to be free in the end...*/
     plw prv_IC;
+    plw head_DC;
+    plw prv_DC;
+    initialize_list(&head_DC, &prv_DC,0);
     initialize_list( &head_IC, &prv_IC,BASE_STOCK);
 
     /*TODO: use error flag to continue looking for errors in the program and stop the program after that*/
@@ -97,7 +100,15 @@ int firstPass(FILE *expanded_file_handler)
         if(iscode == 1 && (strcmp(word, ".data") != 0 && strcmp(word, ".string") != 0) && strcmp(word, ".entry") != 0 && strcmp(word, ".extern"))
         {
             ok = command_code_pross(&prv_IC,line);
+        }
+        else if(strcmp(word, ".data") == 0)
+        {
+            command_data_pross(&prv_DC,line);
+        }
+        else if(strcmp(word, ".string") == 0)
+        {
             
+            command_string_pross(&prv_DC,line);
         }
 
         if (!isEmptyLine(line))
@@ -113,9 +124,10 @@ int firstPass(FILE *expanded_file_handler)
     if (ok)
         printf("OK.\n");
 
-   /* printLabels();*/
+    puts("");    
+    /*printLabels();*/
     
-    print_listNode(head_IC);
+    print_listNode(head_DC);
     free_list(head_IC);
     printf("\n");
     return ok;

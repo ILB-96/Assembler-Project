@@ -1,16 +1,72 @@
 #include "assembler.h"
 
-int_command_data_pross(plw *prv_DC,char *line)
+
+int command_string_pross(plw *prv_DC,char *line)
 {
+    int ok = 1;
+    int i = 7,j = strlen(line)-1;
+    while(line[i] == ' ') i++;
+    while(line[j] == ' ' || line[j] == '\n' ) j--;
+
+    if(line[i] == '\"' && line[j] == '\"')
+    {
+        i++;
+        j--;
+        while (i <= j)
+        {
+            add_numTo_list(prv_DC,A,line[i++]);
+        }
+            add_numTo_list(prv_DC,A,'\0');
+        
+    }
+    else
+    {     
+        printf("\nilligal string\n");/*TODO add the line number*/
+        ok = 0;
+    }
+    return ok;
 
 }
+
+int command_data_pross(plw *prv_DC,char *line)
+{
+    int ok = 1;
+    int i = 0;
+    char command[MAX_LINE] = "";
+    strcat(command,line);
+    char **s_line = split_line(command);
+
+    
+    while(s_line[++i] != NULL && ok == 1)/*start the loop from i=1 because the the numbers in the data start from 1*/
+    {
+       /*in case it's number*/
+       if(isOnlyDigits(s_line[i])==1 && i%2 !=0)
+       {
+           add_numTo_list(prv_DC,A,atoi(s_line[i]));
+       }
+       else if( (i%2 == 0 && strcmp(s_line[i],",")!=0) || (i%2 != 0 && isOnlyDigits(s_line[i]) == 0) )
+       {
+           ok = 0;
+           printf("illigal operator \"%s\"",s_line[i]);
+       }
+    }
+    if(strcmp(s_line[i-1],",")==0)
+    { 
+        printf("illigal ending \",\"\n");
+        ok = 0;
+    }
+    return ok;
+}
+
+
 int isOnlyDigits(char *num)
 {
     int i;
     int result = 1;
     for (i = 0; num[i] != '\0'; i++)
     {
-        if(isdigit(num[i] != 1)) result = 0;
+        if(isdigit(num[i]) == 0) result = 0;
+        if(i == 0 && (num[i] == '+' || num[i] == '-') ) result = 1;
     }
     return result;
 }
@@ -104,7 +160,7 @@ int add_parameters(plw *prv,char **comm, opcode opcod, Funct funct,Valid_operato
     registers source_r = 0, target_r = 0;
     sortType source_sort = 0, target_sort = 0;
     ARE are = 0;
-    int ok = 0;
+    int ok = 1;
 
     /*1) get the size of element*/
     int i = 0, size = 0;
@@ -119,20 +175,20 @@ int add_parameters(plw *prv,char **comm, opcode opcod, Funct funct,Valid_operato
     
     if(size == 3 && *comm[1] == ',')/*case two operators*/
     {
-        ok = setSort_and_register(comm[0],&source_r,&source_sort,&are);
-        ok = setSort_and_register(comm[2],&target_r,&target_sort,&are);
+        ok &= setSort_and_register(comm[0],&source_r,&source_sort,&are);
+        ok &= setSort_and_register(comm[2],&target_r,&target_sort,&are);
 
         addStd_word(prv,are,funct,source_r,source_sort,target_r,target_sort);
-        ok = add_word_by_source(prv, comm[0], source_sort, op);
-        ok = add_word_by_target(prv, comm[2], target_sort, op);
+        ok &= add_word_by_source(prv, comm[0], source_sort, op);
+        ok &= add_word_by_target(prv, comm[2], target_sort, op);
 
     }
     else if(size == 1)/*case one operator*/
     {
-        ok = setSort_and_register(comm[0],&target_r,&target_sort,&are);
+        ok &= setSort_and_register(comm[0],&target_r,&target_sort,&are);
         
-        ok = addStd_word(prv,are,funct,source_r,source_sort,target_r,target_sort);
-        ok = add_word_by_target(prv, comm[0], target_sort, op);
+        ok &= addStd_word(prv,are,funct,source_r,source_sort,target_r,target_sort);
+        ok &= add_word_by_target(prv, comm[0], target_sort, op);
     }
     else if(size != 0)
     {

@@ -60,7 +60,7 @@ typedef struct link_words
 } wordsNode;
 
 #define IS_NULL(x)                \
-    if (h == NULL)                \
+    if (x == NULL)                \
     {                             \
         puts("index not exsist"); \
         exit(0);                  \
@@ -146,6 +146,10 @@ void add_numTo_list(plw *,ARE, int);
 
 #define SUM_OPERATIONS 16
 
+
+int isOnlyDigits(char *);
+int command_string_pross(plw*,char *);
+int command_data_pross(plw*,char *);
 int command_code_pross(plw*,char *);
 char ** split_line(char *);
 int add_parameters(plw*,char **, opcode, Funct,Valid_operator);
