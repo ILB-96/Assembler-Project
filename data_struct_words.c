@@ -98,6 +98,15 @@ void print_word(int word)
         mask >>= 1;
     }
 }
+void update_address(plw head, int n)
+{
+    while(head != NULL)
+    {
+        head->stock_index = n+1;
+        n++;
+        head = head->next;
+    }
+} 
 void free_list(plw h)
 {
     plw p = h->next;

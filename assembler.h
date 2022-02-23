@@ -140,6 +140,7 @@ void print_word(int word);
 void free_list(plw);
 int addBase_word(plw*, ARE, opcode);
 void add_numTo_list(plw *,ARE, int);
+void update_address(plw, int);
 
 
 /*command_process*/

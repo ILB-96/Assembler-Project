@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Feb 22 16:45:05 2022
+# Make data base, printed on Wed Feb 23 09:16:05 2022
 
 # Variables
 
@@ -49,7 +49,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:32498
+JOURNAL_STREAM = 8:32366
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'makefile', line 1)
@@ -67,7 +67,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 1104
+MANAGERPID = 1108
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -79,7 +79,7 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1397,unix/yoni-VirtualBox:/tmp/.ICE-unix/1397
+SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1401,unix/yoni-VirtualBox:/tmp/.ICE-unix/1401
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -89,7 +89,7 @@ VSCODE_LOG_STACK = false
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&iid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&sid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea","uploadToServer":true}
 # environment
-INVOCATION_ID = 2bca4437d8914297a377bc4d9c07d598
+INVOCATION_ID = c1d674f79b834facb739592303fd7f45
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -99,7 +99,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 2893
+GIO_LAUNCHED_DESKTOP_FILE_PID = 3085
 # automatic
 %F = $(notdir $%)
 # environment
@@ -111,7 +111,7 @@ PWD = /home/yoni/Desktop/mm 14/project - v2/Assembler-Project
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1333
+SSH_AGENT_PID = 1335
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -147,7 +147,7 @@ SHLVL = 0
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-d7492266-a3d8-4e90-8cdf-7a408100fc9c.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5a107fb6-99a1-4ef0-80ed-a22614a64c12.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -211,7 +211,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 2893
+VSCODE_PID = 3085
 # variable set hash-table stats:
 # Load=100/1024=10%, Rehash=0, Collisions=14/125=11%
 
@@ -357,6 +357,6 @@ pre-assembler.c:
 # strcache performance: lookups = 76 / hit rate = 46%
 # hash-table stats:
 # Load=41/8192=1%, Rehash=0, Collisions=1/76=1%
-# Finished Make data base on Tue Feb 22 16:45:05 2022
+# Finished Make data base on Wed Feb 23 09:16:05 2022
 
  

@@ -16,8 +16,7 @@ int command_string_pross(plw *prv_DC,char *line)
         {
             add_numTo_list(prv_DC,A,line[i++]);
         }
-            add_numTo_list(prv_DC,A,'\0');
-        
+            add_numTo_list(prv_DC,A,'\0');    
     }
     else
     {     
