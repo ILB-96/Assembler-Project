@@ -125,13 +125,14 @@ int firstPass(FILE *expanded_file_handler)
         printf("OK.\n");
 
     puts("");    
-   /* printLabels();*/
+    printLabels();
    
     update_address(head_DC,prv_IC->stock_index);
+    print_listNode(head_IC);
     print_listNode(head_DC);
     
     
-    
+    free_list(head_DC);
     free_list(head_IC);
     printf("\n");
     return ok;
