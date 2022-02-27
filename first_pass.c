@@ -8,6 +8,7 @@ void get_next_token(char *, char *, unsigned int);
 int base_address(int);
 void label_init(unsigned int count);
 void label_add(unsigned int, char *, unsigned int, char *, size_t);
+void update_data_labels_address(int);
 void print_labels();
 int is_defined_external(char *);
 
@@ -20,23 +21,15 @@ struct TypeLabel
     int offset;
     char *attribute;
 };
-TypeLabel *symbol_table;
-
+TypeLabel *symbols_table;
+unsigned int g_error;
 /*Instruction and data counter are global variable to use in the Second Pass*/
-unsigned int g_error = FALSE;
 
 /*TODO: maybe we need to add more checks to see variables are
 not names after saved words?*/
 
 /*Those arrays are saved words, better to have them globally,
 so we can always check if a variable is trying to use those name*/
-const char *registers_array[] = {"r0", "r1", "r2", "r3", "r4", "r5",
-                                 "r6", "r7", "r8", "r9", "r10", "r11",
-                                 "r12", "r13", "r14", "r15"};
-const char *operations_array[] = {"mov", "cmp", "add", "sub", "lea", "clr",
-                                  "not", "inc", "dec", "jmp", "bne", "jsr",
-                                  "red", "prn", "rts", "stop"};
-const char *guiders_array[] = {".data", ".string", ".entry", ".extern"};
 
 int first_pass(FILE *expanded_file_handler)
 {
@@ -48,6 +41,7 @@ int first_pass(FILE *expanded_file_handler)
     char line[MAX_LINE];
     char word[MAX_LINE];
     char label_name[MAX_LINE];
+
     plw head_IC; /*need to be free in the end...*/
     plw prv_IC;
     plw head_DC;
@@ -122,13 +116,16 @@ int first_pass(FILE *expanded_file_handler)
             if (!strcmp(word, ".data") || !strcmp(word, ".string"))
             {
                 is_code = FALSE;
-                label_add(label_counter++, label_name, get_current_address(prv_DC), "data", ++array_size);
+                if (get_current_address(prv_DC) != 0)
+                    label_add(label_counter++, label_name, get_current_address(prv_DC) + 1, "data", ++array_size);
+                else
+                    label_add(label_counter++, label_name, get_current_address(prv_DC), "data", ++array_size);
             }
             else if (!strcmp(word, ".entry") || !strcmp(word, ".extern"))
                 fprintf(stderr, "Warning at line %d: undefined attribute to label.\n",
                         line_number);
             else if (is_operation_name(word))
-                if (prv_IC->stock_index != BASE_STOCK)
+                if (get_current_address(prv_IC) != BASE_STOCK)
                     label_add(label_counter++, label_name, get_current_address(prv_IC) + 1, "code", ++array_size);
                 else
                     label_add(label_counter++, label_name, get_current_address(prv_IC), "code", ++array_size);
@@ -141,7 +138,7 @@ int first_pass(FILE *expanded_file_handler)
 
         /*in this point the line contain only code*/
         if (!is_empty_line(line) && is_code == TRUE && (strcmp(word, ".data") != 0 && strcmp(word, ".string") != 0) && strcmp(word, ".entry") != 0 && strcmp(word, ".extern"))
-            g_error = command_code_process(&prv_IC, line);
+            command_code_process(&prv_IC, line);
         else if (!is_empty_line(line) && strcmp(word, ".data") == 0)
             command_data_process(&prv_DC, line);
         else if (!is_empty_line(line) && strcmp(word, ".string") == 0)
@@ -154,22 +151,13 @@ int first_pass(FILE *expanded_file_handler)
         }
         line_number++;
     }
-    puts("");
-    /* printLabels();*/
-    printf("before:\n");
-    print_listNode(head_IC);
-    puts("");
-    print_listNode(head_DC);
 
+    update_data_labels_address(prv_IC->stock_index);
     update_address(head_DC, prv_IC->stock_index);
-    printf("\nafter:\n");
-    print_listNode(head_IC);
-    print_listNode(head_DC);
-    /* TODO: add address to .data labels*/
+
     /* TODO: unit test functions for command_data/code/string functions*/
     /* TODO: update global variables into first_pass scope*/
-    free_list(head_IC);
-    print_labels();
+
     return g_error;
 }
 
@@ -182,10 +170,10 @@ int first_pass(FILE *expanded_file_handler)
 int is_defined_external(char *word)
 {
     unsigned int i = 0;
-    while (strcmp(symbol_table[i].name, ""))
+    while (strcmp(symbols_table[i].name, ""))
     {
-        if (!strcmp(symbol_table[i].name, word) &&
-            !strcmp(symbol_table[i].attribute, "external"))
+        if (!strcmp(symbols_table[i].name, word) &&
+            !strcmp(symbols_table[i].attribute, "external"))
             return 1;
     }
     return 0;
@@ -196,63 +184,84 @@ int is_defined_external(char *word)
 void label_init(unsigned int count)
 {
     if (count == 0)
-        if ((symbol_table = calloc(1, sizeof(TypeLabel))) == NULL)
+        if ((symbols_table = calloc(1, sizeof(TypeLabel))) == NULL)
         {
             fprintf(stderr, "FAILED!\nError: Out of memory\n");
             exit(EXIT_FAILURE);
         }
 
-    if ((symbol_table[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
+    if ((symbols_table[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
     {
         fprintf(stderr, "FAILED!\nError: Out of memory\n");
         exit(EXIT_FAILURE);
     }
-    if ((symbol_table[count].attribute = (char *)malloc(MAX_LABEL_LENGTH)) ==
+    if ((symbols_table[count].attribute = (char *)malloc(MAX_LABEL_LENGTH)) ==
         NULL)
     {
         fprintf(stderr, "FAILED!\nError: Out of memory\n");
         exit(EXIT_FAILURE);
     }
-    strcpy(symbol_table[count].name, "");
-    strcpy(symbol_table[count].attribute, "");
-    symbol_table[count].address = 0;
-    symbol_table[count].base_address = 0;
-    symbol_table[count].offset = 0;
+    strcpy(symbols_table[count].name, "");
+    strcpy(symbols_table[count].attribute, "");
+    symbols_table[count].address = 0;
+    symbols_table[count].base_address = 0;
+    symbols_table[count].offset = 0;
 }
 
 /*Function to add new symbol and initialize a new symbol in the next address*/
 void label_add(unsigned int count, char *word, unsigned int address,
                char *attribute, size_t array_size)
 {
-    strcpy(symbol_table[count].name, word);
-    strcpy(symbol_table[count].attribute, attribute);
-    symbol_table[count].address = address;
-    symbol_table[count].base_address = base_address(address);
-    symbol_table[count].offset = (address % BASE_MODE);
+    strcpy(symbols_table[count].name, word);
+    strcpy(symbols_table[count].attribute, attribute);
+    symbols_table[count].address = address;
+    symbols_table[count].base_address = base_address(address);
+    symbols_table[count].offset = (address % BASE_MODE);
 
-    if ((symbol_table = realloc(symbol_table, array_size * sizeof(TypeLabel))) == NULL)
+    if ((symbols_table = realloc(symbols_table, array_size * sizeof(TypeLabel))) == NULL)
     {
         fprintf(stderr, "FAILED!\nError: Out of memory\n");
         exit(EXIT_FAILURE);
     }
     label_init(++count);
 }
+void update_data_labels_address(int last_address)
+{
+    unsigned int i = 0;
+    while (strcmp(symbols_table[i].name, ""))
+    {
+        if (!strcmp(symbols_table[i].attribute, "data"))
+        {
+            symbols_table[i].address += (last_address + 1);
+            symbols_table[i].base_address = base_address(symbols_table[i].address);
+            symbols_table[i].offset = (symbols_table[i].address % BASE_MODE);
+        }
+        i++;
+    }
+}
+
 /*This function frees all the strings inside the symbol array*/
 void free_symbols_str()
 {
     unsigned int i = 0;
-    while (strcmp(symbol_table[i].name, ""))
+    while (strcmp(symbols_table[i].name, ""))
     {
-        free(symbol_table[i].name);
-        free(symbol_table[i++].attribute);
+        free(symbols_table[i].name);
+        free(symbols_table[i++].attribute);
     }
-    free(symbol_table[i].name);
-    free(symbol_table[i].attribute);
+    free(symbols_table[i].name);
+    free(symbols_table[i].attribute);
 }
 
 /*Function that checks if a given name of label is a valid name*/
 int is_valid_label_name(char *word)
 {
+    const char *registers_array[] = {"r0", "r1", "r2", "r3", "r4", "r5",
+                                     "r6", "r7", "r8", "r9", "r10", "r11",
+                                     "r12", "r13", "r14", "r15"};
+    const char *operations_array[] = {"mov", "cmp", "add", "sub", "lea", "clr",
+                                      "not", "inc", "dec", "jmp", "bne", "jsr",
+                                      "red", "prn", "rts", "stop"};
     unsigned int i;
     unsigned int arrays_length = 16;
 
@@ -273,8 +282,8 @@ int is_valid_label_name(char *word)
 int is_label_exists(char *word)
 {
     unsigned int i;
-    for (i = 0; strcmp(symbol_table[i].name, ""); i++)
-        if (!strcmp(symbol_table[i].name, word))
+    for (i = 0; strcmp(symbols_table[i].name, ""); i++)
+        if (!strcmp(symbols_table[i].name, word))
             return 1;
 
     return 0;
@@ -288,11 +297,11 @@ void print_labels()
     printf(
         "--------|---------------|---------------|---------------|-------------"
         "------\n");
-    for (i = 0; strcmp(symbol_table[i].name, ""); i++)
+    for (i = 0; strcmp(symbols_table[i].name, ""); i++)
     {
-        printf("%s\t|\t%d\t|\t%d\t|\t%d\t|\t%s\n", symbol_table[i].name,
-               symbol_table[i].address, symbol_table[i].base_address,
-               symbol_table[i].offset, symbol_table[i].attribute);
+        printf("%s\t|\t%d\t|\t%d\t|\t%d\t|\t%s\n", symbols_table[i].name,
+               symbols_table[i].address, symbols_table[i].base_address,
+               symbols_table[i].offset, symbols_table[i].attribute);
     }
 }
 
@@ -317,6 +326,9 @@ int get_binary_words(char *line, char *word) { return 1; }
 /*Function that checks if a given word is an operation*/
 int is_operation_name(char *word)
 {
+    const char *operations_array[] = {"mov", "cmp", "add", "sub", "lea", "clr",
+                                      "not", "inc", "dec", "jmp", "bne", "jsr",
+                                      "red", "prn", "rts", "stop"};
     unsigned int i = 0, found = 0;
     unsigned int arrays_length = 16;
 

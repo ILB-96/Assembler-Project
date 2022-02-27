@@ -2,6 +2,7 @@
 
 int command_string_process(plw *prv_DC, char *line)
 {
+    unsigned int error = FALSE;
     int i = 7, j = strlen(line) - 1;
     while (line[i] == ' ')
         i++;
@@ -21,15 +22,17 @@ int command_string_process(plw *prv_DC, char *line)
     else if (!is_empty_line(line))
     {
         printf("illegal string\n"); /*TODO add the line number*/
-        g_error = TRUE;
+        error = TRUE;
     }
+    if (error)
+        g_error;
     return g_error;
 }
 
 int command_data_process(plw *prv_DC, char *line)
 {
     int i = 0;
-    unsigned error = 0;
+    unsigned error = FALSE;
     char command[MAX_LINE] = "";
     strcat(command, line);
     char **s_line = split_line(command);
@@ -52,8 +55,9 @@ int command_data_process(plw *prv_DC, char *line)
         printf("illegal ending \",\"\n");
         error = TRUE;
     }
-    g_error = error;
-    return g_error;
+    if (error)
+        g_error = error;
+    return error;
 }
 
 int isOnlyDigits(char *num)
@@ -70,12 +74,12 @@ int isOnlyDigits(char *num)
     return result;
 }
 
-int command_code_process(plw *prv_IC, char *line) /*TODO need to get the number line for errors*/
+int command_code_process(plw *prv_IC, char *line) /*TODO need to get the number line for g_errors*/
 {
 
     char *operators_array[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr", "red", "prn", "rts", "stop"};
     int i;
-    int ok = 0;
+    unsigned int error = FALSE;
     int operator= - 1;
     char command[MAX_LINE] = "";
     strcat(command, line);
@@ -85,77 +89,78 @@ int command_code_process(plw *prv_IC, char *line) /*TODO need to get the number 
         if (strcmp(s_line[0], operators_array[i]) == 0)
         {
             operator= i;
-            ok = 1;
+            error = TRUE;
         }
     }
     /*TODO - enum of operators*/
     switch (operator)
     {
     case 0: /*mov*/
-        ok = add_parameters(prv_IC, s_line + 1, o_mov, f_mov, two_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_mov, f_mov, two_op);
         break;
 
     case 1: /*cmp*/
-        ok = add_parameters(prv_IC, s_line + 1, o_cmp, f_cmp, full_two_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_cmp, f_cmp, full_two_op);
         break;
     case 2: /*add*/
-        ok = add_parameters(prv_IC, s_line + 1, o_add, f_add, two_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_add, f_add, two_op);
         break;
     case 3: /*sub*/
-        ok = add_parameters(prv_IC, s_line + 1, o_sub, f_sub, two_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_sub, f_sub, two_op);
         break;
     case 4: /*lea*/
-        ok = add_parameters(prv_IC, s_line + 1, o_lea, f_lea, min_two_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_lea, f_lea, min_two_op);
         break;
     case 5: /*clr*/
-        ok = add_parameters(prv_IC, s_line + 1, o_clr, f_clr, target_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_clr, f_clr, target_op);
         break;
     case 6: /*not*/
-        ok = add_parameters(prv_IC, s_line + 1, o_not, f_not, target_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_not, f_not, target_op);
         break;
     case 7: /*inc*/
-        ok = add_parameters(prv_IC, s_line + 1, o_inc, f_inc, target_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_inc, f_inc, target_op);
         break;
     case 8: /*dec*/
-        ok = add_parameters(prv_IC, s_line + 1, o_dec, f_dec, target_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_dec, f_dec, target_op);
         break;
     case 9: /*jmp*/
-        ok = add_parameters(prv_IC, s_line + 1, o_jmp, f_jmp, min_target_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_jmp, f_jmp, min_target_op);
         break;
     case 10: /*bne*/
-        ok = add_parameters(prv_IC, s_line + 1, o_bne, f_bne, min_target_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_bne, f_bne, min_target_op);
         break;
     case 11: /*jsr*/
-        ok = add_parameters(prv_IC, s_line + 1, o_jsr, f_jsr, min_target_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_jsr, f_jsr, min_target_op);
         break;
     case 12: /*red*/
-        ok = add_parameters(prv_IC, s_line + 1, o_red, f_red, target_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_red, f_red, target_op);
         break;
     case 13: /*prn*/
-        ok = add_parameters(prv_IC, s_line + 1, o_prn, f_prn, full_target_op);
+        error = !add_parameters(prv_IC, s_line + 1, o_prn, f_prn, full_target_op);
         break;
     case 14: /*rts*/
-        ok = add_parameters(prv_IC, s_line + 1, rts, 0, no_op);
+        error = !add_parameters(prv_IC, s_line + 1, rts, 0, no_op);
         break;
     case 15: /*stop*/
-        ok = add_parameters(prv_IC, s_line + 1, stop, 0, no_op);
+        error = !add_parameters(prv_IC, s_line + 1, stop, 0, no_op);
         break;
     default:
-        ok = 0;
+        error = FALSE;
         printf("illegal command in \"%s\"-", *s_line);
         break;
     }
-
+    if (error)
+        g_error = error;
     free(s_line);
-    return ok;
+    return g_error;
 }
 
 int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_operator op)
 {
+    unsigned int error = FALSE;
     registers source_r = 0, target_r = 0;
     sortType source_sort = 0, target_sort = 0;
     ARE are = 0;
-    int ok = 1;
 
     /*1) get the size of element*/
     int i = 0, size = 0;
@@ -171,31 +176,31 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
 
     if (size == 3 && *comm[1] == ',') /*case two operators*/
     {
-        g_error &= !setSort_and_register(comm[0], &source_r, &source_sort, &are);
-        g_error &= !setSort_and_register(comm[2], &target_r, &target_sort, &are);
+        error &= !setSort_and_register(comm[0], &source_r, &source_sort, &are);
+        error &= !setSort_and_register(comm[2], &target_r, &target_sort, &are);
 
         add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
-        g_error &= !add_word_by_source(prv, comm[0], source_sort, op);
-        g_error &= !add_word_by_target(prv, comm[2], target_sort, op);
+        error &= !add_word_by_source(prv, comm[0], source_sort, op);
+        error &= !add_word_by_target(prv, comm[2], target_sort, op);
     }
     else if (size == 1) /*case one operator*/
     {
-        g_error &= !setSort_and_register(comm[0], &target_r, &target_sort, &are);
-
-        g_error &= !add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
-        g_error &= !add_word_by_target(prv, comm[0], target_sort, op);
+        error &= !setSort_and_register(comm[0], &target_r, &target_sort, &are);
+        error &= !add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
+        error &= !add_word_by_target(prv, comm[0], target_sort, op);
     }
     else if (size != 0)
     {
-
         printf("\n-illegal command \"%s\"-", *comm); /*TODO need to print the number line*/
-        g_error = TRUE;
+        error = TRUE;
     }
-
-    return g_error;
+    if (error)
+        g_error = error;
+    return error;
 }
 int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operator op)
 {
+    unsigned int error;
     switch (source_sort)
     {
     case immediate:
@@ -205,7 +210,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         }
         else
         {
-            g_error = TRUE;
+            error = TRUE;
             printf("\n-illegal operetion-\"%s\"-", comm); /*TODO need to print the number line*/
         }
         break;
@@ -216,17 +221,21 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
     case register_direct:
         if (op == min_two_op && source_sort == register_direct) /*why the 'case' don't do it's work???*/
         {
-            g_error = TRUE;
+            error = TRUE;
             printf("\n-illegal operetion-\"%s\"-", comm); /*TODO need to print the number line*/
         }
         break;
     }
-    return g_error;
+    if (error)
+    {
+        g_error = error;
+    }
+    return error;
 }
 
 int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operator op)
 {
-
+    unsigned int error = FALSE;
     switch (target_sort)
     {
     case immediate:
@@ -236,7 +245,7 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
         }
         else
         {
-            g_error = TRUE;
+            error = TRUE;
             printf("\n-illegal operetion-\"%s\"-", comm); /*TODO need to print the number line*/
         }
         break;
@@ -246,7 +255,9 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
         add_to_list(prv, 0);
         break;
     }
-    return g_error;
+    if (error)
+        g_error = error;
+    return error;
 }
 
 int setSort_and_register(char *operator, registers * r, sortType *sort, ARE *are)

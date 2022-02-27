@@ -6,17 +6,25 @@
     "string.h": "c",
     "assembler.h": "c",
     "stdlib.h": "c",
-    "*.tcc": "c"
+    "*.tcc": "c",
+    "system_error": "c",
+    "fstream": "c",
+    "iostream": "c",
+    "istream": "c",
+    "limits": "c",
+    "new": "c",
+    "ostream": "c",
+    "stdexcept": "c",
+    "streambuf": "c",
+    "functional": "c"
   },
   "cmake.configureOnOpen": false,
   "files.exclude": {
-    ".trunk": true,
     "**.o": true,
     "main.o": true,
     "README.md": true,
     ".vscode/*README": true,
     ".vscode/*README.*": true,
-    "acutest.h": true,
     "backup.c": true
   },
   "cSpell.words": ["endm", "fword"]

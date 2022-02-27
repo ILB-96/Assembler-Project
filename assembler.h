@@ -16,7 +16,7 @@
 
 typedef struct TypeLabel TypeLabel;
 extern unsigned int g_error;
-extern TypeLabel *symbol_table;
+extern TypeLabel *symbols_table;
 
 /*Functions from pre-assembler.c*/
 int pre_assembler(char *, char *);
