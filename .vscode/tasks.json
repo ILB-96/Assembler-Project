@@ -29,7 +29,7 @@
       "args": [
         "-fdiagnostics-color=always",
         "-g",
-        "pre-assembler.o assembler.c",
+        "pre-assembler.o main.c first_pass.c command_process.c",
         "-o",
         "${fileDirname}/${fileBasenameNoExtension} -lm"
       ],

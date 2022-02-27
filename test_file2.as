@@ -1,6 +1,6 @@
 ; file ps.as
 .entry LIST
-.extern W wqwq
+.extern W
 
 MAIN: add r3, LIST
 LOOP: prn #48
@@ -16,9 +16,7 @@ endm
  m1
  sub r1, r4
  bne END
- 3 val1, #-6
- hello val1, #-6
- val1, #-6
+ cmp val1, #-6
  bne END[r15]
  dec K
 m2
@@ -27,7 +25,7 @@ m1
 .entry MAIN
  sub LOOP[r10] ,r14
 END: stop
-STR: .string “abcd”
+STR: .string "abcd"
 LIST: .data 6, -9
  .data -100
 .entry K

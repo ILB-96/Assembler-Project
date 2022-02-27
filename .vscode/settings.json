@@ -5,7 +5,8 @@
     "random": "c",
     "string.h": "c",
     "assembler.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "*.tcc": "c"
   },
   "cmake.configureOnOpen": false,
   "files.exclude": {
