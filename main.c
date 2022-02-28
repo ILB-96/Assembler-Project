@@ -57,16 +57,27 @@ void assembler(char *file_name)
         free(symbols_table);
         return;
     }
+<<<<<<< HEAD
     printf("Assembly Second Pass at work...\n");
     if (!second_pass(expanded_file_handler))
     { /*Go to second-pass.c for more info*/
+=======
+    printf("Assembly Second Pass at work...");
+    fflush(stdout);
+    /*if (!secondPass(expanded_file_handler)) Go to second-pass.c for more info
+    {
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
         fclose(expanded_file_handler);
         free(expanded_file_name);
         free_symbols_str(symbols_table);
         free(symbols_table);
         return;
+<<<<<<< HEAD
     }
     printf("===Assembly process for %s.as finished===\n\n", file_name);
+=======
+    }*/
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
 
     /*Frees every allocated memory and close the file handler*/
     free_symbols_str();

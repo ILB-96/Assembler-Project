@@ -8,7 +8,11 @@
       "args": [
         "-fdiagnostics-color=always",
         "-g",
+<<<<<<< HEAD
         "*.c",
+=======
+        ".c",
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
         "-o",
         "${fileDirname}/${fileBasenameNoExtension} -lm"
       ],
