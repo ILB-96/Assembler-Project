@@ -161,13 +161,13 @@ void update_address(plw, int);
 
 #define SUM_OPERATIONS 16
 
-int isOnlyDigits(char *);
+int is_only_digits(char *);
 int command_string_process(plw *, char *);
 int command_data_process(plw *, char *);
 int command_code_process(plw *, char *);
 char **split_line(char *);
 int add_parameters(plw *, char **, opcode, Funct, Valid_operator);
-int setSort_and_register(char *, registers *, sortType *, ARE *);
+int set_sort_and_register(char *, registers *, sortType *, ARE *);
 int add_word_by_target(plw *, char *, sortType, Valid_operator);
 int add_word_by_source(plw *, char *, sortType, Valid_operator);
 int get_current_address(plw);

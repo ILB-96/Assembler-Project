@@ -2,13 +2,15 @@
 #include "assembler.h"
 int is_valid_label_name(char *word);
 
-void test_next_word_index(void) {
+void test_next_word_index(void)
+{
     unsigned int actual = 0;
     TEST_CHECK_((actual = get_next_token_index("Hello World", 0)) == 6, "Second word index of 'Hello World', Expected: %d Actual: %d", 6, actual);
     TEST_CHECK_((actual = get_next_token_index("", 0)) == 0, "Second word index of '', Expected: %d, Actual: %d", 0, actual);
 }
 
-void test_is_valid_label_name(void) {
+void test_is_valid_label_name(void)
+{
     unsigned int expected = 0;
     unsigned int actual = 0;
     TEST_CHECK_((actual = is_valid_label_name("HelloWorld")) == (expected = 1), "label name 'HelloWorld' Expected: %d Actual: %d", expected, actual);
@@ -19,22 +21,54 @@ void test_is_valid_label_name(void) {
     TEST_CHECK_((actual = is_valid_label_name("1Qls")) == (expected = 0), "label name '1Qls' Expected: %d Actual: %d", expected, actual);
     TEST_CHECK_((actual = is_valid_label_name("#Ql1s")) == (expected = 0), "label name '#Ql1s' Expected: %d Actual: %d", expected, actual);
 }
-
-void test_count_words(void) {
+/*
+void test_count_words(void)
+{
     unsigned int expected = 0;
     unsigned int actual = 0;
     char *line;
     char *word;
     line = ".string \"asdf\"";
     firstWord(line, word);
-    TEST_CHECK_((actual = count_binarywords(line, "data")) == (expected = 5), "Number of Words In '%s' Expected: %d Actual: %d", line, expected, actual);
+    TEST_CHECK_((actual = count_binarywords(line, "data")) == (expected = 5), "'%s' Expected: %d Actual: %d", line, expected, actual);
     line = "add#1,r1";
     firstWord(line, word);
     TEST_CHECK_((actual = count_binary_words(line, "code")) == (expected = 4), "Number of Words '%s' Expected: %d Actual: %d", line, expected, actual);
     line = ".data 6,-11";
     firstWord(line, word);
     TEST_CHECK_((actual = countBinaryWords(line, "data")) == (expected = 4), "Number of Words '%s' Expected: %d Actual: %d", line, expected, actual);
+}*/
+void test_command_code_process(void)
+{
+    unsigned int expected = 0;
+    unsigned int actual = 0;
+    char *line;
+
+    plw head_IC;
+    plw prv_IC;
+    plw head_DC;
+    plw prv_DC;
+    initialize_list(&head_DC, &prv_DC, 0);
+    initialize_list(&head_IC, &prv_IC, BASE_STOCK);
+    line = "add r3, LIST";
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 0), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    line = "prn #48";
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 0), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    line = "inc r6";
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 0), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    line = "add mov, LIST"; /*double command*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    line = "prn #!48"; /*illegal number format*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    line = "prn !#48"; /*illegal number format*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    line = "add r3 LIST"; /*no comma*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    line = "add r14 ,,LIST"; /*double comma*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    line = "add ,r17 ,LIST"; /*illegal comma location*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
 }
 
 TEST_LIST = {
-    {"int get_next_token_index(char *line, int index);", test_next_word_index}, {"int is_valid_label_name(char *word)", test_is_valid_label_name}, {"int countBinaryWords(char *line, char *word);", test_count_words}, {0}};
+    {"int get_next_token_index(char *line, int index);", test_next_word_index}, {"int is_valid_label_name(char *word)", test_is_valid_label_name}, {"int command_code_process(plw *prv_IC, char *line)", test_command_code_process}, {0}};

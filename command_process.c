@@ -40,11 +40,11 @@ int command_data_process(plw *prv_DC, char *line)
     while (s_line[++i] != NULL && !error) /*start the loop from i=1 because the the numbers in the data start from 1*/
     {
         /*in case it's number*/
-        if (isOnlyDigits(s_line[i]) == 1 && i % 2 != 0)
+        if (is_only_digits(s_line[i]) == 1 && i % 2 != 0)
         {
             add_num_to_list(prv_DC, A, atoi(s_line[i]));
         }
-        else if ((i % 2 == 0 && strcmp(s_line[i], ",") != 0) || (i % 2 != 0 && isOnlyDigits(s_line[i]) == 0))
+        else if ((i % 2 == 0 && strcmp(s_line[i], ",") != 0) || (i % 2 != 0 && is_only_digits(s_line[i]) == 0))
         {
             error = TRUE;
             printf("illegal operator \"%s\"", s_line[i]);
@@ -60,7 +60,7 @@ int command_data_process(plw *prv_DC, char *line)
     return error;
 }
 
-int isOnlyDigits(char *num)
+int is_only_digits(char *num)
 {
     int i;
     int result = 1;
@@ -96,53 +96,53 @@ int command_code_process(plw *prv_IC, char *line) /*TODO need to get the number 
     switch (operator)
     {
     case 0: /*mov*/
-        error = !add_parameters(prv_IC, s_line + 1, o_mov, f_mov, two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_mov, f_mov, two_op);
         break;
 
     case 1: /*cmp*/
-        error = !add_parameters(prv_IC, s_line + 1, o_cmp, f_cmp, full_two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_cmp, f_cmp, full_two_op);
         break;
     case 2: /*add*/
-        error = !add_parameters(prv_IC, s_line + 1, o_add, f_add, two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_add, f_add, two_op);
         break;
     case 3: /*sub*/
-        error = !add_parameters(prv_IC, s_line + 1, o_sub, f_sub, two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_sub, f_sub, two_op);
         break;
     case 4: /*lea*/
-        error = !add_parameters(prv_IC, s_line + 1, o_lea, f_lea, min_two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_lea, f_lea, min_two_op);
         break;
     case 5: /*clr*/
-        error = !add_parameters(prv_IC, s_line + 1, o_clr, f_clr, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_clr, f_clr, target_op);
         break;
     case 6: /*not*/
-        error = !add_parameters(prv_IC, s_line + 1, o_not, f_not, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_not, f_not, target_op);
         break;
     case 7: /*inc*/
-        error = !add_parameters(prv_IC, s_line + 1, o_inc, f_inc, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_inc, f_inc, target_op);
         break;
     case 8: /*dec*/
-        error = !add_parameters(prv_IC, s_line + 1, o_dec, f_dec, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_dec, f_dec, target_op);
         break;
     case 9: /*jmp*/
-        error = !add_parameters(prv_IC, s_line + 1, o_jmp, f_jmp, min_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_jmp, f_jmp, min_target_op);
         break;
     case 10: /*bne*/
-        error = !add_parameters(prv_IC, s_line + 1, o_bne, f_bne, min_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_bne, f_bne, min_target_op);
         break;
     case 11: /*jsr*/
-        error = !add_parameters(prv_IC, s_line + 1, o_jsr, f_jsr, min_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_jsr, f_jsr, min_target_op);
         break;
     case 12: /*red*/
-        error = !add_parameters(prv_IC, s_line + 1, o_red, f_red, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_red, f_red, target_op);
         break;
     case 13: /*prn*/
-        error = !add_parameters(prv_IC, s_line + 1, o_prn, f_prn, full_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_prn, f_prn, full_target_op);
         break;
     case 14: /*rts*/
-        error = !add_parameters(prv_IC, s_line + 1, rts, 0, no_op);
+        error = add_parameters(prv_IC, s_line + 1, rts, 0, no_op);
         break;
     case 15: /*stop*/
-        error = !add_parameters(prv_IC, s_line + 1, stop, 0, no_op);
+        error = add_parameters(prv_IC, s_line + 1, stop, 0, no_op);
         break;
     default:
         error = FALSE;
@@ -176,8 +176,8 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
 
     if (size == 3 && *comm[1] == ',') /*case two operators*/
     {
-        error &= !setSort_and_register(comm[0], &source_r, &source_sort, &are);
-        error &= !setSort_and_register(comm[2], &target_r, &target_sort, &are);
+        error &= !set_sort_and_register(comm[0], &source_r, &source_sort, &are);
+        error &= !set_sort_and_register(comm[2], &target_r, &target_sort, &are);
 
         add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
         error &= !add_word_by_source(prv, comm[0], source_sort, op);
@@ -185,7 +185,7 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
     }
     else if (size == 1) /*case one operator*/
     {
-        error &= !setSort_and_register(comm[0], &target_r, &target_sort, &are);
+        error &= !set_sort_and_register(comm[0], &target_r, &target_sort, &are);
         error &= !add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
         error &= !add_word_by_target(prv, comm[0], target_sort, op);
     }
@@ -200,7 +200,7 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
 }
 int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operator op)
 {
-    unsigned int error;
+    unsigned int error = FALSE;
     switch (source_sort)
     {
     case immediate:
@@ -260,7 +260,7 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
     return error;
 }
 
-int setSort_and_register(char *operator, registers * r, sortType *sort, ARE *are)
+int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *are)
 {
     int result = 1;
     *are = A;

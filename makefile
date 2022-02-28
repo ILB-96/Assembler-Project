@@ -17,8 +17,8 @@ command_process.o: command_process.c assembler.h
 data_struct_words.o: data_struct_words.c assembler.h
 	gcc -c data_struct_words.c -o data_struct_words.o
 
-test: test.o functions.o pre_assembler.o first_pass.o second_pass.o
-	$(CC) $(TFLAGS) -o test test.o functions.o pre_assembler.o first_pass.o second_pass.o
+test: test.o functions.o pre_assembler.o first_pass.o second_pass.o command_process.o data_struct_words.o
+	$(CC) $(TFLAGS) -o test command_process.o data_struct_words.o test.o functions.o pre_assembler.o first_pass.o second_pass.o
 test.o: test.c assembler.h
 	$(CC) $(TFLAGS) -c test.c
 clean:
