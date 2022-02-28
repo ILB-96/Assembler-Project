@@ -1,11 +1,18 @@
 #include "assembler.h"
 
+<<<<<<< HEAD
 void initialize_list(plw *h, plw *p, int stock)
+=======
+
+
+void initialize_list(plw *h, plw *p,int stock)
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
 {
     *h = (plw)malloc(sizeof(wordsNode));
     *p = *h;
     (*p)->word = -1;
     (*p)->stock_index = stock;
+<<<<<<< HEAD
 }
 
 void add_num_to_list(plw *prv, ARE are, int n)
@@ -20,6 +27,22 @@ void add_num_to_list(plw *prv, ARE are, int n)
     add_to_list(prv, word);
 }
 void add_to_list(plw *prv, int n)
+=======
+}
+void add_numTo_list(plw *prv,ARE are, int n)
+{
+    int word;
+    SET_ARE(are);
+    int mask = 0;
+    mask = ~mask;
+    mask <<= 16;
+    mask = ~mask;
+    word = (mask&n)|are;
+    addTo_list(prv,word);
+    
+}
+void addTo_list(plw *prv, int n)
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
 {
     if ((*prv)->word == -1)
     {
@@ -57,7 +80,11 @@ int add_base_word(plw *p, ARE are, opcode o)
     add_to_list(p, word);
     return word;
 }
+<<<<<<< HEAD
 int add_std_word(plw *prv, ARE are, Funct funct, registers source_r, sortType source_sort, registers target_r, sortType target_sort)
+=======
+int addStd_word(plw *prv, ARE are, Funct funct, registers source_r, sortType source_sort, registers target_r, sortType target_sort)
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
 {
     int word = 0;
 
@@ -96,6 +123,7 @@ void print_word(int word)
         mask >>= 1;
     }
 }
+<<<<<<< HEAD
 int get_current_address(plw prv)
 {
     return prv->stock_index;
@@ -119,3 +147,42 @@ void free_list(plw h)
         p = h->next;
     }
 }
+=======
+void update_address(plw head, int n)
+{
+    while(head != NULL)
+    {
+        head->stock_index = n+1;
+        n++;
+        head = head->next;
+    }
+} 
+void free_list(plw h)
+{
+    plw p = h->next;
+    while (p != NULL)
+    {
+       free(h);
+       h = p;
+       p = h->next;
+
+    }
+}
+/*int main()
+{
+
+    plw head;
+    plw prv;
+    initialize_list( &head, &prv,BASE_STOCK);
+
+    addBase_word(&prv, A, o_add);
+    addStd_word(&prv, A, 12, 1, 3, 4, 3);
+   
+    add_numTo_list(&prv,R,-1);
+    print_listNode(head);
+    
+    free_list(head);
+
+    return 0;
+}*/
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e

@@ -1,0 +1,697 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+ 
+# GNU Make 4.2.1
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2016 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+<<<<<<< HEAD
+# Make data base, printed on Mon Feb 28 12:09:20 2022
+=======
+<<<<<<< HEAD
+# Make data base, printed on Mon Feb 28 11:21:31 2022
+=======
+# Make data base, printed on Wed Feb 23 09:16:05 2022
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+
+# Variables
+
+# 'override' directive
+GNUMAKEFLAGS := 
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# environment
+DESKTOP_SESSION = ubuntu
+# default
+.SHELLFLAGS := -c
+# environment
+XDG_SESSION_CLASS = user
+# environment
+XDG_SESSION_TYPE = x11
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+IM_CONFIG_PHASE = 1
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+XAUTHORITY = /run/user/1000/gdm/Xauthority
+# environment
+GDMSESSION = ubuntu
+# environment
+XMODIFIERS = @im=ibus
+# makefile
+<<<<<<< HEAD
+CURDIR := /home/yoni/Desktop/mm 14/yoni/Assembler-Project
+=======
+<<<<<<< HEAD
+CURDIR := /home/yoni/Desktop/mm 14/hazan/Assembler-Project
+=======
+CURDIR := /home/yoni/Desktop/mm 14/project - v2/Assembler-Project
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# makefile
+SHELL = /bin/sh
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
+# environment
+_ = /usr/share/code/code
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# makefile (from 'makefile', line 2)
+CFLAGS = -ansi -pedantic -Wall -g
+# environment
+JOURNAL_STREAM = 8:33131
+<<<<<<< HEAD
+=======
+=======
+# environment
+JOURNAL_STREAM = 8:32366
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# environment
+XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
+# makefile (from 'makefile', line 1)
+MAKEFILE_LIST :=  makefile
+# automatic
+@F = $(notdir $@)
+# environment
+GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
+# environment
+USERNAME = yoni
+# environment
+XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+<<<<<<< HEAD
+MANAGERPID = 1111
+=======
+<<<<<<< HEAD
+MANAGERPID = 1111
+=======
+MANAGERPID = 1108
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# environment
+LESSOPEN = | /usr/bin/lesspipe %s
+# environment
+VSCODE_CWD = /home/yoni
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+# environment
+GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
+# environment
+<<<<<<< HEAD
+SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1404,unix/yoni-VirtualBox:/tmp/.ICE-unix/1404
+=======
+<<<<<<< HEAD
+SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1404,unix/yoni-VirtualBox:/tmp/.ICE-unix/1404
+=======
+SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1401,unix/yoni-VirtualBox:/tmp/.ICE-unix/1401
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+XDG_MENU_PREFIX = gnome-
+# environment
+VSCODE_LOG_STACK = false
+# environment
+VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&iid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&sid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea","uploadToServer":true}
+# environment
+<<<<<<< HEAD
+INVOCATION_ID = d3005c0814414e7aba551664ad34ddc1
+=======
+<<<<<<< HEAD
+INVOCATION_ID = d3005c0814414e7aba551664ad34ddc1
+=======
+INVOCATION_ID = c1d674f79b834facb739592303fd7f45
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# environment
+LS_COLORS = 
+# environment
+XDG_SESSION_DESKTOP = ubuntu
+# environment
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# environment
+<<<<<<< HEAD
+GIO_LAUNCHED_DESKTOP_FILE_PID = 2888
+=======
+<<<<<<< HEAD
+GIO_LAUNCHED_DESKTOP_FILE_PID = 2888
+=======
+GIO_LAUNCHED_DESKTOP_FILE_PID = 3085
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# automatic
+%F = $(notdir $%)
+# environment
+DISPLAY = :0
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+<<<<<<< HEAD
+PWD = /home/yoni/Desktop/mm 14/yoni/Assembler-Project
+=======
+<<<<<<< HEAD
+PWD = /home/yoni/Desktop/mm 14/hazan/Assembler-Project
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# default
+.LOADED := 
+# environment
+SSH_AGENT_PID = 1342
+<<<<<<< HEAD
+=======
+=======
+PWD = /home/yoni/Desktop/mm 14/project - v2/Assembler-Project
+# default
+.LOADED := 
+# environment
+SSH_AGENT_PID = 1335
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
+# environment
+GTK_MODULES = gail:atk-bridge
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+# environment
+HOME = /home/yoni
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
+# environment
+VSCODE_CODE_CACHE_PATH = /home/yoni/.config/Code/CachedData/899d46d82c4c95423fb7e10e68eba52050e30ba3
+# environment
+LOGNAME = yoni
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# environment
+GNOME_DESKTOP_SESSION_ID = this-is-deprecated
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+QT_IM_MODULE = ibus
+# environment
+SHLVL = 0
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# makefile (from 'makefile', line 1)
+CC = gcc
+# environment
+GNOME_SHELL_SESSION_MODE = ubuntu
+# environment
+<<<<<<< HEAD
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-aac2be75-8e15-4f12-a78b-59a0d5adf314.sock
+=======
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-c72402ac-5860-49b1-af97-f852cac86dc4.sock
+=======
+# environment
+GNOME_SHELL_SESSION_MODE = ubuntu
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5a107fb6-99a1-4ef0-80ed-a22614a64c12.sock
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# default
+MAKE_VERSION := 4.2.1
+# environment
+USER = yoni
+# makefile
+.DEFAULT_GOAL := assembler
+# environment
+XDG_CURRENT_DESKTOP = Unity
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# default
+MAKE_COMMAND := make
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# environment
+LANGUAGE = en_IL:en
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-e479ce11-1.63.2-main.sock
+# makefile
+MAKEFLAGS = pqrR
+# environment
+MFLAGS = -pqrR
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+BREAKPAD_DUMP_LOCATION = /home/yoni/.config/Code/exthost Crash Reports
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+GDK_BACKEND = x11
+# automatic
++F = $(notdir $+)
+# environment
+QT_ACCESSIBILITY = 1
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+LC_ALL = C
+# environment
+GJS_DEBUG_TOPICS = JS ERROR;JS LOG
+# automatic
+^F = $(notdir $^)
+# default
+SUFFIXES := 
+# environment
+CHROME_DESKTOP = code-url-handler.desktop
+# environment
+WINDOWPATH = 2
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# environment
+GJS_DEBUG_OUTPUT = stderr
+# default
+.RECIPEPREFIX := 
+# environment
+LANG = C
+# environment
+<<<<<<< HEAD
+VSCODE_PID = 2888
+# variable set hash-table stats:
+# Load=102/1024=10%, Rehash=0, Collisions=14/127=11%
+=======
+<<<<<<< HEAD
+VSCODE_PID = 2888
+# variable set hash-table stats:
+# Load=102/1024=10%, Rehash=0, Collisions=14/127=11%
+=======
+VSCODE_PID = 3085
+# variable set hash-table stats:
+# Load=100/1024=10%, Rehash=0, Collisions=14/125=11%
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+<<<<<<< HEAD
+# . (device 2053, inode 523416): 22 files, no impossibilities.
+
+# 22 files, no impossibilities in 1 directories.
+=======
+<<<<<<< HEAD
+# . (device 2053, inode 1574473): 22 files, no impossibilities.
+
+# 22 files, no impossibilities in 1 directories.
+=======
+# . (device 2053, inode 1310172): 35 files, no impossibilities.
+
+# 35 files, no impossibilities in 1 directories.
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+# Not a target:
+assembler.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+pre_assembler.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+<<<<<<< HEAD
+first-pass.o: first_pass.c assembler.h
+=======
+<<<<<<< HEAD
+first-pass.o: first_pass.c assembler.h
+=======
+first-pass.o: first-pass.c assembler.h
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 12):
+<<<<<<< HEAD
+	$(CC) $(CFLAGS) -c first_pass.c
+
+second-pass.o: second_pass.c assembler.h
+=======
+<<<<<<< HEAD
+	$(CC) $(CFLAGS) -c first_pass.c
+
+second-pass.o: second_pass.c assembler.h
+=======
+	gcc -c first-pass.c -o first-pass.o
+
+second-pass.o: second-pass.c assembler.h
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 14):
+<<<<<<< HEAD
+	$(CC) $(CFLAGS) -c second_pass.c
+=======
+<<<<<<< HEAD
+	$(CC) $(CFLAGS) -c second_pass.c
+=======
+	gcc -c second-pass.c -o second-pass.o
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+
+# Not a target:
+main.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# Not a target:
+first_pass.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+<<<<<<< HEAD
+ 
+# Not a target:
+=======
+# Not a target:
+ 
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+second_pass.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+command_process.o: command_process.c assembler.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+<<<<<<< HEAD
+#  recipe to execute (from 'makefile', line 16):
+=======
+<<<<<<< HEAD
+#  recipe to execute (from 'makefile', line 16):
+=======
+#  recipe to execute (from 'makefile', line 4):
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+	gcc -c command_process.c -o command_process.o
+
+# Not a target:
+data_struct_words.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+test.o: test.c assembler.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 23):
+	$(CC) $(TFLAGS) -c test.c
+
+test: test.o functions.o pre_assembler.o first_pass.o second_pass.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 21):
+	$(CC) $(TFLAGS) -o test test.o functions.o pre_assembler.o first_pass.o second_pass.o
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+<<<<<<< HEAD
+#  Last modified 2022-02-28 12:09:09.60071836
+=======
+#  Last modified 2022-02-28 11:21:23.238581879
+=======
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+ 
+#  Last modified 2022-02-16 21:45:21.680510625
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+<<<<<<< HEAD
+first_pass.c:
+=======
+<<<<<<< HEAD
+first_pass.c:
+=======
+first-pass.c:
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+<<<<<<< HEAD
+second_pass.c:
+=======
+<<<<<<< HEAD
+second_pass.c:
+=======
+second-pass.c:
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+assembler: command_process.o data_struct_words.o main.o pre_assembler.o first_pass.o second_pass.o functions.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 4):
+	$(CC) $(CFLAGS) command_process.o data_struct_words.o  main.o pre_assembler.o first_pass.o second_pass.o functions.o -o main
+
+functions.o: functions.c assembler.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 8):
+	$(CC) $(CFLAGS) -c functions.c
+<<<<<<< HEAD
+=======
+=======
+assembler: command_process.o data_struct_words.o main.o pre-assembler.o first-pass.o second-pass.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 2):
+	gcc -g -Wall -ansi -pedantic command_process.o data_struct_words.o  main.o pre-assembler.o first-pass.o -o main
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+
+# Not a target:
+command_process.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# Not a target:
+test.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 25):
+	rm -f core *.o main test
+
+pre_assembler.o: pre_assembler.c assembler.h
+<<<<<<< HEAD
+=======
+=======
+pre-assembler.o: pre-assembler.c assembler.h
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 10):
+<<<<<<< HEAD
+	$(CC) $(CFLAGS) -c pre_assembler.c
+=======
+<<<<<<< HEAD
+	$(CC) $(CFLAGS) -c pre_assembler.c
+=======
+	gcc -c pre-assembler.c -o assembler.o
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+
+main.o: main.c assembler.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+#  recipe to execute (from 'makefile', line 6):
+	$(CC) $(CFLAGS) -c main.c
+
+# Not a target:
+functions.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+data_struct_words.o: data_struct_words.c assembler.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 18):
+	gcc -c data_struct_words.c -o data_struct_words.o
+
+# files hash-table stats:
+# Load=26/1024=3%, Rehash=0, Collisions=0/70=0%
+<<<<<<< HEAD
+=======
+=======
+#  recipe to execute (from 'makefile', line 8):
+	gcc -c main.c -o main.o
+
+data_struct_words.o: data_struct_words.c assembler.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 6):
+	gcc -c data_struct_words.c -o data_struct_words.o
+
+# Not a target:
+pre-assembler.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# files hash-table stats:
+# Load=18/1024=2%, Rehash=0, Collisions=0/52=0%
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+# strcache buffers: 1 (0) / strings = 40 / storage = 457 B / avg = 11 B
+# current buf: size = 8162 B / used = 457 B / count = 40 / avg = 11 B
+
+# strcache performance: lookups = 81 / hit rate = 50%
+# hash-table stats:
+# Load=40/8192=0%, Rehash=0, Collisions=1/81=1%
+<<<<<<< HEAD
+# Finished Make data base on Mon Feb 28 12:09:20 2022
+=======
+# Finished Make data base on Mon Feb 28 11:21:31 2022
+=======
+# strcache buffers: 1 (0) / strings = 41 / storage = 511 B / avg = 12 B
+# current buf: size = 8162 B / used = 511 B / count = 41 / avg = 12 B
+
+# strcache performance: lookups = 76 / hit rate = 46%
+# hash-table stats:
+# Load=41/8192=1%, Rehash=0, Collisions=1/76=1%
+# Finished Make data base on Wed Feb 23 09:16:05 2022
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
+>>>>>>> 2596c5b6994057e97628816b8e2f621d25d43b6f
+
+ 
