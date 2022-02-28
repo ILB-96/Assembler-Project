@@ -3,7 +3,7 @@
 int command_string_process(plw *prv_DC, char *line)
 {
     unsigned int error = FALSE;
-    int i = 7, j = strlen(line) - 1;
+    int i = 7/* define required*/, j = strlen(line) - 1;
     while (line[i] == ' ')
         i++;
     while (line[j] == ' ' || line[j] == '\n')
@@ -24,6 +24,7 @@ int command_string_process(plw *prv_DC, char *line)
         printf("illegal string\n"); /*TODO add the line number*/
         error = TRUE;
     }
+    
     if (error)
         g_error;
     return g_error;
@@ -96,59 +97,61 @@ int command_code_process(plw *prv_IC, char *line) /*TODO need to get the number 
     switch (operator)
     {
     case 0: /*mov*/
-        error = !add_parameters(prv_IC, s_line + 1, o_mov, f_mov, two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_mov, f_mov, two_op);
         break;
 
     case 1: /*cmp*/
-        error = !add_parameters(prv_IC, s_line + 1, o_cmp, f_cmp, full_two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_cmp, f_cmp, full_two_op);
         break;
     case 2: /*add*/
-        error = !add_parameters(prv_IC, s_line + 1, o_add, f_add, two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_add, f_add, two_op);
         break;
     case 3: /*sub*/
-        error = !add_parameters(prv_IC, s_line + 1, o_sub, f_sub, two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_sub, f_sub, two_op);
         break;
     case 4: /*lea*/
-        error = !add_parameters(prv_IC, s_line + 1, o_lea, f_lea, min_two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_lea, f_lea, min_two_op);
         break;
     case 5: /*clr*/
-        error = !add_parameters(prv_IC, s_line + 1, o_clr, f_clr, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_clr, f_clr, target_op);
         break;
     case 6: /*not*/
-        error = !add_parameters(prv_IC, s_line + 1, o_not, f_not, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_not, f_not, target_op);
         break;
     case 7: /*inc*/
-        error = !add_parameters(prv_IC, s_line + 1, o_inc, f_inc, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_inc, f_inc, target_op);
         break;
     case 8: /*dec*/
-        error = !add_parameters(prv_IC, s_line + 1, o_dec, f_dec, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_dec, f_dec, target_op);
         break;
     case 9: /*jmp*/
-        error = !add_parameters(prv_IC, s_line + 1, o_jmp, f_jmp, min_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_jmp, f_jmp, min_target_op);
         break;
     case 10: /*bne*/
-        error = !add_parameters(prv_IC, s_line + 1, o_bne, f_bne, min_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_bne, f_bne, min_target_op);
         break;
     case 11: /*jsr*/
-        error = !add_parameters(prv_IC, s_line + 1, o_jsr, f_jsr, min_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_jsr, f_jsr, min_target_op);
         break;
     case 12: /*red*/
-        error = !add_parameters(prv_IC, s_line + 1, o_red, f_red, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_red, f_red, target_op);
         break;
     case 13: /*prn*/
-        error = !add_parameters(prv_IC, s_line + 1, o_prn, f_prn, full_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_prn, f_prn, full_target_op);
         break;
     case 14: /*rts*/
-        error = !add_parameters(prv_IC, s_line + 1, rts, 0, no_op);
+        error = add_parameters(prv_IC, s_line + 1, rts, 0, no_op);
         break;
     case 15: /*stop*/
-        error = !add_parameters(prv_IC, s_line + 1, stop, 0, no_op);
+        error = add_parameters(prv_IC, s_line + 1, stop, 0, no_op);
         break;
     default:
         error = FALSE;
         printf("illegal command in \"%s\"-", *s_line);
         break;
     }
+    
+    
     if (error)
         g_error = error;
     free(s_line);
@@ -194,6 +197,7 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
         printf("\n-illegal command \"%s\"-", *comm); /*TODO need to print the number line*/
         error = TRUE;
     }
+    
     if (error)
         g_error = error;
     return error;

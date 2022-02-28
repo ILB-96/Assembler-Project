@@ -150,10 +150,12 @@ int first_pass(FILE *expanded_file_handler)
             exit(EXIT_FAILURE);
         }
         line_number++;
+        
     }
 
     update_data_labels_address(prv_IC->stock_index);
     update_address(head_DC, prv_IC->stock_index);
+    printf("\ng_error = %d\n",g_error);
 
     /* TODO: unit test functions for command_data/code/string functions*/
     /* TODO: update global variables into first_pass scope*/
