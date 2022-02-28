@@ -51,6 +51,7 @@ int first_pass(FILE *expanded_file_handler)
     /*First initialize the symbols' table dynamic array and error flag*/
 
     g_error = FALSE;
+    
     label_init(0);
     /*TODO: use error flag to continue looking for errors in the program and
      * stop the program after that*/
@@ -150,6 +151,7 @@ int first_pass(FILE *expanded_file_handler)
             exit(EXIT_FAILURE);
         }
         line_number++;
+        
     }
 
     update_data_labels_address(prv_IC->stock_index);
@@ -158,6 +160,7 @@ int first_pass(FILE *expanded_file_handler)
     /* TODO: unit test functions for command_data/code/string functions*/
     /* TODO: update global variables into first_pass scope*/
 
+    
     return g_error;
 }
 
