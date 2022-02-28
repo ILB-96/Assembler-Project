@@ -51,6 +51,7 @@ int first_pass(FILE *expanded_file_handler)
     /*First initialize the symbols' table dynamic array and error flag*/
 
     g_error = FALSE;
+    
     label_init(0);
     /*TODO: use error flag to continue looking for errors in the program and
      * stop the program after that*/
@@ -150,15 +151,21 @@ int first_pass(FILE *expanded_file_handler)
             exit(EXIT_FAILURE);
         }
         line_number++;
+        
     }
 
     update_data_labels_address(prv_IC->stock_index);
     update_address(head_DC, prv_IC->stock_index);
+<<<<<<< HEAD
     printf("\ng_error = %d\n", g_error);
+=======
+    printf("\ng_error = %d\n",g_error);
+>>>>>>> 2b8056912a358f759b382029ef4a882e910b22ed
 
     /* TODO: unit test functions for command_data/code/string functions*/
     /* TODO: update global variables into first_pass scope*/
 
+    
     return g_error;
 }
 
