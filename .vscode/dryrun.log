@@ -1,4 +1,5 @@
 make --dry-run --always-make --keep-going --print-directory
+<<<<<<< HEAD
 make: Entering directory '/home/yoni/Desktop/mm 14/hazan/Assembler-Project'
 gcc -c command_process.c -o command_process.o
 gcc -c data_struct_words.c -o data_struct_words.o
@@ -9,4 +10,15 @@ gcc -ansi -pedantic -Wall -g   -c -o second_pass.o second_pass.c
 gcc -ansi -pedantic -Wall -g -c functions.c
 gcc -ansi -pedantic -Wall -g command_process.o data_struct_words.o  main.o pre_assembler.o first_pass.o second_pass.o functions.o -o main
 make: Leaving directory '/home/yoni/Desktop/mm 14/hazan/Assembler-Project'
+=======
+make: Entering directory '/home/yoni/Desktop/mm 14/project - v2/Assembler-Project'
+gcc -c command_process.c -o command_process.o
+gcc -c data_struct_words.c -o data_struct_words.o
+gcc -c main.c -o main.o
+gcc -c pre-assembler.c -o assembler.o
+gcc -c first-pass.c -o first-pass.o
+gcc -c second-pass.c -o second-pass.o
+gcc -g -Wall -ansi -pedantic command_process.o data_struct_words.o  main.o pre-assembler.o first-pass.o -o main
+make: Leaving directory '/home/yoni/Desktop/mm 14/project - v2/Assembler-Project'
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
  

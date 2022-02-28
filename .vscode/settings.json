@@ -27,5 +27,9 @@
     ".vscode/*README.*": true,
     "backup.c": true
   },
+<<<<<<< HEAD
   "cSpell.words": ["endm", "fword"]
+=======
+  "C_Cpp.errorSquiggles": "Disabled"
+>>>>>>> 4c1522b3209ce145f637e1a320c288e717cd4f7e
 }
