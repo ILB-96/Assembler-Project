@@ -36,6 +36,7 @@ int first_pass(FILE *expanded_file_handler)
     /*Variables*/
     unsigned int label_counter = 0;
     unsigned int line_number = 1;
+    unsigned int error = FALSE;
     int is_code = TRUE;
     size_t array_size = 1;
     char line[MAX_LINE];
@@ -70,7 +71,7 @@ int first_pass(FILE *expanded_file_handler)
             {
                 /*raises error flag but continue to search for more errors in
                  * the first pass*/
-                g_error = TRUE;
+                error = TRUE;
                 fprintf(stderr,
                         "Error at line %d: '%s' is an illegal label name\n",
                         line_number, word);
@@ -79,7 +80,7 @@ int first_pass(FILE *expanded_file_handler)
             {
                 /*the file is allowed to define the same
                 external more than once without causing an error*/
-                g_error = TRUE;
+                error = TRUE;
                 fprintf(stderr, "Error at line %d: '%s' label already exists\n",
                         line_number, word);
             }
@@ -89,7 +90,7 @@ int first_pass(FILE *expanded_file_handler)
             get_next_token(line, word, get_next_token_index(line, 0));
             if (line[0] != '\0')
             {
-                g_error = TRUE;
+                error = TRUE;
                 fprintf(
                     stderr,
                     "Error at line %d: Extended text after extern variable\n",
@@ -103,13 +104,13 @@ int first_pass(FILE *expanded_file_handler)
             remove_colon(label_name);
             if (!is_valid_label_name(label_name))
             {
-                g_error = TRUE;
+                error = TRUE;
                 fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n",
                         line_number, label_name);
             }
             else if (is_label_exists(label_name))
             {
-                g_error = TRUE;
+                error = TRUE;
                 fprintf(stderr, "Error at line %d: '%s' label already exists\n",
                         line_number, label_name);
             }
@@ -132,18 +133,18 @@ int first_pass(FILE *expanded_file_handler)
                     label_add(label_counter++, label_name, get_current_address(prv_IC), "code", ++array_size);
             else
             {
-                g_error = TRUE;
+                error = TRUE;
                 fprintf(stderr, "Error at line %d: undefined operation.\n", line_number);
             }
         }
 
         /*in this point the line contain only code*/
-        if (!is_empty_line(line) && is_code == TRUE && (strcmp(word, ".data") != 0 && strcmp(word, ".string") != 0) && strcmp(word, ".entry") != 0 && strcmp(word, ".extern"))
-            command_code_process(&prv_IC, line);
-        else if (!is_empty_line(line) && strcmp(word, ".data") == 0)
-            command_data_process(&prv_DC, line);
-        else if (!is_empty_line(line) && strcmp(word, ".string") == 0)
-            command_string_process(&prv_DC, line);
+        if (!error && !is_empty_line(line) && is_code == TRUE && (strcmp(word, ".data") != 0 && strcmp(word, ".string") != 0) && strcmp(word, ".entry") != 0 && strcmp(word, ".extern"))
+            command_code_process(&prv_IC, line, line_number);
+        else if (!error && !is_empty_line(line) && !strcmp(word, ".data"))
+            command_data_process(&prv_DC, line, line_number);
+        else if (!error && !is_empty_line(line) && !strcmp(word, ".string"))
+            command_string_process(&prv_DC, line, line_number);
 
         if (head_IC->stock_index > MAX_ADDRESS)
         { /*checks if we didn't use too much memory*/
@@ -151,6 +152,11 @@ int first_pass(FILE *expanded_file_handler)
             exit(EXIT_FAILURE);
         }
         line_number++;
+        if (error)
+        {
+            g_error = error;
+            error = FALSE;
+        }
     }
 
     update_data_labels_address(prv_IC->stock_index);

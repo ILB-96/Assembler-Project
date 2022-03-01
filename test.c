@@ -124,6 +124,9 @@ void test_command_data_process(void)
     line = ".data !6, c-9";
     TEST_CHECK_((actual = command_data_process(&prv_DC, line)) == (expected = 1),
                 "'%s', illegal number format. inserted Expected: %d Actual: %d", line, expected, actual);
+    line = ".data 9.3";
+    TEST_CHECK_((actual = command_data_process(&prv_DC, line)) == (expected = 1),
+                "'%s', illegal floating number. inserted Expected: %d Actual: %d", line, expected, actual);
 }
 void test_command_string_process(void)
 {

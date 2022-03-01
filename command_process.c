@@ -1,6 +1,6 @@
 #include "assembler.h"
 
-int command_string_process(plw *prv_DC, char *line)
+int command_string_process(plw *prv_DC, char *line, int line_number)
 {
     unsigned int error = FALSE;
     int i = 7, j = strlen(line) - 1;
@@ -21,7 +21,8 @@ int command_string_process(plw *prv_DC, char *line)
     }
     else if (!is_empty_line(line))
     {
-        printf("illegal string\n"); /*TODO add the line number*/
+        fprintf(stderr, "Error at line %d: '%s' is an illegal string\n",
+                line_number, line);
         error = TRUE;
     }
     if (error)
@@ -29,7 +30,7 @@ int command_string_process(plw *prv_DC, char *line)
     return error;
 }
 
-int command_data_process(plw *prv_DC, char *line)
+int command_data_process(plw *prv_DC, char *line, int line_number)
 {
     int i = 0;
     unsigned error = FALSE;
@@ -47,12 +48,13 @@ int command_data_process(plw *prv_DC, char *line)
         else if ((i % 2 == 0 && strcmp(s_line[i], ",") != 0) || (i % 2 != 0 && is_only_digits(s_line[i]) == 0))
         {
             error = TRUE;
-            printf("illegal operator \"%s\"", s_line[i]);
+            fprintf(stderr, "Error at line %d: '%s' is an illegal operator\n",
+                    line_number, s_line[i]);
         }
     }
     if (strcmp(s_line[i - 1], ",") == 0)
     {
-        printf("illegal ending \",\"\n");
+        fprintf(stderr, "Error at line %d: Illegal extended text\n", line_number);
         error = TRUE;
     }
     if (error)
@@ -79,7 +81,7 @@ int is_only_digits(char *num)
     return result;
 }
 
-int command_code_process(plw *prv_IC, char *line) /*TODO need to get the number line for g_errors*/
+int command_code_process(plw *prv_IC, char *line, int line_number) /*TODO need to get the number line for g_errors*/
 {
 
     char *operators_array[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr", "red", "prn", "rts", "stop"};
@@ -101,57 +103,58 @@ int command_code_process(plw *prv_IC, char *line) /*TODO need to get the number 
     switch (operator)
     {
     case 0: /*mov*/
-        error = add_parameters(prv_IC, s_line + 1, o_mov, f_mov, two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_mov, f_mov, two_op, line_number);
         break;
 
     case 1: /*cmp*/
-        error = add_parameters(prv_IC, s_line + 1, o_cmp, f_cmp, full_two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_cmp, f_cmp, full_two_op, line_number);
         break;
     case 2: /*add*/
-        error = add_parameters(prv_IC, s_line + 1, o_add, f_add, two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_add, f_add, two_op, line_number);
         break;
     case 3: /*sub*/
-        error = add_parameters(prv_IC, s_line + 1, o_sub, f_sub, two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_sub, f_sub, two_op, line_number);
         break;
     case 4: /*lea*/
-        error = add_parameters(prv_IC, s_line + 1, o_lea, f_lea, min_two_op);
+        error = add_parameters(prv_IC, s_line + 1, o_lea, f_lea, min_two_op, line_number);
         break;
     case 5: /*clr*/
-        error = add_parameters(prv_IC, s_line + 1, o_clr, f_clr, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_clr, f_clr, target_op, line_number);
         break;
     case 6: /*not*/
-        error = add_parameters(prv_IC, s_line + 1, o_not, f_not, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_not, f_not, target_op, line_number);
         break;
     case 7: /*inc*/
-        error = add_parameters(prv_IC, s_line + 1, o_inc, f_inc, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_inc, f_inc, target_op, line_number);
         break;
     case 8: /*dec*/
-        error = add_parameters(prv_IC, s_line + 1, o_dec, f_dec, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_dec, f_dec, target_op, line_number);
         break;
     case 9: /*jmp*/
-        error = add_parameters(prv_IC, s_line + 1, o_jmp, f_jmp, min_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_jmp, f_jmp, min_target_op, line_number);
         break;
     case 10: /*bne*/
-        error = add_parameters(prv_IC, s_line + 1, o_bne, f_bne, min_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_bne, f_bne, min_target_op, line_number);
         break;
     case 11: /*jsr*/
-        error = add_parameters(prv_IC, s_line + 1, o_jsr, f_jsr, min_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_jsr, f_jsr, min_target_op, line_number);
         break;
     case 12: /*red*/
-        error = add_parameters(prv_IC, s_line + 1, o_red, f_red, target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_red, f_red, target_op, line_number);
         break;
     case 13: /*prn*/
-        error = add_parameters(prv_IC, s_line + 1, o_prn, f_prn, full_target_op);
+        error = add_parameters(prv_IC, s_line + 1, o_prn, f_prn, full_target_op, line_number);
         break;
     case 14: /*rts*/
-        error = add_parameters(prv_IC, s_line + 1, rts, 0, no_op);
+        error = add_parameters(prv_IC, s_line + 1, rts, 0, no_op, line_number);
         break;
     case 15: /*stop*/
-        error = add_parameters(prv_IC, s_line + 1, stop, 0, no_op);
+        error = add_parameters(prv_IC, s_line + 1, stop, 0, no_op, line_number);
         break;
     default:
         error = FALSE;
-        printf("illegal command in \"%s\"-", *s_line);
+        fprintf(stderr, "Error at line %d: '%s' is an illegal command\n",
+                line_number, *s_line);
         break;
     }
     if (error)
@@ -160,7 +163,7 @@ int command_code_process(plw *prv_IC, char *line) /*TODO need to get the number 
     return g_error;
 }
 
-int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_operator op)
+int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_operator op, int line_number)
 {
     unsigned int error = FALSE;
     registers source_r = 0, target_r = 0;
@@ -185,25 +188,25 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
         error &= !set_sort_and_register(comm[2], &target_r, &target_sort, &are);
 
         add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
-        error &= !add_word_by_source(prv, comm[0], source_sort, op);
-        error &= !add_word_by_target(prv, comm[2], target_sort, op);
+        error &= !add_word_by_source(prv, comm[0], source_sort, op, line_number);
+        error &= !add_word_by_target(prv, comm[2], target_sort, op, line_number);
     }
     else if (size == 1) /*case one operator*/
     {
         error &= !set_sort_and_register(comm[0], &target_r, &target_sort, &are);
         error &= !add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
-        error &= !add_word_by_target(prv, comm[0], target_sort, op);
+        error &= !add_word_by_target(prv, comm[0], target_sort, op, line_number);
     }
     else if (size != 0)
     {
-        printf("\n-illegal command \"%s\"-", *comm); /*TODO need to print the number line*/
+        fprintf(stderr, "Error at line %d: Illegal command\n", line_number);
         error = TRUE;
     }
     if (error)
         g_error = error;
     return error;
 }
-int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operator op)
+int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operator op, int line_number)
 {
     unsigned int error = FALSE;
     switch (source_sort)
@@ -216,7 +219,8 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         else
         {
             error = TRUE;
-            printf("\n-illegal operetion-\"%s\"-", comm); /*TODO need to print the number line*/
+            fprintf(stderr, "Error at line %d: '%s' is an illegal operation\n",
+                    line_number, comm);
         }
         break;
     case direct:
@@ -227,7 +231,8 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         if (op == min_two_op && source_sort == register_direct) /*why the 'case' don't do it's work???*/
         {
             error = TRUE;
-            printf("\n-illegal operetion-\"%s\"-", comm); /*TODO need to print the number line*/
+            fprintf(stderr, "Error at line %d: '%s' is an illegal operation\n",
+                    line_number, comm);
         }
         break;
     }
@@ -238,7 +243,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
     return error;
 }
 
-int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operator op)
+int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operator op, int line_number)
 {
     unsigned int error = FALSE;
     switch (target_sort)
@@ -251,7 +256,7 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
         else
         {
             error = TRUE;
-            printf("\n-illegal operetion-\"%s\"-", comm); /*TODO need to print the number line*/
+            fprintf(stderr, "Error at line %d: Illegal operation\n", line_number);
         }
         break;
     case direct:
