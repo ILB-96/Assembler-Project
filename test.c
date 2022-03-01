@@ -50,25 +50,112 @@ void test_command_code_process(void)
     plw prv_DC;
     initialize_list(&head_DC, &prv_DC, 0);
     initialize_list(&head_IC, &prv_IC, BASE_STOCK);
+
     line = "add r3, LIST";
     TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 0), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
-    line = "prn #48";
-    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 0), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
-    line = "inc r6";
-    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 0), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
-    line = "add mov, LIST"; /*double command*/
-    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
-    line = "prn #!48"; /*illegal number format*/
-    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
-    line = "prn !#48"; /*illegal number format*/
-    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
-    line = "add r3 LIST"; /*no comma*/
-    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
-    line = "add r14 ,,LIST"; /*double comma*/
-    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
-    line = "add ,r17 ,LIST"; /*illegal comma location*/
-    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1), "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
-}
+    TEST_CHECK_((actual = get_current_address(prv_IC) - BASE_STOCK) == (expected = 3),
+                "'%s' number of binary words Expected: %d Actual: %d", line, expected, actual);
+    initialize_list(&head_IC, &prv_IC, BASE_STOCK);
 
+    line = "prn #48";
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 0),
+                "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+
+    line = "inc r6";
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 0),
+                "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+
+    line = "add mov, LIST"; /*double command*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1),
+                "'%s', double command Expected: %d Actual: %d", line, expected, actual);
+
+    line = "prn #!48"; /*illegal number format*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1),
+                "'%s', illegal number format. Expected: %d Actual: %d", line, expected, actual);
+
+    line = "prn !#48"; /*illegal number format*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1),
+                "'%s', illegal number format. Expected: %d Actual: %d", line, expected, actual);
+
+    line = "add r3 LIST"; /*no comma*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1),
+                "'%s', no comma. Expected: %d Actual: %d", line, expected, actual);
+
+    line = "add r14 ,,LIST"; /*double comma*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1),
+                "'%s', double comma. Expected: %d Actual: %d", line, expected, actual);
+
+    line = "add ,r17 ,LIST"; /*illegal comma location*/
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line)) == (expected = 1),
+                "'%s', illegal comma location. Expected: %d Actual: %d", line, expected, actual);
+}
+void test_command_data_process(void)
+{
+    unsigned int expected = 0;
+    unsigned int actual = 0;
+    char *line;
+
+    plw head_IC;
+    plw prv_IC;
+    plw head_DC;
+    plw prv_DC;
+    initialize_list(&head_DC, &prv_DC, 0);
+    initialize_list(&head_IC, &prv_IC, BASE_STOCK);
+
+    line = ".data 6, -9";
+    TEST_CHECK_((actual = command_data_process(&prv_DC, line)) == (expected = 0),
+                "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    TEST_CHECK_((actual = get_current_address(prv_DC) + 1) == (expected = 2),
+                "'%s' number of binary words Expected: %d Actual: %d", line, expected, actual);
+    initialize_list(&head_DC, &prv_DC, 0);
+
+    line = ".data ,6, -9";
+    TEST_CHECK_((actual = command_data_process(&prv_DC, line)) == (expected = 1),
+                "'%s', illegal comma. Expected: %d Actual: %d", line, expected, actual);
+
+    line = ".data 6, -9 ,";
+    TEST_CHECK_((actual = command_data_process(&prv_DC, line)) == (expected = 1),
+                "'%s', illegal comma. inserted Expected: %d Actual: %d", line, expected, actual);
+
+    line = ".data 6,, -9";
+    TEST_CHECK_((actual = command_data_process(&prv_DC, line)) == (expected = 1),
+                "'%s', double comma. inserted Expected: %d Actual: %d", line, expected, actual);
+
+    line = ".data !6, c-9";
+    TEST_CHECK_((actual = command_data_process(&prv_DC, line)) == (expected = 1),
+                "'%s', illegal number format. inserted Expected: %d Actual: %d", line, expected, actual);
+}
+void test_command_string_process(void)
+{
+    unsigned int expected = 0;
+    unsigned int actual = 0;
+    char *line;
+
+    plw head_IC;
+    plw prv_IC;
+    plw head_DC;
+    plw prv_DC;
+    initialize_list(&head_DC, &prv_DC, 0);
+    initialize_list(&head_IC, &prv_IC, BASE_STOCK);
+
+    line = ".string \"abcd\"";
+    TEST_CHECK_((actual = command_string_process(&prv_DC, line)) == (expected = 0),
+                "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    TEST_CHECK_((actual = get_current_address(prv_DC) + 1) == (expected = 5),
+                "'%s' number of binary words Expected: %d Actual: %d", line, expected, actual);
+
+    line = ".string ,\"abcd\"";
+    TEST_CHECK_((actual = command_string_process(&prv_DC, line)) == (expected = 1),
+                "'%s' illegal comma Expected: %d Actual: %d", line, expected, actual);
+
+    line = ".string \"abcd\",  ,";
+    TEST_CHECK_((actual = command_string_process(&prv_DC, line)) == (expected = 1),
+                "'%s' illegal comma Expected: %d Actual: %d", line, expected, actual);
+}
 TEST_LIST = {
-    {"int get_next_token_index(char *line, int index);", test_next_word_index}, {"int is_valid_label_name(char *word)", test_is_valid_label_name}, {"int command_code_process(plw *prv_IC, char *line)", test_command_code_process}, {0}};
+    {"int get_next_token_index(char *line, int index);", test_next_word_index},
+    {"int is_valid_label_name(char *word)", test_is_valid_label_name},
+    {"int command_code_process(plw *prv_IC, char *line)", test_command_code_process},
+    {"int command_data_proces(plw *prv_DC, char *line)", test_command_data_process},
+    {"int command_string_proces(plw *prv_DC, char *line)", test_command_string_process},
+    {0}};

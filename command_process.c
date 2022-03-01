@@ -26,7 +26,7 @@ int command_string_process(plw *prv_DC, char *line)
     }
     if (error)
         g_error;
-    return g_error;
+    return error;
 }
 
 int command_data_process(plw *prv_DC, char *line)
