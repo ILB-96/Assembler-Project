@@ -25,8 +25,7 @@ int command_string_process(plw *prv_DC, char *line, int line_number)
                 line_number, line);
         error = TRUE;
     }
-    if (error)
-        g_error;
+
     return error;
 }
 
@@ -57,8 +56,7 @@ int command_data_process(plw *prv_DC, char *line, int line_number)
         fprintf(stderr, "Error at line %d: Illegal extended text\n", line_number);
         error = TRUE;
     }
-    if (error)
-        g_error = error;
+
     return error;
 }
 
@@ -157,10 +155,9 @@ int command_code_process(plw *prv_IC, char *line, int line_number) /*TODO need t
                 line_number, *s_line);
         break;
     }
-    if (error)
-        g_error = error;
+
     free(s_line);
-    return g_error;
+    return error;
 }
 
 int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_operator op, int line_number)
@@ -202,8 +199,7 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
         fprintf(stderr, "Error at line %d: Illegal command\n", line_number);
         error = TRUE;
     }
-    if (error)
-        g_error = error;
+
     return error;
 }
 int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operator op, int line_number)
@@ -236,10 +232,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         }
         break;
     }
-    if (error)
-    {
-        g_error = error;
-    }
+
     return error;
 }
 
@@ -265,8 +258,7 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
         add_to_list(prv, 0);
         break;
     }
-    if (error)
-        g_error = error;
+
     return error;
 }
 

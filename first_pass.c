@@ -22,7 +22,7 @@ struct TypeLabel
     char *attribute;
 };
 TypeLabel *symbols_table;
-unsigned int g_error;
+
 /*Instruction and data counter are global variable to use in the Second Pass*/
 
 /*TODO: maybe we need to add more checks to see variables are
@@ -37,6 +37,7 @@ int first_pass(FILE *expanded_file_handler)
     unsigned int label_counter = 0;
     unsigned int line_number = 1;
     unsigned int error = FALSE;
+    unsigned int g_error = FALSE;
     int is_code = TRUE;
     size_t array_size = 1;
     char line[MAX_LINE];
@@ -50,8 +51,6 @@ int first_pass(FILE *expanded_file_handler)
     initialize_list(&head_DC, &prv_DC, 0);
     initialize_list(&head_IC, &prv_IC, BASE_STOCK);
     /*First initialize the symbols' table dynamic array and error flag*/
-
-    g_error = FALSE;
 
     label_init(0);
     /*TODO: use error flag to continue looking for errors in the program and
@@ -140,13 +139,13 @@ int first_pass(FILE *expanded_file_handler)
 
         /*in this point the line contain only code*/
         if (!error && !is_empty_line(line) && is_code == TRUE && (strcmp(word, ".data") != 0 && strcmp(word, ".string") != 0) && strcmp(word, ".entry") != 0 && strcmp(word, ".extern"))
-            command_code_process(&prv_IC, line, line_number);
+            error = command_code_process(&prv_IC, line, line_number);
         else if (!error && !is_empty_line(line) && !strcmp(word, ".data"))
-            command_data_process(&prv_DC, line, line_number);
+            error = command_data_process(&prv_DC, line, line_number);
         else if (!error && !is_empty_line(line) && !strcmp(word, ".string"))
-            command_string_process(&prv_DC, line, line_number);
+            error = command_string_process(&prv_DC, line, line_number);
 
-        if (head_IC->stock_index > MAX_ADDRESS)
+        if (get_current_address(prv_IC) + get_current_address(prv_DC) + 1 > MAX_ADDRESS)
         { /*checks if we didn't use too much memory*/
             fprintf(stderr, "Error: Out of memory\n");
             exit(EXIT_FAILURE);
@@ -162,7 +161,6 @@ int first_pass(FILE *expanded_file_handler)
     update_data_labels_address(prv_IC->stock_index);
     update_address(head_DC, prv_IC->stock_index);
 
-    /* TODO: unit test functions for command_data/code/string functions*/
     /* TODO: update global variables into first_pass scope*/
 
     return g_error;
