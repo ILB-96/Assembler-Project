@@ -81,23 +81,31 @@ int is_only_digits(char *num)
     return result;
 }
 
+int is_operator(char *op)
+{
+    int result = -1;
+    char *operators_array[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr", "red", "prn", "rts", "stop"};
+    int i;
+    for (i = 0; i < SUM_OPERATIONS; i++)
+    {
+        if(strcmp(op,operators_array[i]) == 0) result = i;
+    }
+    return result;
+}
+
 int command_code_process(plw *prv_IC, char *line, int line_number) /*TODO need to get the number line for g_errors*/
 {
 
-    char *operators_array[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "jsr", "red", "prn", "rts", "stop"};
+    
     int i;
     unsigned int error = FALSE;
-    int operator= - 1;
+    int operator;
     char command[MAX_LINE] = "";
     strcat(command, line);
     char **s_line = split_line(command);
     for (i = 0; i < SUM_OPERATIONS; i++)
     {
-        if (strcmp(s_line[0], operators_array[i]) == 0)
-        {
-            operator= i;
-            error = TRUE;
-        }
+        if (operator=is_operator(s_line[0]) >= 0)  error = TRUE;
     }
     /*TODO - enum of operators*/
     switch (operator)
@@ -184,18 +192,20 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
 
     if (size == 3 && *comm[1] == ',') /*case two operators*/
     {
-        error &= !set_sort_and_register(comm[0], &source_r, &source_sort, &are);
-        error &= !set_sort_and_register(comm[2], &target_r, &target_sort, &are);
-
+        error |= !set_sort_and_register(comm[0], &source_r, &source_sort, &are);
+        error |= !set_sort_and_register(comm[2], &target_r, &target_sort, &are);
+        
         add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
-        error &= !add_word_by_source(prv, comm[0], source_sort, op, line_number);
-        error &= !add_word_by_target(prv, comm[2], target_sort, op, line_number);
+        
+        error |= add_word_by_source(prv, comm[0], source_sort, op, line_number);
+        error |= add_word_by_target(prv, comm[2], target_sort, op, line_number);
+        
     }
     else if (size == 1) /*case one operator*/
     {
-        error &= !set_sort_and_register(comm[0], &target_r, &target_sort, &are);
-        error &= !add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
-        error &= !add_word_by_target(prv, comm[0], target_sort, op, line_number);
+        error |= !set_sort_and_register(comm[0], &target_r, &target_sort, &are);
+        error |= !add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
+        error |= add_word_by_target(prv, comm[0], target_sort, op, line_number);
     }
     else if (size != 0)
     {
@@ -236,6 +246,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         }
         break;
     }
+    
     if (error)
     {
         g_error = error;
@@ -296,7 +307,7 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
     else
     {
         /*case illegal variable*/
-        if (isdigit(operator[0]))
+        if (isdigit(operator[0]) || is_operator(operator) >=0)
             result = 0;
         else
         {

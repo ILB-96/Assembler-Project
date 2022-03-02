@@ -157,10 +157,15 @@ int first_pass(FILE *expanded_file_handler)
             g_error = error;
             error = FALSE;
         }
+        
     }
 
     update_data_labels_address(prv_IC->stock_index);
     update_address(head_DC, prv_IC->stock_index);
+    puts("\n");
+    
+    print_listNode(head_IC);
+    puts("\n");
 
     /* TODO: unit test functions for command_data/code/string functions*/
     /* TODO: update global variables into first_pass scope*/
