@@ -2,7 +2,7 @@
 
 int is_empty_line(char *line)
 {
-    unsigned int i = 0;
+     int i = 0;
     while (line[i] != '\0')
         if (!isspace(line[i++]))
             return 0;
@@ -11,7 +11,7 @@ int is_empty_line(char *line)
 
 int is_comment_line(char *line)
 {
-    unsigned int i = 0;
+     int i = 0;
     while (isspace(line[i++]))
         ;
     if (line[--i] == ';')
@@ -24,7 +24,7 @@ int is_comment_line(char *line)
  * ****************************************************************************/
 void get_first_token(char *line, char *word)
 {
-    unsigned int i = 0, j = 0;
+     int i = 0, j = 0;
     while (isspace(line[i]) && line[i] != '\0')
     {
         i++;
@@ -36,7 +36,7 @@ void get_first_token(char *line, char *word)
     word[j] = '\0';
 }
 
-unsigned int get_next_token_index(char *line, int index)
+int get_next_token_index(char *line, int index)
 {
     while (isspace(line[index]) && line[index] != '\0')
     {
@@ -56,9 +56,11 @@ unsigned int get_next_token_index(char *line, int index)
 /*Function that moves the line to the next word and insert the next word inside
  * a variable(word)*/
 /*TODO: change the variable name "word" to not be confused with a binary word*/
-void get_next_token(char *line, char *word, unsigned int i)
+void get_next_token(char *line, char *word)
 {
-    unsigned int j = 0;
+
+    int j = 0;
+    int i = get_next_token_index(line,0);
     while (line[i] != '\0' && line[i] != '\n')
         line[j++] = line[i++];
 
@@ -73,7 +75,7 @@ void get_next_token(char *line, char *word, unsigned int i)
 /*Function that removes the ":" sign from a word*/
 void remove_colon(char *word)
 {
-    unsigned int i = 0;
+     int i = 0;
     while (word[i++] != ':')
         ;
     word[--i] = '\0';

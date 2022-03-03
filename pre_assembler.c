@@ -39,7 +39,7 @@ void expand_macros(FILE *file_handler, FILE *expanded_file_handler)
 {
     FILE *macros_file_handler;
     char line[MAX_LINE] = "", word[MAX_LINE] = "";
-    unsigned int is_part_of_macro = 0;
+     int is_part_of_macro = 0;
     if (!(macros_file_handler = fopen("macros-file.txt", "w+")))
     {
         fprintf(stderr, "FAILED!\nError: File '%s' open failed.\n\n", "macros-file.txt");
@@ -84,7 +84,7 @@ void expand_macros(FILE *file_handler, FILE *expanded_file_handler)
 
 void get_macro_name(char *line, char *word)
 {
-    unsigned int i = 0, j = 0;
+     int i = 0, j = 0;
     while (isspace(line[i]) && line[i] != '\0')
     {
         i++;
@@ -101,7 +101,7 @@ void get_macro_name(char *line, char *word)
 int is_macro_name(char *word, FILE *macros_file_handler)
 {
     char line[MAX_LINE] = "", *macro_name;
-    unsigned int next_is_macro = 1;
+     int next_is_macro = 1;
     fseek(macros_file_handler, 0, SEEK_SET);
     while (fgets(line, MAX_LINE, macros_file_handler) != NULL)
     {
@@ -122,7 +122,7 @@ int is_macro_name(char *word, FILE *macros_file_handler)
 void insert_macro(FILE *expanded_file_handler, FILE *macros_file_handler, char *word)
 {
     char line[MAX_LINE] = "", fword[MAX_LINE] = "";
-    unsigned int inserted = 0, insert = 0;
+     int inserted = 0, insert = 0;
     fseek(macros_file_handler, 0, SEEK_SET);
     while (fgets(line, MAX_LINE, macros_file_handler) != NULL && !inserted)
     {
