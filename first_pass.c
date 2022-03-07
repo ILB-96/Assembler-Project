@@ -28,7 +28,8 @@ not names after saved words?*/
 /*Those arrays are saved words, better to have them globally,
 so we can always check if a variable is trying to use those name*/
 
-int first_pass(FILE *expanded_file_handler) {
+int first_pass(FILE *expanded_file_handler, plw *h_I, plw *p_I, plw *h_D,
+               plw *p_D) {
   /*Variables*/
   int label_counter = 0;
   int line_number = 1;
@@ -147,6 +148,11 @@ int first_pass(FILE *expanded_file_handler) {
 
   update_data_labels_address(prv_IC->stock_index);
   update_address(head_DC, prv_IC->stock_index);
+
+  *h_I = head_IC;
+  *p_I = prv_IC;
+  *h_D = head_DC;
+  *p_D = prv_DC;
 
   /* TODO: update global variables into first_pass scope*/
 
@@ -273,7 +279,26 @@ int is_label_exists(char *word) {
 
   return 0;
 }
-
+int get_label_values(char *word, int *label_base_val, int *label_offset_val) {
+  int i;
+  for (i = 0; strcmp(symbols_table[i].name, ""); i++)
+    if (!strcmp(symbols_table[i].name, word)) {
+      *label_base_val = symbols_table[i].base_address;
+      *label_offset_val = symbols_table[i].offset;
+      return 0;
+    }
+  return 1;
+}
+int found_label(char *line, char *word) {
+  while (!is_empty_line(line)) {
+    remove_signs(word);
+    if (!is_valid_label_name(word))
+      get_next_token(line, word);
+    else
+      return TRUE;
+  }
+  return FALSE;
+}
 /*Function that prints labels(just for show).*/
 void print_labels() {
   int i;

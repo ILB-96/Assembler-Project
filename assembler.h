@@ -17,17 +17,25 @@
 typedef struct TypeLabel TypeLabel;
 extern unsigned int g_error;
 extern TypeLabel *symbols_table;
+typedef struct link_words *plw;
+typedef struct link_words {
+  plw next;
+  unsigned int word;
 
+  int stock_index;
+} wordsNode;
 /*Functions from pre-assembler.c*/
 int pre_assembler(char *, char *);
 /*Functions from first-pass.c*/
-int first_pass(FILE *);
+int first_pass(FILE *, plw *, plw *, plw *, plw *);
 void free_symbols_str();
 int get_binary_words(char *, char *);
 int is_operation_name(char *);
 void add_entry_attribute(char *);
 int is_label_exists(char *);
 void print_labels();
+int get_label_values(char *, int *, int *);
+int found_label(char *, char *);
 /*Functions from second-pass.c*/
 int second_pass(FILE *);
 int process_entry_label(char *word, int line_number);
@@ -39,17 +47,10 @@ void get_first_token(char *, char *);
 int get_next_token_index(char *, int);
 void get_next_token(char *, char *);
 void remove_colon(char *);
+void remove_signs(char *);
 
 /*WORD-LIST*/
 typedef enum { A = 4, R = 2, E = 1 } ARE;
-
-typedef struct link_words *plw;
-typedef struct link_words {
-  plw next;
-  unsigned int word;
-
-  int stock_index;
-} wordsNode;
 
 #define IS_NULL(x)                                                             \
   if (x == NULL) {                                                             \
@@ -146,6 +147,7 @@ void free_list(plw);
 int add_base_word(plw *, ARE, opcode);
 void add_num_to_list(plw *, ARE, int);
 void update_address(plw, int);
+int set_next_empty(plw, ARE, int);
 
 /*command_process*/
 

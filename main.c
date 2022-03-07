@@ -21,6 +21,11 @@ int main(int argc, char *argv[])
 /*Primary Function to process all the steps of the assembler*/
 void assembler(char *file_name)
 {
+    plw head_IC; /*need to be free in the end...*/
+    plw prv_IC;
+    plw head_DC;
+    plw prv_DC;
+
     /*variables to handle the expanded file that we will use*/
     FILE *expanded_file_handler;
     char *expanded_file_name;
@@ -39,7 +44,7 @@ void assembler(char *file_name)
         free(expanded_file_name);
         return;
     }
-
+    
     printf("===Assembly process for %s.as started===\n", file_name);
     /*Here we open the expanded file completed from the pre assembler*/
     if (!(expanded_file_handler = fopen(expanded_file_name, "r")))
@@ -49,7 +54,7 @@ void assembler(char *file_name)
     }
 
     printf("Assembly First Pass at work...\n");
-    if (first_pass(expanded_file_handler))
+    if (first_pass(expanded_file_handler, &head_IC, &prv_IC, &head_DC, &prv_DC))
     { /*Go to first-pass.c for more info*/
         fclose(expanded_file_handler);
         free(expanded_file_name);
@@ -57,7 +62,7 @@ void assembler(char *file_name)
         free(symbols_table);
         return;
     }
-
+    
     fseek(expanded_file_handler, 0, SEEK_SET);
     printf("Assembly Second Pass at work...\n");
     if (second_pass(expanded_file_handler))
@@ -68,11 +73,17 @@ void assembler(char *file_name)
         free(symbols_table);
         return;
     }
+    
     printf("===Assembly process for %s.as finished===\n\n", file_name);
 
+   
+    
     /*Frees every allocated memory and close the file handler*/
     free_symbols_str();
     free(symbols_table);
     fclose(expanded_file_handler);
     free(expanded_file_name);
+    
+    free_list(head_IC);
+    free_list(head_DC);
 }

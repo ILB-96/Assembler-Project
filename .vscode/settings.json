@@ -27,5 +27,14 @@
     ".vscode/*README.*": true,
     "backup.c": true
   },
-  "cSpell.words": ["endm", "fword"]
+  "cSpell.words": [
+    "endm",
+    "fword"
+  ],
+  "window.title": "${activeEditorLong}${separator}${rootName}",
+  "window.zoomLevel": 0.6,
+  "editor.rename.enablePreview": false,
+  "editor.wordWrap": "on",
+  "editor.wordWrapColumn": 100,
+  "html.format.wrapLineLength": 100
 }
