@@ -157,6 +157,7 @@ int first_pass(FILE *expanded_file_handler, plw *h_I, plw *p_I, plw *h_D,
   *h_D = head_DC;
   *p_D = prv_DC;
 
+  
   /* TODO: update global variables into first_pass scope*/
 
   return g_error;

@@ -43,9 +43,9 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC) {
                                &label_are);
       printf("at line: %d label: %s  base: %d off: %d are: %c\n", line_number,
              word, label_base_val, label_offset_val, label_are);
-      set_next_empty(head_IC,label_are,label_base_val);
-      set_next_empty(head_IC,label_are,label_offset_val);
-
+      
+      set_next_empty(head_IC, label_are, label_base_val);
+      set_next_empty(head_IC, label_are, label_offset_val);
       /*TODO: process ob.ext file
       if (!error &&label_are = 'E') {
         fprintf
@@ -59,14 +59,12 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC) {
     line_number++;
   }
   
-  print_listNode(head_IC);
-  puts("\n");
-
   print_labels();
   fclose(obj_file_handler);
   fclose(ent_file_handler);
   fclose(ext_file_handler);
 
+  print_convert_Node(head_IC);
   return g_error;
 }
 int process_entry_label(char *word, int line_number) {
@@ -95,3 +93,4 @@ void create_file(FILE **file_handler, char *name, char *exten) {
   }
   free(file_name);
 }
+

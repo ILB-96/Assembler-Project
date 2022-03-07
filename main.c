@@ -5,6 +5,7 @@
 void assembler(char *);
 void create_file(char *, FILE *);
 int main(int argc, char *argv[]) {
+ 
   if (argc < 2) {
     printf("Error: Not enough arguments, please insert files names.\n");
     return 1;

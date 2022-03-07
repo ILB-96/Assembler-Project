@@ -92,19 +92,16 @@ int is_operator(char *op)
 }
 
 int command_code_process(plw *prv_IC, char *line, int line_number) /*TODO need to get the number line for g_errors*/
-{
-
-    
+{ 
     int i;
     unsigned int error = FALSE;
     int operator;
     char command[MAX_LINE] = "";
     strcat(command, line);
     char **s_line = split_line(command);
-    for (i = 0; i < SUM_OPERATIONS; i++)
-    {
-        if (operator=is_operator(s_line[0]) >= 0)  error = TRUE;
-    }
+    
+    operator = is_operator(s_line[0]);
+    
     /*TODO - enum of operators*/
     switch (operator)
     {
@@ -192,6 +189,7 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
         error |= !set_sort_and_register(comm[0], &source_r, &source_sort, &are);
         error |= !set_sort_and_register(comm[2], &target_r, &target_sort, &are);
         
+        
         add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
         
         error |= add_word_by_source(prv, comm[0], source_sort, op, line_number);
@@ -242,15 +240,6 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         }
         break;
     }
-<<<<<<< HEAD
-    
-    if (error)
-    {
-        g_error = error;
-    }
-=======
-
-
     return error;
 }
 
@@ -283,11 +272,13 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
 
 int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *are)
 {
+    
     int result = 1;
      int temp;
     *are = A;
     /*case it's register*/
-    if (operator[0] == 'r' && is_only_digits(operator+1) && (temp = atoi(operator+1) >= r0) && temp <= r15)
+    temp = atoi(operator+1);
+    if (operator[0] == 'r' && operator[1] != '\0' && is_only_digits(operator+1) && temp >= r0 && temp <= r15)
     {
         *r = temp;
         *sort = register_direct;
@@ -388,21 +379,4 @@ char **split_line(char *str)
     return s;
 }
 
-/*
-int main()
-{
-    plw head;
-    plw prv;
-    initialize_list(&head,&prv,BASE_STOCK);
-    char s1[] ={"add    r3,LIST"};
-    char s2[] ={"prn    #48"};
-    char s3[] ={"lea STR,r6"};
-    char s4[] ={"inc r6"};
-    twoParam_1(&prv, split_line(s1)+1,o_add,f_add,two_op);
-    twoParam_1(&prv, split_line(s2)+1,o_prn,f_prn,full_target_op);
-    twoParam_1(&prv, split_line(s3)+1,o_lea,f_lea,min_two_op);
-    twoParam_1(&prv, split_line(s4)+1,o_inc,f_inc,target_op);
-    command_code_process(s1);
-    return 0;
-}
-*/
+

@@ -26,6 +26,8 @@ typedef struct link_words {
 } wordsNode;
 typedef enum { A = 4, R = 2, E = 1 } ARE;
 
+/*for test*/int mainly();
+
 /*Functions from pre-assembler.c*/
 int pre_assembler(char *, char *);
 /*Functions from first-pass.c*/
@@ -145,6 +147,8 @@ int add_std_word(plw *, ARE are, Funct funct, registers source_r,
 void print_listNode(plw h);
 void print_node(plw p);
 void print_word(int word);
+int convert_word( int);
+void print_convert_Node(plw);
 void free_list(plw);
 int add_base_word(plw *, ARE, opcode);
 void add_num_to_list(plw *, ARE, int);
