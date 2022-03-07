@@ -134,6 +134,7 @@ int first_pass(FILE *expanded_file_handler, plw *h_I, plw *p_I, plw *h_D,
     else if (!error && !is_empty_line(line) && !strcmp(word, ".string"))
       error = command_string_process(&prv_DC, line, line_number);
 
+
     if (get_current_address(prv_IC) + get_current_address(prv_DC) + 1 >
         MAX_ADDRESS) { /*checks if we didn't use too much memory*/
       fprintf(stderr, "Error: Out of memory\n");
@@ -146,8 +147,10 @@ int first_pass(FILE *expanded_file_handler, plw *h_I, plw *p_I, plw *h_D,
     }
   }
 
+
   update_data_labels_address(prv_IC->stock_index);
   update_address(head_DC, prv_IC->stock_index);
+
 
   *h_I = head_IC;
   *p_I = prv_IC;
