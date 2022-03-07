@@ -7,8 +7,7 @@ void initialize_list(plw *h, plw *p, int stock)
     (*p)->word = -1;
     (*p)->stock_index = stock;
 }
-
-void add_num_to_list(plw *prv, ARE are, int n)
+int create_stdnum(ARE are, int n)
 {
     int word;
     SET_ARE(are);
@@ -16,7 +15,12 @@ void add_num_to_list(plw *prv, ARE are, int n)
     mask = ~mask;
     mask <<= 16;
     mask = ~mask;
-    word = (mask & n) | are;
+    return (mask & n) | are;
+}
+
+void add_num_to_list(plw *prv, ARE are, int n)
+{
+    int word = create_stdnum(are, n);
     add_to_list(prv, word);
 }
 void add_to_list(plw *prv, int n)
@@ -107,6 +111,15 @@ void update_address(plw head, int n)
         head->stock_index = n + 1;
         n++;
         head = head->next;
+    }
+}
+int set_next_empty(plw p, ARE are, int num)
+{
+    int std_word = create_stdnum(are , num);
+    while (p->word != 0 && p->next != NULL) p = p->next;
+    if(p != NULL)
+    {
+        p->word = std_word;
     }
 }
 void free_list(plw h)

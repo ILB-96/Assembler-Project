@@ -56,7 +56,7 @@ int command_data_process(plw *prv_DC, char *line, int line_number)
         fprintf(stderr, "Error at line %d: Illegal extended text\n", line_number);
         error = TRUE;
     }
-
+    free(s_line);
     return error;
 }
 
@@ -260,8 +260,9 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
     switch (target_sort)
     {
     case immediate:
-        if (op == full_two_op || op == full_target_op)
+        if ( (op == full_two_op || op == full_target_op) && is_only_digits(comm+1) )
         {
+
             add_num_to_list(prv, A, atoi(comm + 1));
         }
         else
@@ -283,17 +284,12 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
 int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *are)
 {
     int result = 1;
+     int temp;
     *are = A;
     /*case it's register*/
-    if (operator[0] == 'r')
+    if (operator[0] == 'r' && is_only_digits(operator+1) && (temp = atoi(operator+1) >= r0) && temp <= r15)
     {
-        int temp = atoi(operator+ 1);
-        if (temp >= r0 && temp <= r15)
-        {
-            *r = temp;
-        }
-        else
-            result = 0;
+        *r = temp;
         *sort = register_direct;
     }
     /*case it's number*/
@@ -303,7 +299,7 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
         *sort = immediate;
     }
     /*case it's variable*/
-    else
+    else if(isalpha(operator[0]))
     {
         /*case illegal variable*/
         if (isdigit(operator[0]) || is_operator(operator) >=0)
@@ -337,7 +333,10 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
                 result = 0;
         }
     }
+    else   
+      result = 0;
 
+   
     return result;
 }
 
@@ -392,33 +391,18 @@ char **split_line(char *str)
 /*
 int main()
 {
-
     plw head;
     plw prv;
     initialize_list(&head,&prv,BASE_STOCK);
-
-
     char s1[] ={"add    r3,LIST"};
     char s2[] ={"prn    #48"};
     char s3[] ={"lea STR,r6"};
     char s4[] ={"inc r6"};
-
-
-
-
-
     twoParam_1(&prv, split_line(s1)+1,o_add,f_add,two_op);
     twoParam_1(&prv, split_line(s2)+1,o_prn,f_prn,full_target_op);
     twoParam_1(&prv, split_line(s3)+1,o_lea,f_lea,min_two_op);
     twoParam_1(&prv, split_line(s4)+1,o_inc,f_inc,target_op);
-
-
-
     command_code_process(s1);
-
-
-
     return 0;
 }
-
 */
