@@ -75,11 +75,12 @@ int convert_word(int n, FILE *file_handler) {
   int c = (n >> 8) & masc;
   int d = (n >> 4) & masc;
   int e = n & masc;
-
+  /*TODO: this part should also convert DC words*/
   fprintf(file_handler, "A%x-B%x-C%x-D%x-E%x\n", a, b, c, d, e);
 }
 void load_obj_file(plw h, FILE *file_handler) {
   while (h != NULL) {
+    /*TODO:this get_current_address should include DC address(149)*/
     fprintf(file_handler, "%d\t\t", get_current_address(h));
     convert_word(h->word, file_handler);
     h = h->next;
