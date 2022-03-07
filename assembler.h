@@ -156,7 +156,7 @@ int add_base_word(plw *, ARE, opcode);
 void add_num_to_list(plw *, ARE, int);
 void update_address(plw, int);
 int set_next_empty(plw, ARE, int);
-int get_length(plw );
+int get_length(plw);
 
 /*command_process*/
 

@@ -20,8 +20,7 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
   load_file(&ext_file_handler, file_name, ".ext", "w");
   /*TODO: this function should count the number of IC words
   and number of DC words.*/
-  fprintf(obj_file_handler, "\t\t\t%d\t%d\n", get_current_address(head_IC),
-          get_current_address(head_DC) - 99);
+
   while (fgets(line, MAX_LINE, exp_file_handler)) {
     get_first_token(line, word);
     if (!strcmp(word, ".entry")) {
@@ -39,9 +38,6 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
     if (!is_empty_line(line) && !error && found_label(line, word)) {
       error = get_label_values(word, &label_base_val, &label_offset_val,
                                &label_are);
-      printf("at line: %d label: %s  base: %d off: %d are: %c\n", line_number,
-             word, label_base_val, label_offset_val, label_are);
-
       if (!error && label_are == E) {
         fprintf(ext_file_handler, "%s BASE %d\n", word,
                 set_next_empty(head_IC, label_are, label_base_val));
@@ -72,17 +68,11 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
     }
     line_number++;
   }
-  printf("length IC is %d\n",get_length(head_IC));
-  printf("length DC is %d\n",get_length(head_DC));
-  print_listNode(head_IC);
-  print_listNode(head_DC);
-  puts("\n");
 
-  print_labels();
-  puts("\n");
-  
-
+  fprintf(obj_file_handler, "\t\t\t%d\t%d\n", get_length(head_IC),
+          get_length(head_DC));
   load_obj_file(head_IC, obj_file_handler);
+  load_obj_file(head_DC, obj_file_handler);
   fclose(obj_file_handler);
   fclose(ent_file_handler);
   fclose(ext_file_handler);
