@@ -6,44 +6,28 @@ int is_macro_name(char *, FILE *);
 void insert_macro(FILE *, FILE *, char *);
 void get_macro_name(char *, char *);
 
-int pre_assembler(char *expanded_name, char *file_name) {
+int pre_assembler(FILE **exp_file_handler, char *file_name) {
   FILE *file_handler;
-  FILE *expanded_file_handler;
-  strcpy(expanded_name, file_name);
-  strcat(expanded_name, AS);
-  if (!(file_handler = fopen(expanded_name, "r"))) {
-    fprintf(stderr, "FAILED!\nError: File '%s' open failed.\n\n",
-            expanded_name);
-    return 0;
-  }
-  strcpy(expanded_name, "expanded_");
-  strcat(expanded_name, file_name);
-  strcat(expanded_name, AS);
-  if (!(expanded_file_handler = fopen(expanded_name, "w"))) {
-    fprintf(stderr, "FAILED!\nError: File '%s' open failed.\n\n",
-            expanded_name);
-    exit(EXIT_FAILURE);
-  }
+  int error = FALSE;
+  error = load_file(&file_handler, file_name, ".as", "r");
+  if (!error)
+    error = load_file(&*exp_file_handler, file_name, "_exp.as", "w+");
 
-  /*TODO: maybe change macros file to a dynamic array*/
-  expand_macros(file_handler, expanded_file_handler);
-  fclose(expanded_file_handler);
-  fclose(file_handler);
-  remove("macros-file.txt");
-  printf("OK.\n");
-  return 1;
+  if (!error) {
+    expand_macros(file_handler, *exp_file_handler);
+    fclose(file_handler);
+    remove("macros_file.txt");
+  }
+  return error;
 }
 
-void expand_macros(FILE *file_handler, FILE *expanded_file_handler) {
+void expand_macros(FILE *file_handler, FILE *exp_file_handler) {
   FILE *macros_file_handler;
   char line[MAX_LINE] = "", word[MAX_LINE] = "";
   int is_part_of_macro = 0;
-  if (!(macros_file_handler = fopen("macros-file.txt", "w+"))) {
-    fprintf(stderr, "FAILED!\nError: File '%s' open failed.\n\n",
-            "macros-file.txt");
-    exit(EXIT_FAILURE);
-  }
-  while (fgets(line, sizeof(line), file_handler) != NULL) {
+  load_file(&macros_file_handler, "macros_file", ".txt", "w+");
+
+  while (fgets(line, sizeof(line), file_handler)) {
     get_first_token(line, word);
     if (!strcmp(word, "macro") || is_part_of_macro) {
       if (!strcmp(word, "endm")) {
@@ -59,9 +43,9 @@ void expand_macros(FILE *file_handler, FILE *expanded_file_handler) {
       }
     } else {
       if (is_macro_name(word, macros_file_handler)) {
-        insert_macro(expanded_file_handler, macros_file_handler, word);
+        insert_macro(exp_file_handler, macros_file_handler, word);
       } else if (!is_empty_line(line) && !is_comment_line(line))
-        fprintf(expanded_file_handler, "%s", line);
+        fprintf(exp_file_handler, "%s", line);
       fseek(macros_file_handler, 0, SEEK_END);
     }
   }
@@ -100,7 +84,7 @@ int is_macro_name(char *word, FILE *macros_file_handler) {
   return 0;
 }
 
-void insert_macro(FILE *expanded_file_handler, FILE *macros_file_handler,
+void insert_macro(FILE *exp_file_handler, FILE *macros_file_handler,
                   char *word) {
   char line[MAX_LINE] = "", fword[MAX_LINE] = "";
   int inserted = 0, insert = 0;
@@ -112,7 +96,7 @@ void insert_macro(FILE *expanded_file_handler, FILE *macros_file_handler,
       inserted = 1;
     }
     if (insert) {
-      fprintf(expanded_file_handler, "%s", line);
+      fprintf(exp_file_handler, "%s", line);
     }
     if (!strcmp(fword, word) && !insert)
       insert = 1;
