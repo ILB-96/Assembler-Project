@@ -1,5 +1,20 @@
 #include "assembler.h"
-
+int load_file(FILE **file_handler, char *name, char *exten, char *mode) {
+  char *file_name;
+  if (!(file_name = (char *)malloc(strlen(name) + EXTEN_LEN))) {
+    fprintf(stderr, "Error: Out of memory\n");
+    exit(EXIT_FAILURE);
+  }
+  strcpy(file_name, name);
+  strcat(file_name, exten);
+  if (!(*file_handler = fopen(file_name, mode))) {
+    fprintf(stderr, "FAILED! Error: File '%s' open failed.\n\n", file_name);
+    free(file_name);
+    return 1;
+  }
+  free(file_name);
+  return 0;
+}
 int is_empty_line(char *line) {
   int i = 0;
   while (line[i] != '\0')

@@ -28,8 +28,7 @@ not names after saved words?*/
 /*Those arrays are saved words, better to have them globally,
 so we can always check if a variable is trying to use those name*/
 
-int first_pass(FILE *expanded_file_handler, plw *h_I, plw *p_I, plw *h_D,
-               plw *p_D) {
+int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D) {
   /*Variables*/
   int label_counter = 0;
   int line_number = 1;
@@ -54,7 +53,7 @@ int first_pass(FILE *expanded_file_handler, plw *h_I, plw *p_I, plw *h_D,
    * stop the program after that*/
   /*This loop will go through the entire expanded file, creating the labels
    * and adding every piece of data to it's correct location in the memory*/
-  while (fgets(line, MAX_LINE, expanded_file_handler) != NULL) {
+  while (fgets(line, MAX_LINE, exp_file_handler)) {
     get_first_token(line, word);
 
     if (!strcmp(word, ".extern")) /*Case for extern labels*/
@@ -134,7 +133,6 @@ int first_pass(FILE *expanded_file_handler, plw *h_I, plw *p_I, plw *h_D,
     else if (!error && !is_empty_line(line) && !strcmp(word, ".string"))
       error = command_string_process(&prv_DC, line, line_number);
 
-
     if (get_current_address(prv_IC) + get_current_address(prv_DC) + 1 >
         MAX_ADDRESS) { /*checks if we didn't use too much memory*/
       fprintf(stderr, "Error: Out of memory\n");
@@ -147,18 +145,13 @@ int first_pass(FILE *expanded_file_handler, plw *h_I, plw *p_I, plw *h_D,
     }
   }
 
-
   update_data_labels_address(prv_IC->stock_index);
   update_address(head_DC, prv_IC->stock_index);
-
-
   *h_I = head_IC;
   *p_I = prv_IC;
   *h_D = head_DC;
   *p_D = prv_DC;
 
-  
-  /* TODO: update global variables into first_pass scope*/
 
   return g_error;
 }
@@ -283,8 +276,8 @@ int is_label_exists(char *word) {
 
   return 0;
 }
-int get_label_values(char *word, int *label_base_val, int *label_offset_val,ARE *are) 
-{
+int get_label_values(char *word, int *label_base_val, int *label_offset_val,
+                     ARE *are) {
   int i;
   for (i = 0; strcmp(symbols_table[i].name, ""); i++)
     if (!strcmp(symbols_table[i].name, word)) {

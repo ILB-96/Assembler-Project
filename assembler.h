@@ -8,6 +8,7 @@
 
 #define MAX_LINE 81
 #define MAX_ADDRESS 8191
+#define EXTEN_LEN 13
 #define BASE_MODE 16
 #define BASE_IC 100
 #define BASE_DC 0
@@ -29,7 +30,7 @@ typedef enum { A = 4, R = 2, E = 1 } ARE;
 /*for test*/int mainly();
 
 /*Functions from pre-assembler.c*/
-int pre_assembler(char *, char *);
+int pre_assembler(FILE **, char *);
 /*Functions from first-pass.c*/
 int first_pass(FILE *, plw *, plw *, plw *, plw *);
 void free_symbols_str();
@@ -41,10 +42,11 @@ void print_labels();
 int get_label_values(char *, int *, int *, ARE *);
 int found_label(char *, char *);
 /*Functions from second-pass.c*/
-int second_pass(FILE *, char *,plw);
+int second_pass(FILE *, char *, plw);
 int process_entry_label(char *word, int line_number);
 
 /*General use functions from functions.c*/
+int load_file(FILE **, char *, char *, char *);
 int is_comment_line(char *);
 int is_empty_line(char *);
 void get_first_token(char *, char *);
@@ -54,7 +56,6 @@ void remove_colon(char *);
 void remove_signs(char *);
 
 /*WORD-LIST*/
-
 
 #define IS_NULL(x)                                                             \
   if (x == NULL) {                                                             \

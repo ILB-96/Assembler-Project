@@ -8,7 +8,9 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Mar  7 17:55:30 2022
+
+# Make data base, printed on Mon Mar  7 19:01:44 2022
+
 
 # Variables
 
@@ -41,7 +43,7 @@ GDMSESSION = ubuntu
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/yoni/Desktop/mm 14/4/Assembler-Project
+CURDIR := /home/yoni/Desktop/mm 14/temp/Assembler-Project
 # makefile
 SHELL = /bin/sh
 # environment
@@ -109,7 +111,7 @@ DISPLAY = :0
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-PWD = /home/yoni/Desktop/mm 14/4/Assembler-Project
+PWD = /home/yoni/Desktop/mm 14/temp/Assembler-Project
 # default
 .LOADED := 
 # environment
@@ -151,7 +153,9 @@ CC = gcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-af5fadb2-ce78-4a16-88e9-c3a94aca74be.sock
+
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-707d9396-0b46-4ade-9a1a-148000addfd5.sock
+
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -225,7 +229,9 @@ VSCODE_PID = 2458
 
 # Directories
 
-# . (device 2053, inode 1315808): 32 files, no impossibilities.
+
+# . (device 2053, inode 1315883): 20 files, no impossibilities.
+
 
 # 32 files, no impossibilities in 1 directories.
 
@@ -317,7 +323,9 @@ test: test.o functions.o pre_assembler.o first_pass.o second_pass.o command_proc
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-03-07 14:46:19.237441028
+
+#  Last modified 2022-03-07 19:01:33.781562135
+
 #  File has been updated.
 #  Successfully updated.
 
@@ -412,7 +420,7 @@ data_struct_words.o: data_struct_words.c assembler.h
 
 # strcache performance: lookups = 93 / hit rate = 53%
 # hash-table stats:
-# Load=43/8192=1%, Rehash=0, Collisions=1/93=1%
-# Finished Make data base on Mon Mar  7 17:55:31 2022
 
- 
+# Load=38/8192=0%, Rehash=0, Collisions=1/81=1%
+# Finished Make data base on Mon Mar  7 19:01:44 2022
+

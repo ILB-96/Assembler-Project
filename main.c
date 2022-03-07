@@ -1,9 +1,8 @@
 #include "assembler.h"
-#define EXP_EXT_LEN 13 /*"expanded-.as\0" = 13 chars"*/
+/*"expanded-.as\0" = 13 chars"*/
 
 /*Private functions meant to be used only inside this source*/
 void assembler(char *);
-void create_file(char *, FILE *);
 int main(int argc, char *argv[]) {
  
   if (argc < 2) {
@@ -25,30 +24,14 @@ void assembler(char *file_name) {
 
   /*variables to handle the expanded file that we will use*/
   FILE *exp_file_handler;
-  char *exp_file_name;
-
-  /*allocating memory for the new name*/
-  if (!(exp_file_name = (char *)malloc(strlen(file_name) + EXP_EXT_LEN))) {
-    fprintf(stderr, "Error: Out of memory\n");
-    exit(EXIT_FAILURE);
-  }
-
-  printf("Pre Assembly process at work...");
-  fflush(stdout);
+  printf("Pre Assembly process at work...\n");
   /*go to pre-assembler.c for more info*/
-  if (!pre_assembler(exp_file_name, file_name)) {
-    free(exp_file_name);
+  if (pre_assembler(&exp_file_handler, file_name)) {
     return;
   }
-
+  fseek(exp_file_handler, 0, SEEK_SET);
   printf("===Assembly process for %s.as started===\n", file_name);
   /*Here we open the expanded file completed from the pre assembler*/
-  if (!(exp_file_handler = fopen(exp_file_name, "r"))) {
-    fprintf(stderr, "Error: File '%s' open failed.\n", exp_file_name);
-    exit(EXIT_FAILURE);
-  }
-  free(exp_file_name);
-
   printf("Assembly First Pass at work...\n");
   /*Go to first-pass.c for more info*/
   if (first_pass(exp_file_handler, &head_IC, &prv_IC, &head_DC, &prv_DC)) {
