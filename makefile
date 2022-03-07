@@ -23,3 +23,5 @@ test.o: test.c assembler.h
 	$(CC) $(TFLAGS) -c test.c
 clean:
 	rm -f core *.o main test
+fclean:
+	rm -f core *.ob *.ext *.ent *_exp.as
