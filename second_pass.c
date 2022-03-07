@@ -1,5 +1,6 @@
 #include "assembler.h"
-void create_file(FILE *, char *, char *);
+#define EXTEN_LEN 8
+void create_file(FILE **, char *, char *);
 int second_pass(FILE *exp_file_handler, char *file_name) {
   int line_number = 1;
   int error = FALSE;
@@ -13,9 +14,9 @@ int second_pass(FILE *exp_file_handler, char *file_name) {
   FILE *ent_file_handler = NULL;
   FILE *ext_file_handler = NULL;
 
-  create_file(obj_file_handler, file_name, "_ps.ob");
-  create_file(ent_file_handler, file_name, "_ps.ent");
-  create_file(ext_file_handler, file_name, "_ps.ext");
+  create_file(&obj_file_handler, file_name, "_ps.ob");
+  create_file(&ent_file_handler, file_name, "_ps.ent");
+  create_file(&ext_file_handler, file_name, "_ps.ext");
 
   while (fgets(line, MAX_LINE, exp_file_handler) != NULL) {
     get_first_token(line, word);
@@ -41,7 +42,8 @@ int second_pass(FILE *exp_file_handler, char *file_name) {
                                &label_are);
       printf("at line: %d label: %s  base: %d off: %d are: %c\n", line_number,
              word, label_base_val, label_offset_val, label_are);
-      /*if (!error &&label_are = 'E') {
+      /*TODO: process ob.ext file
+      if (!error &&label_are = 'E') {
         fprintf
       }*/
     }
@@ -53,6 +55,9 @@ int second_pass(FILE *exp_file_handler, char *file_name) {
     line_number++;
   }
   print_labels();
+  fclose(obj_file_handler);
+  fclose(ent_file_handler);
+  fclose(ext_file_handler);
 
   return g_error;
 }
@@ -67,15 +72,15 @@ int process_entry_label(char *word, int line_number) {
   }
   return error;
 }
-void create_file(FILE *file_handler, char *name, char *exten) {
+void create_file(FILE **file_handler, char *name, char *exten) {
   char *file_name;
-  if (!(file_name = (char *)malloc(strlen(name) + 8))) {
+  if (!(file_name = (char *)malloc(strlen(name) + EXTEN_LEN))) {
     fprintf(stderr, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
   strcpy(file_name, name);
   strcat(file_name, exten);
-  if (!(file_handler = fopen(file_name, "w+"))) {
+  if (!(*file_handler = fopen(file_name, "w+"))) {
     free(file_name);
     fprintf(stderr, "FAILED!\nError: File '%s' open failed.\n\n", file_name);
     exit(EXIT_FAILURE);
