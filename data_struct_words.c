@@ -105,6 +105,16 @@ void print_word(int word) {
     mask >>= 1;
   }
 }
+int get_length(plw h)
+{
+  int length = 0;
+  while(h != NULL) 
+  {
+    length++;
+    h = h->next;
+  }
+  return length;
+}
 int get_current_address(plw prv) { return prv->stock_index; }
 void update_address(plw head, int n) {
   while (head != NULL) {
