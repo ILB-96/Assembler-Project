@@ -279,17 +279,17 @@ int is_label_exists(char *word) {
 
   return 0;
 }
-int get_label_values(char *word, int *label_base_val, int *label_offset_val,
-                     char *label_are) {
+int get_label_values(char *word, int *label_base_val, int *label_offset_val,ARE *are) 
+{
   int i;
   for (i = 0; strcmp(symbols_table[i].name, ""); i++)
     if (!strcmp(symbols_table[i].name, word)) {
       *label_base_val = symbols_table[i].base_address;
       *label_offset_val = symbols_table[i].offset;
       if (strstr(symbols_table[i].attribute, "external"))
-        *label_are = 'E';
+        *are = E;
       else
-        *label_are = 'R';
+        *are = R;
       return 0;
     }
   return 1;

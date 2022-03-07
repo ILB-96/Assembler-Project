@@ -24,6 +24,8 @@ typedef struct link_words {
 
   int stock_index;
 } wordsNode;
+typedef enum { A = 4, R = 2, E = 1 } ARE;
+
 /*Functions from pre-assembler.c*/
 int pre_assembler(char *, char *);
 /*Functions from first-pass.c*/
@@ -34,10 +36,10 @@ int is_operation_name(char *);
 void add_entry_attribute(char *);
 int is_label_exists(char *);
 void print_labels();
-int get_label_values(char *, int *, int *, char *);
+int get_label_values(char *, int *, int *, ARE *);
 int found_label(char *, char *);
 /*Functions from second-pass.c*/
-int second_pass(FILE *, char *);
+int second_pass(FILE *, char *,plw);
 int process_entry_label(char *word, int line_number);
 
 /*General use functions from functions.c*/
@@ -50,7 +52,7 @@ void remove_colon(char *);
 void remove_signs(char *);
 
 /*WORD-LIST*/
-typedef enum { A = 4, R = 2, E = 1 } ARE;
+
 
 #define IS_NULL(x)                                                             \
   if (x == NULL) {                                                             \
