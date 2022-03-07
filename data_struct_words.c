@@ -1,15 +1,13 @@
 #include "assembler.h"
 
-
-
-void initialize_list(plw *h, plw *p,int stock)
+void initialize_list(plw *h, plw *p, int stock)
 {
     *h = (plw)malloc(sizeof(wordsNode));
     *p = *h;
     (*p)->word = -1;
     (*p)->stock_index = stock;
 }
-void add_numTo_list(plw *prv,ARE are, int n)
+int create_stdnum(ARE are, int n)
 {
     int word;
     SET_ARE(are);
@@ -17,11 +15,15 @@ void add_numTo_list(plw *prv,ARE are, int n)
     mask = ~mask;
     mask <<= 16;
     mask = ~mask;
-    word = (mask&n)|are;
-    addTo_list(prv,word);
-    
+    return (mask & n) | are;
 }
-void addTo_list(plw *prv, int n)
+
+void add_num_to_list(plw *prv, ARE are, int n)
+{
+    int word = create_stdnum(are, n);
+    add_to_list(prv, word);
+}
+void add_to_list(plw *prv, int n)
 {
     if ((*prv)->word == -1)
     {
@@ -40,7 +42,7 @@ void addTo_list(plw *prv, int n)
     }
 }
 
-int getWord(plw h, int index)
+int get_word(plw h, int index)
 {
     int i;
     IS_NULL(h)
@@ -50,16 +52,16 @@ int getWord(plw h, int index)
     IS_NULL(h)
     return h->word;
 }
-int addBase_word(plw *p, ARE are, opcode o)
+int add_base_word(plw *p, ARE are, opcode o)
 {
     int word = 1 << o;
     SET_ARE(are);
     word |= are;
 
-    addTo_list(p, word);
+    add_to_list(p, word);
     return word;
 }
-int addStd_word(plw *prv, ARE are, Funct funct, registers source_r, sortType source_sort, registers target_r, sortType target_sort)
+int add_std_word(plw *prv, ARE are, Funct funct, registers source_r, sortType source_sort, registers target_r, sortType target_sort)
 {
     int word = 0;
 
@@ -71,7 +73,7 @@ int addStd_word(plw *prv, ARE are, Funct funct, registers source_r, sortType sou
 
     word = target_sort | target_r | source_sort | source_r | funct | are;
 
-    addTo_list(prv, word);
+    add_to_list(prv, word);
     return word;
 }
 void print_listNode(plw h)
@@ -98,31 +100,35 @@ void print_word(int word)
         mask >>= 1;
     }
 }
+int get_current_address(plw prv)
+{
+    return prv->stock_index;
+}
+void update_address(plw head, int n)
+{
+    while (head != NULL)
+    {
+        head->stock_index = n + 1;
+        n++;
+        head = head->next;
+    }
+}
+int set_next_empty(plw p, ARE are, int num)
+{
+    int std_word = create_stdnum(are , num);
+    while (p->word != 0 && p->next != NULL) p = p->next;
+    if(p != NULL)
+    {
+        p->word = std_word;
+    }
+}
 void free_list(plw h)
 {
     plw p = h->next;
     while (p != NULL)
     {
-       free(h);
-       h = p;
-       p = h->next;
-
+        free(h);
+        h = p;
+        p = h->next;
     }
 }
-/*int main()
-{
-
-    plw head;
-    plw prv;
-    initialize_list( &head, &prv,BASE_STOCK);
-
-    addBase_word(&prv, A, o_add);
-    addStd_word(&prv, A, 12, 1, 3, 4, 3);
-   
-    add_numTo_list(&prv,R,-1);
-    print_listNode(head);
-    
-    free_list(head);
-
-    return 0;
-}*/

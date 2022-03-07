@@ -8,7 +8,9 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Feb 20 13:48:59 2022
+
+# Make data base, printed on Mon Mar  7 14:46:28 2022
+
 
 # Variables
 
@@ -41,15 +43,17 @@ GDMSESSION = ubuntu
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/yoni/Desktop/mm 14/project - v2/Assembler-Project
+CURDIR := /home/yoni/Desktop/mm 14/4/Assembler-Project
 # makefile
 SHELL = /bin/sh
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
 # environment
 _ = /usr/share/code/code
+# makefile (from 'makefile', line 2)
+CFLAGS = -ansi -pedantic -Wall -g
 # environment
-JOURNAL_STREAM = 8:31655
+JOURNAL_STREAM = 8:32722
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'makefile', line 1)
@@ -67,7 +71,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 1076
+MANAGERPID = 1107
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -79,7 +83,7 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1365,unix/yoni-VirtualBox:/tmp/.ICE-unix/1365
+SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1401,unix/yoni-VirtualBox:/tmp/.ICE-unix/1401
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -89,7 +93,7 @@ VSCODE_LOG_STACK = false
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&iid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&sid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea","uploadToServer":true}
 # environment
-INVOCATION_ID = 22cc3d35f7974e3881c7e694b3194660
+INVOCATION_ID = e809e876464546e19320186815a85320
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -99,7 +103,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 2447
+GIO_LAUNCHED_DESKTOP_FILE_PID = 17373
 # automatic
 %F = $(notdir $%)
 # environment
@@ -107,11 +111,11 @@ DISPLAY = :0
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-PWD = /home/yoni/Desktop/mm 14/project - v2/Assembler-Project
+PWD = /home/yoni/Desktop/mm 14/4/Assembler-Project
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1302
+SSH_AGENT_PID = 1338
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -144,10 +148,12 @@ MAKECMDGOALS := all
 QT_IM_MODULE = ibus
 # environment
 SHLVL = 0
+# makefile (from 'makefile', line 1)
+CC = gcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f646691e-fb36-4d60-bf67-feb67f24d43a.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-c6285b10-d432-48fe-8173-1f5b66e6578e.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -211,9 +217,9 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 2447
+VSCODE_PID = 17373
 # variable set hash-table stats:
-# Load=100/1024=10%, Rehash=0, Collisions=14/125=11%
+# Load=102/1024=10%, Rehash=0, Collisions=14/127=11%
 
 # Pattern-specific Variable Values
 
@@ -221,9 +227,9 @@ VSCODE_PID = 2447
 
 # Directories
 
-# . (device 2053, inode 1310172): 33 files, no impossibilities.
+# . (device 2053, inode 1315808): 20 files, no impossibilities.
 
-# 33 files, no impossibilities in 1 directories.
+# 20 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -238,28 +244,47 @@ assembler.h:
 #  File has not been updated.
 
 # Not a target:
+pre_assembler.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 all:
 #  Command line target.
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has not been updated.
 
-first-pass.o: first-pass.c assembler.h
+first-pass.o: first_pass.c assembler.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'makefile', line 12):
-	gcc -c first-pass.c -o first-pass.o
+	$(CC) $(CFLAGS) -c first_pass.c
 
-second-pass.o: second-pass.c assembler.h
+second-pass.o: second_pass.c assembler.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'makefile', line 14):
-	gcc -c second-pass.c -o second-pass.o
+	$(CC) $(CFLAGS) -c second_pass.c
 
 # Not a target:
 main.c:
+#  Implicit rule search has not been done.
+
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+first_pass.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+second_pass.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -268,7 +293,7 @@ command_process.o: command_process.c assembler.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 4):
+#  recipe to execute (from 'makefile', line 16):
 	gcc -c command_process.c -o command_process.o
 
 # Not a target:
@@ -277,32 +302,54 @@ data_struct_words.c:
 #  Modification time never checked.
 #  File has not been updated.
 
+test.o: test.c assembler.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 23):
+	$(CC) $(TFLAGS) -c test.c
+
+test: test.o functions.o pre_assembler.o first_pass.o second_pass.o command_process.o data_struct_words.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 21):
+	$(CC) $(TFLAGS) -o test command_process.o data_struct_words.o test.o functions.o pre_assembler.o first_pass.o second_pass.o
+
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-02-16 21:45:21.680510625
+
+#  Last modified 2022-03-07 14:46:19.237441028
+
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
-first-pass.c:
+first_pass.c:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
 # Not a target:
-second-pass.c:
+second_pass.c:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
- 
-assembler: command_process.o data_struct_words.o main.o pre-assembler.o first-pass.o second-pass.o
+assembler: command_process.o data_struct_words.o main.o pre_assembler.o first_pass.o second_pass.o functions.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 2):
-	gcc -g -Wall -ansi -pedantic command_process.o data_struct_words.o  main.o pre-assembler.o first-pass.o -o main
+#  recipe to execute (from 'makefile', line 4):
+	$(CC) $(CFLAGS) command_process.o data_struct_words.o  main.o pre_assembler.o first_pass.o second_pass.o functions.o -o main
+
+functions.o: functions.c assembler.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 8):
+	$(CC) $(CFLAGS) -c functions.c
 
 # Not a target:
 command_process.c:
@@ -316,47 +363,62 @@ command_process.c:
 #  Modification time never checked.
 #  File has not been updated.
 
-pre-assembler.o: pre-assembler.c assembler.h
+# Not a target:
+test.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 25):
+	rm -f core *.o main test
+
+pre_assembler.o: pre_assembler.c assembler.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'makefile', line 10):
-	gcc -c pre-assembler.c -o assembler.o
+	$(CC) $(CFLAGS) -c pre_assembler.c
 
 main.o: main.c assembler.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 8):
-	gcc -c main.c -o main.o
+#  recipe to execute (from 'makefile', line 6):
+	$(CC) $(CFLAGS) -c main.c
+
+# Not a target:
+functions.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 data_struct_words.o: data_struct_words.c assembler.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 6):
+#  recipe to execute (from 'makefile', line 18):
 	gcc -c data_struct_words.c -o data_struct_words.o
 
-# Not a target:
-pre-assembler.c:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
 # files hash-table stats:
-# Load=18/1024=2%, Rehash=0, Collisions=0/52=0%
+# Load=26/1024=3%, Rehash=0, Collisions=0/72=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 39 / storage = 473 B / avg = 12 B
-# current buf: size = 8162 B / used = 473 B / count = 39 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 38 / storage = 427 B / avg = 11 B
+# current buf: size = 8162 B / used = 427 B / count = 38 / avg = 11 B
 
-# strcache performance: lookups = 74 / hit rate = 47%
+# strcache performance: lookups = 81 / hit rate = 53%
 # hash-table stats:
-# Load=39/8192=0%, Rehash=0, Collisions=1/74=1%
-# Finished Make data base on Sun Feb 20 13:48:59 2022
+# Load=38/8192=0%, Rehash=0, Collisions=1/81=1%
+
+# Finished Make data base on Mon Mar  7 14:46:28 2022
+
 
  

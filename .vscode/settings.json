@@ -5,18 +5,36 @@
     "random": "c",
     "string.h": "c",
     "assembler.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "*.tcc": "c",
+    "system_error": "c",
+    "fstream": "c",
+    "iostream": "c",
+    "istream": "c",
+    "limits": "c",
+    "new": "c",
+    "ostream": "c",
+    "stdexcept": "c",
+    "streambuf": "c",
+    "functional": "c"
   },
   "cmake.configureOnOpen": false,
   "files.exclude": {
-    ".trunk": true,
     "**.o": true,
     "main.o": true,
     "README.md": true,
     ".vscode/*README": true,
     ".vscode/*README.*": true,
-    "acutest.h": true,
     "backup.c": true
   },
-  "C_Cpp.errorSquiggles": "Disabled"
+  "cSpell.words": [
+    "endm",
+    "fword"
+  ],
+  "window.title": "${activeEditorLong}${separator}${rootName}",
+  "window.zoomLevel": 0.6,
+  "editor.rename.enablePreview": false,
+  "editor.wordWrap": "on",
+  "editor.wordWrapColumn": 100,
+  "html.format.wrapLineLength": 100
 }
