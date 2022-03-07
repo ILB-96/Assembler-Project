@@ -15,9 +15,9 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
   FILE *ent_file_handler;
   FILE *ext_file_handler;
 
-  load_file(&obj_file_handler, file_name, "_ps.ob", "w");
-  load_file(&ent_file_handler, file_name, "_ps.ent", "w");
-  load_file(&ext_file_handler, file_name, "_ps.ext", "w");
+  load_file(&obj_file_handler, file_name, ".ob", "w");
+  load_file(&ent_file_handler, file_name, ".ent", "w");
+  load_file(&ext_file_handler, file_name, ".ext", "w");
   /*TODO: this function should count the number of IC words
   and number of DC words.*/
   fprintf(obj_file_handler, "\t\t\t%d\t%d\n", get_current_address(head_IC),
