@@ -1,13 +1,13 @@
 #include "assembler.h"
 #define EXTEN_LEN 8
 void create_file(FILE **, char *, char *);
-int second_pass(FILE *exp_file_handler, char *file_name) {
+int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC) {
   int line_number = 1;
   int error = FALSE;
   int g_error = FALSE;
   int label_base_val = 0;
   int label_offset_val = 0;
-  char label_are;
+  ARE label_are;
   char line[MAX_LINE];
   char word[MAX_LINE];
   FILE *obj_file_handler = NULL;
@@ -37,11 +37,15 @@ int second_pass(FILE *exp_file_handler, char *file_name) {
       get_next_token(line, word);
     }
 
-    if (!is_empty_line(line) && !error && found_label(line, word)) {
+    if (!is_empty_line(line) && !error && found_label(line, word)) 
+    {
       error = get_label_values(word, &label_base_val, &label_offset_val,
                                &label_are);
       printf("at line: %d label: %s  base: %d off: %d are: %c\n", line_number,
              word, label_base_val, label_offset_val, label_are);
+      set_next_empty(head_IC,label_are,label_base_val);
+      set_next_empty(head_IC,label_are,label_offset_val);
+
       /*TODO: process ob.ext file
       if (!error &&label_are = 'E') {
         fprintf
@@ -54,6 +58,10 @@ int second_pass(FILE *exp_file_handler, char *file_name) {
     }
     line_number++;
   }
+  
+  print_listNode(head_IC);
+  puts("\n");
+
   print_labels();
   fclose(obj_file_handler);
   fclose(ent_file_handler);

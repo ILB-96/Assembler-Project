@@ -242,6 +242,14 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         }
         break;
     }
+<<<<<<< HEAD
+    
+    if (error)
+    {
+        g_error = error;
+    }
+=======
+
 
     return error;
 }

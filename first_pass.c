@@ -134,6 +134,7 @@ int first_pass(FILE *expanded_file_handler, plw *h_I, plw *p_I, plw *h_D,
     else if (!error && !is_empty_line(line) && !strcmp(word, ".string"))
       error = command_string_process(&prv_DC, line, line_number);
 
+
     if (get_current_address(prv_IC) + get_current_address(prv_DC) + 1 >
         MAX_ADDRESS) { /*checks if we didn't use too much memory*/
       fprintf(stderr, "Error: Out of memory\n");
@@ -146,8 +147,10 @@ int first_pass(FILE *expanded_file_handler, plw *h_I, plw *p_I, plw *h_D,
     }
   }
 
+
   update_data_labels_address(prv_IC->stock_index);
   update_address(head_DC, prv_IC->stock_index);
+
 
   *h_I = head_IC;
   *p_I = prv_IC;
@@ -279,17 +282,17 @@ int is_label_exists(char *word) {
 
   return 0;
 }
-int get_label_values(char *word, int *label_base_val, int *label_offset_val,
-                     char *label_are) {
+int get_label_values(char *word, int *label_base_val, int *label_offset_val,ARE *are) 
+{
   int i;
   for (i = 0; strcmp(symbols_table[i].name, ""); i++)
     if (!strcmp(symbols_table[i].name, word)) {
       *label_base_val = symbols_table[i].base_address;
       *label_offset_val = symbols_table[i].offset;
       if (strstr(symbols_table[i].attribute, "external"))
-        *label_are = 'E';
+        *are = E;
       else
-        *label_are = 'R';
+        *are = R;
       return 0;
     }
   return 1;
