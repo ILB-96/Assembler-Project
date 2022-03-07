@@ -8,7 +8,9 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
+
 # Make data base, printed on Mon Mar  7 14:46:28 2022
+
 
 # Variables
 
@@ -271,7 +273,7 @@ second-pass.o: second_pass.c assembler.h
 # Not a target:
 main.c:
 #  Implicit rule search has not been done.
- 
+
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -317,7 +319,9 @@ test: test.o functions.o pre_assembler.o first_pass.o second_pass.o command_proc
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
+
 #  Last modified 2022-03-07 14:46:19.237441028
+
 #  File has been updated.
 #  Successfully updated.
 
@@ -413,6 +417,8 @@ data_struct_words.o: data_struct_words.c assembler.h
 # strcache performance: lookups = 81 / hit rate = 53%
 # hash-table stats:
 # Load=38/8192=0%, Rehash=0, Collisions=1/81=1%
+
 # Finished Make data base on Mon Mar  7 14:46:28 2022
+
 
  
