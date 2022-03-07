@@ -115,13 +115,17 @@ void update_address(plw head, int n)
 }
 int set_next_empty(plw p, ARE are, int num)
 {
+    int result = -1;
     int std_word = create_stdnum(are , num);
     while (p->word != 0 && p->next != NULL) p = p->next;
     if(p != NULL)
     {
         p->word = std_word;
+        result = p->stock_index;
     }
+    return result;
 }
+
 void free_list(plw h)
 {
     plw p = h->next;
