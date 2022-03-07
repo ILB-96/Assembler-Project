@@ -1,7 +1,7 @@
 #include "assembler.h"
 
 int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
-                plw prv_IC) {
+                plw head_DC) {
   int line_number = 1;
   int is_entry = FALSE;
   int error = FALSE;
@@ -18,7 +18,8 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
   load_file(&obj_file_handler, file_name, "_ps.ob", "w");
   load_file(&ent_file_handler, file_name, "_ps.ent", "w");
   load_file(&ext_file_handler, file_name, "_ps.ext", "w");
-
+  fprintf(obj_file_handler, "\t\t\t%d\t%d\n", get_current_address(head_IC),
+          get_current_address(head_DC) - 99);
   while (fgets(line, MAX_LINE, exp_file_handler)) {
     get_first_token(line, word);
     if (!strcmp(word, ".entry")) {
@@ -74,11 +75,11 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
   puts("\n");
 
   print_labels();
+  load_obj_file(head_IC, obj_file_handler);
   fclose(obj_file_handler);
   fclose(ent_file_handler);
   fclose(ext_file_handler);
 
-  print_convert_Node(head_IC);
   return g_error;
 }
 int process_entry_label(char *word, int line_number) {

@@ -68,7 +68,7 @@ int add_std_word(plw *prv, ARE are, Funct funct, registers source_r,
   add_to_list(prv, word);
   return word;
 }
-int convert_word(int n) {
+int convert_word(int n, FILE *file_handler) {
   int masc = 15;
   int a = (n >> 16) & masc;
   int b = (n >> 12) & masc;
@@ -76,11 +76,12 @@ int convert_word(int n) {
   int d = (n >> 4) & masc;
   int e = n & masc;
 
-  printf("\nA%x-B%x-C%x-D%x-E%x", a, b, c, d, e);
+  fprintf(file_handler, "A%x-B%x-C%x-D%x-E%x\n", a, b, c, d, e);
 }
-void print_convert_Node(plw h) {
+void load_obj_file(plw h, FILE *file_handler) {
   while (h != NULL) {
-    convert_word(h->word);
+    fprintf(file_handler, "%d\t\t", get_current_address(h));
+    convert_word(h->word, file_handler);
     h = h->next;
   }
 }

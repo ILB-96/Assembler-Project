@@ -149,8 +149,8 @@ int add_std_word(plw *, ARE are, Funct funct, registers source_r,
 void print_listNode(plw h);
 void print_node(plw p);
 void print_word(int word);
-int convert_word(int);
-void print_convert_Node(plw);
+int convert_word(int, FILE *);
+void load_obj_file(plw, FILE *);
 void free_list(plw);
 int add_base_word(plw *, ARE, opcode);
 void add_num_to_list(plw *, ARE, int);
