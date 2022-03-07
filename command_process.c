@@ -250,7 +250,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
     }
 =======
 
->>>>>>> 0ac25b92bee95f4adf9d765b686451d90c44082d
+
     return error;
 }
 

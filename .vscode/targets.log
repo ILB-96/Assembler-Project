@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Mar  1 21:15:31 2022
+# Make data base, printed on Mon Mar  7 14:26:59 2022
 
 # Variables
 
@@ -41,7 +41,7 @@ GDMSESSION = ubuntu
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/yoni/Desktop/mm 14/hazan/Assembler-Project
+CURDIR := /home/yoni/Desktop/mm 14/4/Assembler-Project
 # makefile
 SHELL = /bin/sh
 # environment
@@ -51,7 +51,7 @@ _ = /usr/share/code/code
 # makefile (from 'makefile', line 2)
 CFLAGS = -ansi -pedantic -Wall -g
 # environment
-JOURNAL_STREAM = 8:32910
+JOURNAL_STREAM = 8:32722
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'makefile', line 1)
@@ -69,7 +69,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 1109
+MANAGERPID = 1107
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -81,7 +81,7 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1402,unix/yoni-VirtualBox:/tmp/.ICE-unix/1402
+SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1401,unix/yoni-VirtualBox:/tmp/.ICE-unix/1401
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -91,7 +91,7 @@ VSCODE_LOG_STACK = false
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&iid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&sid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea","uploadToServer":true}
 # environment
-INVOCATION_ID = dc4d3142edd749b89708b860e1cc4bf3
+INVOCATION_ID = e809e876464546e19320186815a85320
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -101,7 +101,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 2871
+GIO_LAUNCHED_DESKTOP_FILE_PID = 2907
 # automatic
 %F = $(notdir $%)
 # environment
@@ -109,11 +109,11 @@ DISPLAY = :0
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-PWD = /home/yoni/Desktop/mm 14/hazan/Assembler-Project
+PWD = /home/yoni/Desktop/mm 14/4/Assembler-Project
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1341
+SSH_AGENT_PID = 1338
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -151,7 +151,7 @@ CC = gcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-2b2a5c4b-d3da-4b0f-8631-9fd214f9c0ae.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-088008ca-667f-4241-8afa-3b464850f0a4.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -215,7 +215,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 2871
+VSCODE_PID = 2907
 # variable set hash-table stats:
 # Load=102/1024=10%, Rehash=0, Collisions=14/127=11%
 
@@ -225,7 +225,7 @@ VSCODE_PID = 2871
 
 # Directories
 
-# . (device 2053, inode 532316): 20 files, no impossibilities.
+# . (device 2053, inode 1315715): 20 files, no impossibilities.
 
 # 20 files, no impossibilities in 1 directories.
 
@@ -317,7 +317,7 @@ test: test.o functions.o pre_assembler.o first_pass.o second_pass.o command_proc
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-03-01 21:15:22.887247251
+#  Last modified 2022-03-07 14:26:48.768414289
 #  File has been updated.
 #  Successfully updated.
 
@@ -413,6 +413,6 @@ data_struct_words.o: data_struct_words.c assembler.h
 # strcache performance: lookups = 81 / hit rate = 53%
 # hash-table stats:
 # Load=38/8192=0%, Rehash=0, Collisions=1/81=1%
-# Finished Make data base on Tue Mar  1 21:15:31 2022
+# Finished Make data base on Mon Mar  7 14:26:59 2022
 
  
