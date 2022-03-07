@@ -34,10 +34,10 @@ int is_operation_name(char *);
 void add_entry_attribute(char *);
 int is_label_exists(char *);
 void print_labels();
-int get_label_values(char *, int *, int *);
+int get_label_values(char *, int *, int *, char *);
 int found_label(char *, char *);
 /*Functions from second-pass.c*/
-int second_pass(FILE *);
+int second_pass(FILE *, char *);
 int process_entry_label(char *word, int line_number);
 
 /*General use functions from functions.c*/

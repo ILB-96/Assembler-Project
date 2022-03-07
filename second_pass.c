@@ -1,14 +1,23 @@
 #include "assembler.h"
-
-int second_pass(FILE *expanded_file_handler) {
+void create_file(FILE *, char *, char *);
+int second_pass(FILE *exp_file_handler, char *file_name) {
   int line_number = 1;
   int error = FALSE;
   int g_error = FALSE;
   int label_base_val = 0;
   int label_offset_val = 0;
+  char label_are;
   char line[MAX_LINE];
   char word[MAX_LINE];
-  while (fgets(line, MAX_LINE, expanded_file_handler) != NULL) {
+  FILE *obj_file_handler = NULL;
+  FILE *ent_file_handler = NULL;
+  FILE *ext_file_handler = NULL;
+
+  create_file(obj_file_handler, file_name, "_ps.ob");
+  create_file(ent_file_handler, file_name, "_ps.ent");
+  create_file(ext_file_handler, file_name, "_ps.ext");
+
+  while (fgets(line, MAX_LINE, exp_file_handler) != NULL) {
     get_first_token(line, word);
     if (!strcmp(word, ".entry")) {
       get_next_token(line, word);
@@ -28,9 +37,13 @@ int second_pass(FILE *expanded_file_handler) {
     }
 
     if (!is_empty_line(line) && !error && found_label(line, word)) {
-      error = get_label_values(word, &label_base_val, &label_offset_val);
-      printf("at line: %d label: %s  base: %d off: %d\n", line_number, word,
-             label_base_val, label_offset_val);
+      error = get_label_values(word, &label_base_val, &label_offset_val,
+                               &label_are);
+      printf("at line: %d label: %s  base: %d off: %d are: %c\n", line_number,
+             word, label_base_val, label_offset_val, label_are);
+      /*if (!error &&label_are = 'E') {
+        fprintf
+      }*/
     }
 
     if (error) {
@@ -40,6 +53,7 @@ int second_pass(FILE *expanded_file_handler) {
     line_number++;
   }
   print_labels();
+
   return g_error;
 }
 int process_entry_label(char *word, int line_number) {
@@ -52,4 +66,19 @@ int process_entry_label(char *word, int line_number) {
             line_number, word);
   }
   return error;
+}
+void create_file(FILE *file_handler, char *name, char *exten) {
+  char *file_name;
+  if (!(file_name = (char *)malloc(strlen(name) + 8))) {
+    fprintf(stderr, "Error: Out of memory\n");
+    exit(EXIT_FAILURE);
+  }
+  strcpy(file_name, name);
+  strcat(file_name, exten);
+  if (!(file_handler = fopen(file_name, "w+"))) {
+    free(file_name);
+    fprintf(stderr, "FAILED!\nError: File '%s' open failed.\n\n", file_name);
+    exit(EXIT_FAILURE);
+  }
+  free(file_name);
 }
