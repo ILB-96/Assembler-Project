@@ -76,6 +76,25 @@ int add_std_word(plw *prv, ARE are, Funct funct, registers source_r, sortType so
     add_to_list(prv, word);
     return word;
 }
+int convert_word( int n)
+{
+    int masc = 15;
+    int a = (n>>16)&masc;
+    int b = (n>>12)&masc;
+    int c = (n>>8)&masc;
+    int d = (n>>4)&masc;
+    int e = n&masc;
+
+    printf("\nA%x-B%x-C%x-D%x-E%x",a,b,c,d,e);
+}
+void print_convert_Node(plw h)
+{
+    while (h != NULL)
+    {
+        convert_word(h->word);
+        h = h->next;
+    }
+}
 void print_listNode(plw h)
 {
     while (h != NULL)

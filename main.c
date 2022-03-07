@@ -4,6 +4,7 @@
 /*Private functions meant to be used only inside this source*/
 void assembler(char *);
 int main(int argc, char *argv[]) {
+ 
   if (argc < 2) {
     printf("Error: Not enough arguments, please insert files names.\n");
     return 1;

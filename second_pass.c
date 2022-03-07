@@ -41,6 +41,7 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC) {
                                &label_are);
       printf("at line: %d label: %s  base: %d off: %d are: %c\n", line_number,
              word, label_base_val, label_offset_val, label_are);
+
       set_next_empty(head_IC, label_are, label_base_val);
       set_next_empty(head_IC, label_are, label_offset_val);
 
@@ -57,6 +58,7 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC) {
     line_number++;
   }
 
+
   print_listNode(head_IC);
   puts("\n");
 
@@ -65,6 +67,7 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC) {
   fclose(ent_file_handler);
   fclose(ext_file_handler);
 
+  print_convert_Node(head_IC);
   return g_error;
 }
 int process_entry_label(char *word, int line_number) {
