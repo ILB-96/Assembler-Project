@@ -27,7 +27,7 @@ typedef struct link_words {
 } wordsNode;
 typedef enum { A = 4, R = 2, E = 1 } ARE;
 
-/*for test*/int mainly();
+/*for test*/ int mainly();
 
 /*Functions from pre-assembler.c*/
 int pre_assembler(FILE **, char *);
@@ -41,8 +41,9 @@ int is_label_exists(char *);
 void print_labels();
 int get_label_values(char *, int *, int *, ARE *);
 int found_label(char *, char *);
+int found_attribute(char *, char *);
 /*Functions from second-pass.c*/
-int second_pass(FILE *, char *, plw);
+int second_pass(FILE *, char *, plw, plw);
 int process_entry_label(char *word, int line_number);
 
 /*General use functions from functions.c*/
@@ -148,7 +149,7 @@ int add_std_word(plw *, ARE are, Funct funct, registers source_r,
 void print_listNode(plw h);
 void print_node(plw p);
 void print_word(int word);
-int convert_word( int);
+int convert_word(int);
 void print_convert_Node(plw);
 void free_list(plw);
 int add_base_word(plw *, ARE, opcode);

@@ -152,7 +152,6 @@ int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D) {
   *h_D = head_DC;
   *p_D = prv_DC;
 
-
   return g_error;
 }
 
@@ -268,12 +267,20 @@ int is_valid_label_name(char *word) {
 
 /*Function that checks if a given name of label is already exist in the symbols
  * array*/
-int is_label_exists(char *word) {
+int is_label_exists(char *label_name) {
   int i;
   for (i = 0; strcmp(symbols_table[i].name, ""); i++)
-    if (!strcmp(symbols_table[i].name, word))
+    if (!strcmp(symbols_table[i].name, label_name))
       return 1;
 
+  return 0;
+}
+int found_attribute(char *label_name, char *attribute) {
+  int i;
+  for (i = 0; strcmp(symbols_table[i].name, ""); i++)
+    if (!strcmp(symbols_table[i].name, label_name))
+      if (strcmp(symbols_table[i].attribute, attribute))
+        return 1;
   return 0;
 }
 int get_label_values(char *word, int *label_base_val, int *label_offset_val,

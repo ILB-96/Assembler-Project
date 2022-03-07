@@ -1,7 +1,9 @@
 #include "assembler.h"
 
-int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC) {
+int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
+                plw prv_IC) {
   int line_number = 1;
+  int is_entry = FALSE;
   int error = FALSE;
   int g_error = FALSE;
   int label_base_val = 0;
@@ -20,15 +22,10 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC) {
   while (fgets(line, MAX_LINE, exp_file_handler)) {
     get_first_token(line, word);
     if (!strcmp(word, ".entry")) {
+      is_entry = TRUE;
       get_next_token(line, word);
       error = process_entry_label(word, line_number);
-      get_next_token(line, word);
-      if (!is_empty_line(line)) {
-        error = TRUE;
-        fprintf(stderr,
-                "Error at line %d: Extended text after entry variable\n",
-                line_number);
-      }
+
     } else if (word[strlen(word) - 1] == ':')
       get_next_token(line, word);
     else if (!strcmp(word, ".extern")) {
@@ -42,13 +39,28 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC) {
       printf("at line: %d label: %s  base: %d off: %d are: %c\n", line_number,
              word, label_base_val, label_offset_val, label_are);
 
-      set_next_empty(head_IC, label_are, label_base_val);
-      set_next_empty(head_IC, label_are, label_offset_val);
-
-      /*TODO: process ob.ext file
-      if (!error &&label_are = 'E') {
-        fprintf
-      }*/
+      if (!error && label_are == E) {
+        fprintf(ext_file_handler, "%s BASE %d\n", word,
+                set_next_empty(head_IC, label_are, label_base_val));
+        fprintf(ext_file_handler, "%s OFFSET %d\n\n", word,
+                set_next_empty(head_IC, label_are, label_base_val));
+      } else if (!error) {
+        if (is_entry) {
+          fprintf(ent_file_handler, "%s, %d, %d\n", word, label_base_val,
+                  label_offset_val);
+          get_next_token(line, word);
+          if (!is_empty_line(line)) {
+            error = TRUE;
+            fprintf(stderr,
+                    "Error at line %d: Extended text after entry variable\n",
+                    line_number);
+          }
+          is_entry = FALSE;
+        } else {
+          set_next_empty(head_IC, label_are, label_base_val);
+          set_next_empty(head_IC, label_are, label_base_val);
+        }
+      }
     }
 
     if (error) {
@@ -57,7 +69,6 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC) {
     }
     line_number++;
   }
-
 
   print_listNode(head_IC);
   puts("\n");

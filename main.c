@@ -4,7 +4,7 @@
 /*Private functions meant to be used only inside this source*/
 void assembler(char *);
 int main(int argc, char *argv[]) {
- 
+
   if (argc < 2) {
     printf("Error: Not enough arguments, please insert files names.\n");
     return 1;
@@ -44,7 +44,7 @@ void assembler(char *file_name) {
   fseek(exp_file_handler, 0, SEEK_SET);
   printf("Assembly Second Pass at work...\n");
   /*Go to second-pass.c for more info*/
-  if (second_pass(exp_file_handler, file_name, head_IC)) {
+  if (second_pass(exp_file_handler, file_name, head_IC, prv_IC)) {
     fclose(exp_file_handler);
     free_symbols_str(symbols_table);
     free(symbols_table);
