@@ -72,11 +72,16 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
     }
     line_number++;
   }
-
+  printf("length IC is %d\n",get_length(head_IC));
+  printf("length DC is %d\n",get_length(head_DC));
   print_listNode(head_IC);
+  print_listNode(head_DC);
   puts("\n");
 
   print_labels();
+  puts("\n");
+  
+
   load_obj_file(head_IC, obj_file_handler);
   fclose(obj_file_handler);
   fclose(ent_file_handler);
