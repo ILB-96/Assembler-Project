@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Mar  7 23:02:26 2022
+# Make data base, printed on Tue Mar  8 09:33:48 2022
 
 # Variables
 
@@ -151,7 +151,7 @@ CC = gcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5ef26047-8385-4b05-a111-e98c31cdc27e.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-bd0c05f0-bdd3-4487-b414-cf48466f0072.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -280,8 +280,8 @@ first_pass.o:
 #  Modification time never checked.
 #  File has not been updated.
 
- 
 # Not a target:
+ 
 second_pass.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -317,9 +317,16 @@ test: test.o functions.o pre_assembler.o first_pass.o second_pass.o command_proc
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-03-07 22:51:33.658249508
+#  Last modified 2022-03-08 08:36:20.727578179
 #  File has been updated.
 #  Successfully updated.
+
+fclean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 27):
+	rm -f core *.ob *.ext *.ent *_exp.as
 
 # Not a target:
 first_pass.c:
@@ -400,19 +407,19 @@ data_struct_words.o: data_struct_words.c assembler.h
 	gcc -c data_struct_words.c -o data_struct_words.o
 
 # files hash-table stats:
-# Load=26/1024=3%, Rehash=0, Collisions=0/72=0%
+# Load=27/1024=3%, Rehash=0, Collisions=0/73=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 38 / storage = 427 B / avg = 11 B
-# current buf: size = 8162 B / used = 427 B / count = 38 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 39 / storage = 434 B / avg = 11 B
+# current buf: size = 8162 B / used = 434 B / count = 39 / avg = 11 B
 
-# strcache performance: lookups = 81 / hit rate = 53%
+# strcache performance: lookups = 83 / hit rate = 53%
 # hash-table stats:
-# Load=38/8192=0%, Rehash=0, Collisions=1/81=1%
-# Finished Make data base on Mon Mar  7 23:02:26 2022
+# Load=39/8192=0%, Rehash=0, Collisions=1/83=1%
+# Finished Make data base on Tue Mar  8 09:33:48 2022
 
  
