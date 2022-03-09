@@ -1,13 +1,16 @@
 #include "assembler.h"
-int load_file(FILE **file_handler, char *name, char *exten, char *mode) {
+int load_file(FILE **file_handler, char *name, char *exten, char *mode)
+{
   char *file_name;
-  if (!(file_name = (char *)malloc(strlen(name) + EXTEN_LEN))) {
+  if (!(file_name = (char *)malloc(strlen(name) + EXTEN_LEN)))
+  {
     fprintf(stderr, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
   strcpy(file_name, name);
   strcat(file_name, exten);
-  if (!(*file_handler = fopen(file_name, mode))) {
+  if (!(*file_handler = fopen(file_name, mode)))
+  {
     fprintf(stderr, "FAILED! Error: File '%s' open failed.\n\n", file_name);
     free(file_name);
     return 1;
@@ -15,7 +18,8 @@ int load_file(FILE **file_handler, char *name, char *exten, char *mode) {
   free(file_name);
   return 0;
 }
-int is_empty_line(char *line) {
+int is_empty_line(char *line)
+{
   int i = 0;
   while (line[i] != '\0')
     if (!isspace(line[i++]))
@@ -23,7 +27,8 @@ int is_empty_line(char *line) {
   return 1;
 }
 
-int is_comment_line(char *line) {
+int is_comment_line(char *line)
+{
   int i = 0;
   while (isspace(line[i++]))
     ;
@@ -35,25 +40,32 @@ int is_comment_line(char *line) {
  * The next functions are used to change and alternate the words and the lines
  * from the file to meet our needs.
  * ****************************************************************************/
-void get_first_token(char *line, char *word) {
+void get_first_token(char *line, char *word)
+{
   int i = 0, j = 0;
-  while (isspace(line[i]) && line[i] != '\0') {
+  while (isspace(line[i]) && line[i] != '\0')
+  {
     i++;
   }
-  while (!isspace(line[i]) && line[i] != '0') {
+  while (!isspace(line[i]) && line[i] != '0')
+  {
     word[j++] = line[i++];
   }
   word[j] = '\0';
 }
 
-int get_next_token_index(char *line, int index) {
-  while (isspace(line[index]) && line[index] != '\0') {
+int get_next_token_index(char *line, int index)
+{
+  while (isspace(line[index]) && line[index] != '\0')
+  {
     index++;
   }
-  while (!isspace(line[index]) && line[index] != '\0') {
+  while (!isspace(line[index]) && line[index] != '\0')
+  {
     index++;
   }
-  while (isspace(line[index]) && line[index] != '\0') {
+  while (isspace(line[index]) && line[index] != '\0')
+  {
     index++;
   }
   return index;
@@ -62,7 +74,8 @@ int get_next_token_index(char *line, int index) {
 /*Function that moves the line to the next word and insert the next word inside
  * a variable(word)*/
 /*TODO: change the variable name "word" to not be confused with a binary word*/
-void get_next_token(char *line, char *word) {
+void get_next_token(char *line, char *word)
+{
 
   int j = 0;
   int i = get_next_token_index(line, 0);
@@ -78,13 +91,15 @@ void get_next_token(char *line, char *word) {
 }
 
 /*Function that removes the ":" sign from a word*/
-void remove_colon(char *word) {
+void remove_colon(char *word)
+{
   int i = 0;
   while (word[i++] != ':')
     ;
   word[--i] = '\0';
 }
-void remove_signs(char *word) {
+void remove_signs(char *word)
+{
   int i = 0;
   while (isalnum(word[i++]))
     ;

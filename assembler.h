@@ -19,13 +19,19 @@ typedef struct TypeLabel TypeLabel;
 extern unsigned int g_error;
 extern TypeLabel *symbols_table;
 typedef struct link_words *plw;
-typedef struct link_words {
+typedef struct link_words
+{
   plw next;
   unsigned int word;
 
   int stock_index;
 } wordsNode;
-typedef enum { A = 4, R = 2, E = 1 } ARE;
+typedef enum
+{
+  A = 4,
+  R = 2,
+  E = 1
+} ARE;
 
 /*for test*/ int mainly();
 
@@ -58,10 +64,11 @@ void remove_signs(char *);
 
 /*WORD-LIST*/
 
-#define IS_NULL(x)                                                             \
-  if (x == NULL) {                                                             \
-    puts("index not exists");                                                  \
-    exit(0);                                                                   \
+#define IS_NULL(x)            \
+  if (x == NULL)              \
+  {                           \
+    puts("index not exists"); \
+    exit(0);                  \
   }
 
 #define WORD_SIZE 1 << 19
@@ -73,7 +80,8 @@ void remove_signs(char *);
 #define SET_FUNCT(x) x = x << 12
 #define SET_ARE(x) x = x << 16
 
-typedef enum {
+typedef enum
+{
   full_two_op,
   two_op,
   min_two_op,
@@ -83,7 +91,8 @@ typedef enum {
   no_op
 } Valid_operator;
 
-typedef enum {
+typedef enum
+{
   f_mov = 0,
   f_cmp = 0,
   f_add = 10,
@@ -101,7 +110,8 @@ typedef enum {
 
 } Funct;
 
-typedef enum {
+typedef enum
+{
   o_mov = 0,
   o_cmp = 1,
   o_add = 2,
@@ -120,8 +130,15 @@ typedef enum {
   stop = 15
 } opcode;
 
-typedef enum { immediate, direct, index_sort, register_direct } sortType;
-typedef enum {
+typedef enum
+{
+  immediate,
+  direct,
+  index_sort,
+  register_direct
+} sortType;
+typedef enum
+{
   r0,
   r1,
   r2,
