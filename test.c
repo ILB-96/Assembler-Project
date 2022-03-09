@@ -70,10 +70,12 @@ void test_command_code_process(void) {
               expected, actual);
   initialize_list(&head_IC, &prv_IC, BASE_STOCK);
 
+  /*this test wrong because of the command_code_process assumes to get the line without the label    
   line = "MAIN : add r3, LIST";
   TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
                   (expected = 1),
               "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    */
   line = "prn #48";
   TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
                   (expected = 0),

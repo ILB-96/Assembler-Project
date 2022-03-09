@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
- 
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Mar  7 23:02:26 2022
+# Make data base, printed on Wed Mar  9 13:03:00 2022
 
 # Variables
 
@@ -51,7 +49,7 @@ _ = /usr/share/code/code
 # makefile (from 'makefile', line 2)
 CFLAGS = -ansi -pedantic -Wall -g
 # environment
-JOURNAL_STREAM = 8:32004
+JOURNAL_STREAM = 8:33133
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'makefile', line 1)
@@ -69,7 +67,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 1060
+MANAGERPID = 1099
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -81,7 +79,7 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1353,unix/yoni-VirtualBox:/tmp/.ICE-unix/1353
+SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1393,unix/yoni-VirtualBox:/tmp/.ICE-unix/1393
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -91,7 +89,7 @@ VSCODE_LOG_STACK = false
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&iid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&sid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea","uploadToServer":true}
 # environment
-INVOCATION_ID = b136e06ebf2a42e8a814df871cf29290
+INVOCATION_ID = c57251333d144a278effd9480a360fe9
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -101,7 +99,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 23798
+GIO_LAUNCHED_DESKTOP_FILE_PID = 2196
 # automatic
 %F = $(notdir $%)
 # environment
@@ -113,7 +111,7 @@ PWD = /home/yoni/Desktop/mm 14/temp/Assembler-Project
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1292
+SSH_AGENT_PID = 1332
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -151,7 +149,7 @@ CC = gcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5ef26047-8385-4b05-a111-e98c31cdc27e.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-96fc202e-5aae-48b6-a691-646aa9b23551.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -215,7 +213,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 23798
+VSCODE_PID = 2196
 # variable set hash-table stats:
 # Load=102/1024=10%, Rehash=0, Collisions=14/127=11%
 
@@ -281,6 +279,8 @@ first_pass.o:
 #  File has not been updated.
 
  
+make: *** No rule to make target 'all'.  Stop.
+ 
 # Not a target:
 second_pass.o:
 #  Implicit rule search has not been done.
@@ -317,9 +317,16 @@ test: test.o functions.o pre_assembler.o first_pass.o second_pass.o command_proc
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-03-07 22:51:33.658249508
+#  Last modified 2022-03-08 08:36:20.727578179
 #  File has been updated.
 #  Successfully updated.
+
+fclean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 27):
+	rm -f core *.ob *.ext *.ent *_exp.as
 
 # Not a target:
 first_pass.c:
@@ -400,19 +407,19 @@ data_struct_words.o: data_struct_words.c assembler.h
 	gcc -c data_struct_words.c -o data_struct_words.o
 
 # files hash-table stats:
-# Load=26/1024=3%, Rehash=0, Collisions=0/72=0%
+# Load=27/1024=3%, Rehash=0, Collisions=0/73=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 38 / storage = 427 B / avg = 11 B
-# current buf: size = 8162 B / used = 427 B / count = 38 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 39 / storage = 434 B / avg = 11 B
+# current buf: size = 8162 B / used = 434 B / count = 39 / avg = 11 B
 
-# strcache performance: lookups = 81 / hit rate = 53%
+# strcache performance: lookups = 83 / hit rate = 53%
 # hash-table stats:
-# Load=38/8192=0%, Rehash=0, Collisions=1/81=1%
-# Finished Make data base on Mon Mar  7 23:02:26 2022
+# Load=39/8192=0%, Rehash=0, Collisions=1/83=1%
+# Finished Make data base on Wed Mar  9 13:03:01 2022
 
  

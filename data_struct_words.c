@@ -81,7 +81,7 @@ int convert_word(int n, FILE *file_handler) {
 void load_obj_file(plw h, FILE *file_handler) {
   while (h != NULL) {
     /*TODO:this get_current_address should include DC address(149)*/
-    fprintf(file_handler, "%d\t\t", get_current_address(h));
+    fprintf(file_handler, "%04d\t\t", get_current_address(h));
     convert_word(h->word, file_handler);
     h = h->next;
   }
