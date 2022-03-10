@@ -263,7 +263,7 @@ void update_data_labels_address(int last_address)
 }
 
 /*This function frees all the strings inside the symbol array*/
-void free_symbols_str()
+void free_symbols()
 {
   int i = 0;
   while (strcmp(symbols_table[i].name, ""))
@@ -273,6 +273,7 @@ void free_symbols_str()
   }
   free(symbols_table[i].name);
   free(symbols_table[i].attribute);
+  free(symbols_table);
 }
 
 /*Function that checks if a given name of label is a valid name*/

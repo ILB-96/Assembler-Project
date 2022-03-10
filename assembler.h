@@ -39,7 +39,7 @@ typedef enum
 int pre_assembler(FILE **, char *);
 /*Functions from first-pass.c*/
 int first_pass(FILE *, plw *, plw *, plw *, plw *);
-void free_symbols_str();
+void free_symbols();
 int get_binary_words(char *, char *);
 int is_operation_name(char *);
 void add_entry_attribute(char *);

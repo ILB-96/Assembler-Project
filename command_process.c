@@ -2,7 +2,7 @@
 
 int command_string_process(plw *prv_DC, char *line, int line_number)
 {
-    unsigned int error = FALSE;
+    int error = FALSE;
     int i = 7, j = strlen(line) - 1;
     while (line[i] == ' ')
         i++;
@@ -32,7 +32,7 @@ int command_string_process(plw *prv_DC, char *line, int line_number)
 int command_data_process(plw *prv_DC, char *line, int line_number)
 {
     int i = 0;
-    unsigned error = FALSE;
+    int error = FALSE;
     char command[MAX_LINE] = "";
     strcat(command, line);
     char **s_line = split_line(command);
@@ -86,22 +86,23 @@ int is_operator(char *op)
     int i;
     for (i = 0; i < SUM_OPERATIONS; i++)
     {
-        if(strcmp(op,operators_array[i]) == 0) result = i;
+        if (strcmp(op, operators_array[i]) == 0)
+            result = i;
     }
     return result;
 }
 
 int command_code_process(plw *prv_IC, char *line, int line_number) /*TODO need to get the number line for g_errors*/
-{ 
+{
     int i;
-    unsigned int error = FALSE;
+    int error = FALSE;
     int operator;
     char command[MAX_LINE] = "";
     strcat(command, line);
     char **s_line = split_line(command);
-    
-    operator = is_operator(s_line[0]);
-    
+
+    operator= is_operator(s_line[0]);
+
     /*TODO - enum of operators*/
     switch (operator)
     {
@@ -167,7 +168,7 @@ int command_code_process(plw *prv_IC, char *line, int line_number) /*TODO need t
 
 int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_operator op, int line_number)
 {
-    unsigned int error = FALSE;
+    int error = FALSE;
     registers source_r = 0, target_r = 0;
     sortType source_sort = 0, target_sort = 0;
     ARE are = 0;
@@ -188,13 +189,11 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
     {
         error |= !set_sort_and_register(comm[0], &source_r, &source_sort, &are);
         error |= !set_sort_and_register(comm[2], &target_r, &target_sort, &are);
-        
-        
+
         add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
-        
+
         error |= add_word_by_source(prv, comm[0], source_sort, op, line_number);
         error |= add_word_by_target(prv, comm[2], target_sort, op, line_number);
-        
     }
     else if (size == 1) /*case one operator*/
     {
@@ -212,7 +211,7 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
 }
 int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operator op, int line_number)
 {
-    unsigned int error = FALSE;
+    int error = FALSE;
     switch (source_sort)
     {
     case immediate:
@@ -245,11 +244,11 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
 
 int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operator op, int line_number)
 {
-    unsigned int error = FALSE;
+    int error = FALSE;
     switch (target_sort)
     {
     case immediate:
-        if ( (op == full_two_op || op == full_target_op) && is_only_digits(comm+1) )
+        if ((op == full_two_op || op == full_target_op) && is_only_digits(comm + 1))
         {
 
             add_num_to_list(prv, A, atoi(comm + 1));
@@ -272,13 +271,13 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
 
 int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *are)
 {
-    
+
     int result = 1;
-     int temp;
+    int temp;
     *are = A;
     /*case it's register*/
-    temp = atoi(operator+1);
-    if (operator[0] == 'r' && operator[1] != '\0' && is_only_digits(operator+1) && temp >= r0 && temp <= r15)
+    temp = atoi(operator+ 1);
+    if (operator[0] == 'r' && operator[1] != '\0' && is_only_digits(operator+ 1) && temp >= r0 && temp <= r15)
     {
         *r = temp;
         *sort = register_direct;
@@ -290,10 +289,10 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
         *sort = immediate;
     }
     /*case it's variable*/
-    else if(isalpha(operator[0]))
+    else if (isalpha(operator[0]))
     {
         /*case illegal variable*/
-        if (isdigit(operator[0]) || is_operator(operator) >=0)
+        if (isdigit(operator[0]) || is_operator(operator) >= 0)
             result = 0;
         else
         {
@@ -324,10 +323,9 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
                 result = 0;
         }
     }
-    else   
-      result = 0;
+    else
+        result = 0;
 
-   
     return result;
 }
 
@@ -378,6 +376,3 @@ char **split_line(char *str)
     s[i] = NULL;
     return s;
 }
-
-
-
