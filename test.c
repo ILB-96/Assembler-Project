@@ -89,11 +89,11 @@ void test_command_code_process(void)
                     (expected = 0),
                 "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
 
-    line = "cmp #48,str[3]";
+    line = "cmp #48,str[r3]";
     TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
                     (expected = 0),
                 "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
-    line = "add array[2],r1";
+    line = "add array[r2],r1";
     TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
                     (expected = 0),
                 "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
@@ -181,7 +181,6 @@ void test_command_data_process(void)
                     (expected = 1),
                 "'%s', data overflow. Expected: %d Actual: %d", line, expected,
                 actual);
-
     line = ".data 6, -9";
     TEST_CHECK_((actual = command_data_process(&prv_DC, line, line_number)) ==
                     (expected = 0),
