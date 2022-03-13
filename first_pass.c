@@ -6,9 +6,10 @@ int is_valid_label_name(char *);
 int base_address(int);
 void label_init(int count);
 void label_add(int, char *, int, char *, size_t);
+int add_binary_words(char *, char *, plw *, plw *, int);
 void update_data_labels_address(int);
 int process_extern(char *, char *, int, int *, size_t *);
-int process_label(int *, char *, char *, int, int *, size_t *, plw, plw);
+int process_label(char *, char *, int, int *, size_t *, plw, plw);
 int is_defined_external(char *);
 
 /*Defining and declaring the symbols table*/
@@ -22,14 +23,6 @@ struct TypeLabel
 };
 TypeLabel *symbols_table;
 
-/*Instruction and data counter are global variable to use in the Second Pass*/
-
-/*TODO: maybe we need to add more checks to see variables are
-not names after saved words?*/
-
-/*Those arrays are saved words, better to have them globally,
-so we can always check if a variable is trying to use those name*/
-
 int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D)
 {
   /*Variables*/
@@ -37,44 +30,34 @@ int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D)
   int line_number = 1;
   int error = FALSE;
   int g_error = FALSE;
-  int is_code = TRUE;
   size_t array_size = 1;
   char line[MAX_LINE];
   char token[MAX_LINE];
 
-  plw head_IC; /*need to be free in the end...*/
+  /*Initialize labels, IC and DC*/
+  plw head_IC;
   plw prv_IC;
   plw head_DC;
   plw prv_DC;
   initialize_list(&head_DC, &prv_DC, 0);
   initialize_list(&head_IC, &prv_IC, BASE_STOCK);
-  /*First initialize the symbols' table dynamic array and error flag*/
-
   label_init(0);
-  /*TODO: use error flag to continue looking for errors in the program and
-   * stop the program after that*/
+
   /*This loop will go through the entire expanded file, creating the labels
    * and adding every piece of data to it's correct location in the memory*/
   while (fgets(line, MAX_LINE, exp_file_handler))
   {
     get_first_token(line, token);
-    is_code = TRUE;
     /*Case for extern labels*/
     if (!strcmp(token, ".extern"))
       error = process_extern(line, token, line_number, &label_counter, &array_size);
     /*Case for inner labels*/
     else if (token[strlen(token) - 1] == ':')
-      error = process_label(&is_code, line, token, line_number, &label_counter, &array_size, prv_IC, prv_DC);
+      error = process_label(line, token, line_number, &label_counter, &array_size, prv_IC, prv_DC);
 
-    /*in this point the line contain only code*/
-    if (!error && !is_empty_line(line) && is_code == TRUE &&
-        (strcmp(token, ".data") != 0 && strcmp(token, ".string") != 0) &&
-        strcmp(token, ".entry") != 0 && strcmp(token, ".extern"))
-      error = command_code_process(&prv_IC, line, line_number);
-    else if (!error && !is_empty_line(line) && !strcmp(token, ".data"))
-      error = command_data_process(&prv_DC, line, line_number);
-    else if (!error && !is_empty_line(line) && !strcmp(token, ".string"))
-      error = command_string_process(&prv_DC, line, line_number);
+    /*At this point the line doesn't contain a label*/
+    if (!error && !is_empty_line(line))
+      error = add_binary_words(line, token, &prv_IC, &prv_DC, line_number);
 
     if (get_current_address(prv_IC) + get_current_address(prv_DC) + 1 >
         MAX_ADDRESS)
@@ -149,7 +132,7 @@ int is_defined_external(char *token)
   }
   return 0;
 }
-int process_label(int *is_code, char *line, char *token, int line_number,
+int process_label(char *line, char *token, int line_number,
                   int *label_counter, size_t *array_size, plw prv_IC, plw prv_DC)
 {
   int error = FALSE;
@@ -171,7 +154,6 @@ int process_label(int *is_code, char *line, char *token, int line_number,
   get_next_token(line, token);
   if (!strcmp(token, ".data") || !strcmp(token, ".string"))
   {
-    *is_code = FALSE;
     label_add((*label_counter)++, label_name, get_current_address(prv_DC),
               "data", ++(*array_size));
   }
@@ -376,7 +358,17 @@ int base_address(int address)
     return 0;
   return (address - (address % BASE_MODE));
 }
-
+int add_binary_words(char *line, char *token, plw *prv_IC, plw *prv_DC, int line_number)
+{
+  int error = FALSE;
+  if (!strcmp(token, ".data"))
+    error = command_data_process(prv_DC, line, line_number);
+  else if (!strcmp(token, ".string"))
+    error = command_string_process(prv_DC, line, line_number);
+  else if (strcmp(token, ".entry") != 0)
+    error = command_code_process(prv_IC, line, line_number);
+  return error;
+}
 /*******************************************************************
  * The next functions related to finding and checking commands
  *******************************************************************/

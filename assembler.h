@@ -40,7 +40,6 @@ int pre_assembler(FILE **, char *);
 /*Functions from first-pass.c*/
 int first_pass(FILE *, plw *, plw *, plw *, plw *);
 void free_symbols();
-int get_binary_words(char *, char *);
 int is_operation_name(char *);
 void add_entry_attribute(char *);
 int is_label_exists(char *);
@@ -63,7 +62,6 @@ void remove_colon(char *);
 void remove_signs(char *);
 
 /*WORD-LIST*/
-
 #define IS_NULL(x)            \
   if (x == NULL)              \
   {                           \
