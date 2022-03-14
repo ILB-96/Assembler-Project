@@ -33,7 +33,7 @@ void assembler(char *file_name)
   /*go to pre-assembler.c for more info*/
   if (pre_assembler(&exp_file_handler, file_name))
   {
-    puts("abort...\n");
+    puts("Abort...\n");
     free_list(head_IC);
     free_list(head_DC);
     return;
@@ -45,7 +45,7 @@ void assembler(char *file_name)
   /*Go to first-pass.c for more info*/
   if (first_pass(exp_file_handler, &head_IC, &prv_IC, &head_DC, &prv_DC))
   {
-    puts("abort...\n");
+    puts("Abort...\n");
     fclose(exp_file_handler);
     free_list(head_IC);
     free_list(head_DC);
@@ -57,7 +57,7 @@ void assembler(char *file_name)
   /*Go to second-pass.c for more info*/
   if (second_pass(exp_file_handler, file_name, head_IC, head_DC))
   {
-    puts("abort...\n");
+    puts("Abort...\n");
     fclose(exp_file_handler);
     free_list(head_IC);
     free_list(head_DC);

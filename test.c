@@ -83,6 +83,10 @@ void test_command_code_process(void)
     TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
                     (expected = 0),
                 "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+    line = "jsr\tmiami";
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
+                    (expected = 0),
+                "'%s' Unknown Error, Expected: %d Actual: %d", line, expected, actual);
 
     line = "inc r6";
     TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==

@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/${fileBasenameNoExtension}",
-      "args": ["test_file1", "test_file2"],
+      "args": ["test_file5", "test_file2"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
