@@ -52,7 +52,7 @@ int second_pass(FILE *, char *, plw, plw);
 int process_entry_label(char *word, int line_number);
 
 /*General use functions from functions.c*/
-int load_file(FILE **, char *, char *, char *);
+void load_file(FILE **, char *, char *, char *);
 int is_comment_line(char *);
 int is_empty_line(char *);
 void get_first_token(char *, char *);

@@ -92,7 +92,7 @@ int is_operator(char *op)
     return result;
 }
 
-int command_code_process(plw *prv_IC, char *line, int line_number) /*TODO need to get the number line for g_errors*/
+int command_code_process(plw *prv_IC, char *line, int line_number)
 {
     int i;
     int error = FALSE;
@@ -156,7 +156,7 @@ int command_code_process(plw *prv_IC, char *line, int line_number) /*TODO need t
         error = add_parameters(prv_IC, s_line + 1, stop, 0, no_op, line_number);
         break;
     default:
-        error = FALSE;
+        error = TRUE;
         fprintf(stderr, "Error at line %d: '%s' is an illegal command\n",
                 line_number, *s_line);
         break;
@@ -347,7 +347,6 @@ char **split_line(char *str)
                 j++;
             if (token[j] == ',')
             {
-
                 temp = token;
                 token[j] = '\0';
                 c = ",";

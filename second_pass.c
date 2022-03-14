@@ -1,7 +1,8 @@
 #include "assembler.h"
 
 int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
-                plw head_DC) {
+                plw head_DC)
+{
   int line_number = 1;
   int is_entry = FALSE;
   int error = FALSE;
@@ -18,51 +19,61 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
   load_file(&obj_file_handler, file_name, ".ob", "w");
   load_file(&ent_file_handler, file_name, ".ent", "w");
   load_file(&ext_file_handler, file_name, ".ext", "w");
-  /*TODO: this function should count the number of IC words
-  and number of DC words.*/
 
-  while (fgets(line, MAX_LINE, exp_file_handler)) {
+  while (fgets(line, MAX_LINE, exp_file_handler))
+  {
     get_first_token(line, word);
-    if (!strcmp(word, ".entry")) {
+    if (!strcmp(word, ".entry"))
+    {
       is_entry = TRUE;
       get_next_token(line, word);
       error = process_entry_label(word, line_number);
-
-    } else if (word[strlen(word) - 1] == ':')
+    }
+    else if (word[strlen(word) - 1] == ':')
       get_next_token(line, word);
-    else if (!strcmp(word, ".extern")) {
+    else if (!strcmp(word, ".extern"))
+    {
       get_next_token(line, word);
       get_next_token(line, word);
     }
 
-    if (!is_empty_line(line) && !error && found_label(line, word)) {
+    if (!is_empty_line(line) && !error && found_label(line, word))
+    {
       error = get_label_values(word, &label_base_val, &label_offset_val,
                                &label_are);
-      if (!error && label_are == E) {
+      if (!error && label_are == E)
+      {
         fprintf(ext_file_handler, "%s BASE %d\n", word,
                 set_next_empty(head_IC, label_are, label_base_val));
         fprintf(ext_file_handler, "%s OFFSET %d\n\n", word,
                 set_next_empty(head_IC, label_are, label_base_val));
-      } else if (!error) {
-        if (is_entry) {
+      }
+      else if (!error)
+      {
+        if (is_entry)
+        {
           fprintf(ent_file_handler, "%s, %d, %d\n", word, label_base_val,
                   label_offset_val);
           get_next_token(line, word);
-          if (!is_empty_line(line)) {
+          if (!is_empty_line(line))
+          {
             error = TRUE;
             fprintf(stderr,
                     "Error at line %d: Extended text after entry variable\n",
                     line_number);
           }
           is_entry = FALSE;
-        } else {
+        }
+        else
+        {
           set_next_empty(head_IC, label_are, label_base_val);
           set_next_empty(head_IC, label_are, label_base_val);
         }
       }
     }
 
-    if (error) {
+    if (error)
+    {
       g_error = TRUE;
       error = FALSE;
     }
@@ -79,11 +90,13 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
 
   return g_error;
 }
-int process_entry_label(char *word, int line_number) {
+int process_entry_label(char *word, int line_number)
+{
   int error = FALSE;
   if (is_label_exists(word))
     add_entry_attribute(word);
-  else {
+  else
+  {
     error = TRUE;
     fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n",
             line_number, word);

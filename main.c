@@ -21,37 +21,46 @@ int main(int argc, char *argv[])
 /*Primary Function to process all the steps of the assembler*/
 void assembler(char *file_name)
 {
-  plw head_IC; /*need to be free in the end...*/
+  plw head_IC;
   plw prv_IC;
   plw head_DC;
   plw prv_DC;
 
   /*variables to handle the expanded file that we will use*/
   FILE *exp_file_handler;
+  printf("===Assembly process for %s.as started===\n", file_name);
   printf("Pre Assembly process at work...\n");
   /*go to pre-assembler.c for more info*/
   if (pre_assembler(&exp_file_handler, file_name))
   {
+    puts("abort...\n");
+    free_list(head_IC);
+    free_list(head_DC);
     return;
   }
 
   fseek(exp_file_handler, 0, SEEK_SET);
-  printf("===Assembly process for %s.as started===\n", file_name);
+
   printf("Assembly First Pass at work...\n");
   /*Go to first-pass.c for more info*/
   if (first_pass(exp_file_handler, &head_IC, &prv_IC, &head_DC, &prv_DC))
   {
+    puts("abort...\n");
     fclose(exp_file_handler);
+    free_list(head_IC);
+    free_list(head_DC);
     free_symbols();
     return;
   }
-
   fseek(exp_file_handler, 0, SEEK_SET);
   printf("Assembly Second Pass at work...\n");
   /*Go to second-pass.c for more info*/
   if (second_pass(exp_file_handler, file_name, head_IC, head_DC))
   {
+    puts("abort...\n");
     fclose(exp_file_handler);
+    free_list(head_IC);
+    free_list(head_DC);
     free_symbols();
     return;
   }
