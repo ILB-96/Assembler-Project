@@ -16,8 +16,6 @@
 #define FALSE 0
 
 typedef struct TypeLabel TypeLabel;
-extern unsigned int g_error;
-extern TypeLabel *symbols_table;
 typedef struct link_words *plw;
 typedef struct link_words
 {
@@ -33,23 +31,21 @@ typedef enum
   E = 1
 } ARE;
 
-/*for test*/ int mainly();
-
 /*Functions from pre-assembler.c*/
 int pre_assembler(FILE **, char *);
 /*Functions from first-pass.c*/
-int first_pass(FILE *, plw *, plw *, plw *, plw *);
-void free_symbols();
+int first_pass(FILE *, plw *, plw *, plw *, plw *, TypeLabel **);
+void free_symbols(TypeLabel *);
 int is_operation_name(char *);
-void add_entry_attribute(char *);
-int is_label_exists(char *);
-void print_labels();
-int get_label_values(char *, int *, int *, ARE *, int);
-int found_label(char *, char *);
-int found_attribute(char *, char *);
+void add_entry_attribute(char *, TypeLabel *);
+int is_label_exists(char *, TypeLabel *);
+void print_labels(TypeLabel *);
+int get_label_values(char *, int *, int *, ARE *, int, TypeLabel *);
+int found_label(char *, char *, TypeLabel *);
+int found_attribute(char *, char *, TypeLabel *);
 /*Functions from second-pass.c*/
-int second_pass(FILE *, char *, plw, plw);
-int process_entry_label(char *word, int line_number);
+int second_pass(FILE *, char *, plw, plw, TypeLabel *);
+int process_entry_label(char *, int, TypeLabel *);
 
 /*General use functions from functions.c*/
 int load_file(FILE **, char *, char *, char *);

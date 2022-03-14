@@ -4,13 +4,13 @@
 /*Inner functions that are meant to use only inside this source*/
 int is_valid_label_name(char *);
 int base_address(int);
-void label_init(int count);
-void label_add(int, char *, int, char *, size_t);
+void label_init(int, TypeLabel **);
+void label_add(int, char *, int, char *, size_t, TypeLabel **);
 int add_binary_words(char *, char *, plw *, plw *, int);
-void update_data_labels_address(int);
-int process_extern(char *, char *, int, int *, size_t *);
-int process_label(char *, char *, int, int *, size_t *, plw, plw);
-int is_defined_external(char *);
+void update_data_labels_address(int, TypeLabel *);
+int process_extern(char *, char *, int, int *, size_t *, TypeLabel **);
+int process_label(char *, char *, int, int *, size_t *, plw, plw, TypeLabel **);
+int is_defined_external(char *, TypeLabel *);
 
 /*Defining and declaring the symbols table*/
 struct TypeLabel
@@ -21,9 +21,8 @@ struct TypeLabel
   int offset;
   char *attribute;
 };
-TypeLabel *symbols_table;
 
-int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D)
+int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D, TypeLabel **symbols_table)
 {
   /*Variables*/
   int label_counter = 0;
@@ -41,7 +40,7 @@ int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D)
   plw prv_DC;
   initialize_list(&head_DC, &prv_DC, 0);
   initialize_list(&head_IC, &prv_IC, BASE_STOCK);
-  label_init(0);
+  label_init(0, symbols_table);
 
   /*This loop will go through the entire expanded file, creating the labels
    * and adding every piece of data to it's correct location in the memory*/
@@ -50,10 +49,10 @@ int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D)
     get_first_token(line, token);
     /*Case for extern labels*/
     if (!strcmp(token, ".extern"))
-      error = process_extern(line, token, line_number, &label_counter, &array_size);
+      error = process_extern(line, token, line_number, &label_counter, &array_size, symbols_table);
     /*Case for inner labels*/
     else if (token[strlen(token) - 1] == ':')
-      error = process_label(line, token, line_number, &label_counter, &array_size, prv_IC, prv_DC);
+      error = process_label(line, token, line_number, &label_counter, &array_size, prv_IC, prv_DC, symbols_table);
 
     /*At this point the line doesn't contain a label*/
     if (!error && !is_empty_line(line))
@@ -73,7 +72,7 @@ int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D)
     }
   }
 
-  update_data_labels_address(prv_IC->stock_index);
+  update_data_labels_address(prv_IC->stock_index, *symbols_table);
   update_address(head_DC, prv_IC->stock_index);
   *h_I = head_IC;
   *p_I = prv_IC;
@@ -88,7 +87,7 @@ int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D)
  **********************************************************************/
 /*Function that accepts a name and checks if a symbol name is already
   definedand has "external" attribute with the same given name*/
-int process_extern(char *line, char *token, int line_number, int *label_counter, size_t *array_size)
+int process_extern(char *line, char *token, int line_number, int *label_counter, size_t *array_size, TypeLabel **symbols_table)
 {
   int error = FALSE;
   get_next_token(line, token);
@@ -100,7 +99,7 @@ int process_extern(char *line, char *token, int line_number, int *label_counter,
     fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n",
             line_number, token);
   }
-  else if (is_label_exists(token) && !is_defined_external(token))
+  else if (is_label_exists(token, *symbols_table) && !is_defined_external(token, *symbols_table))
   {
     /*the file is allowed to define the same
     external more than once without causing an error*/
@@ -110,7 +109,7 @@ int process_extern(char *line, char *token, int line_number, int *label_counter,
   }
   /*If we reached here the label is a valid external label, and we can
    * add it to the symbols array*/
-  label_add((*label_counter)++, token, 0, "external", ++(*array_size));
+  label_add((*label_counter)++, token, 0, "external", ++(*array_size), symbols_table);
   get_next_token(line, token);
   if (!is_empty_line(line))
   {
@@ -121,7 +120,7 @@ int process_extern(char *line, char *token, int line_number, int *label_counter,
   }
   return error;
 }
-int is_defined_external(char *token)
+int is_defined_external(char *token, TypeLabel *symbols_table)
 {
   int i = 0;
   while (strcmp(symbols_table[i].name, ""))
@@ -133,7 +132,7 @@ int is_defined_external(char *token)
   return 0;
 }
 int process_label(char *line, char *token, int line_number,
-                  int *label_counter, size_t *array_size, plw prv_IC, plw prv_DC)
+                  int *label_counter, size_t *array_size, plw prv_IC, plw prv_DC, TypeLabel **symbols_table)
 {
   int error = FALSE;
   char label_name[MAX_LINE];
@@ -145,7 +144,7 @@ int process_label(char *line, char *token, int line_number,
     fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n",
             line_number, label_name);
   }
-  else if (is_label_exists(label_name))
+  else if (is_label_exists(label_name, *symbols_table))
   {
     error = TRUE;
     fprintf(stderr, "Error at line %d: '%s' label already exists\n",
@@ -155,14 +154,14 @@ int process_label(char *line, char *token, int line_number,
   if (!strcmp(token, ".data") || !strcmp(token, ".string"))
   {
     label_add((*label_counter)++, label_name, get_current_address(prv_DC),
-              "data", ++(*array_size));
+              "data", ++(*array_size), symbols_table);
   }
   else if (!strcmp(token, ".entry") || !strcmp(token, ".extern"))
     fprintf(stderr, "Warning at line %d: undefined attribute to label.\n",
             line_number);
   else if (is_operation_name(token))
     label_add((*label_counter)++, label_name, get_current_address(prv_IC),
-              "code", ++(*array_size));
+              "code", ++(*array_size), symbols_table);
   else
   {
     error = TRUE;
@@ -173,55 +172,56 @@ int process_label(char *line, char *token, int line_number,
 }
 /*Function that accept the location in the symbols array to initialize a new
  * symbol*/
-void label_init(int count)
+void label_init(int count, TypeLabel **symbols_table)
 {
   if (count == 0)
-    if ((symbols_table = calloc(1, sizeof(TypeLabel))) == NULL)
+    if ((*symbols_table = calloc(1, sizeof(TypeLabel))) == NULL)
     {
       fprintf(stderr, "FAILED!\nError: Out of memory\n");
       exit(EXIT_FAILURE);
     }
 
-  if ((symbols_table[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
+  if (((*symbols_table)[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
   {
     fprintf(stderr, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
-  if ((symbols_table[count].attribute = (char *)malloc(MAX_LABEL_LENGTH)) ==
+  if (((*symbols_table)[count].attribute = (char *)malloc(MAX_LABEL_LENGTH)) ==
       NULL)
   {
     fprintf(stderr, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
-  strcpy(symbols_table[count].name, "");
-  strcpy(symbols_table[count].attribute, "");
-  symbols_table[count].address = 0;
-  symbols_table[count].base_address = 0;
-  symbols_table[count].offset = 0;
+  strcpy((*symbols_table)[count].name, "");
+  strcpy((*symbols_table)[count].attribute, "");
+  (*symbols_table)[count].address = 0;
+  (*symbols_table)[count].base_address = 0;
+  (*symbols_table)[count].offset = 0;
 }
 
 /*Function to add new symbol and initialize a new symbol in the next address*/
 void label_add(int count, char *token, int address, char *attribute,
-               size_t array_size)
+               size_t array_size, TypeLabel **symbols_table)
 {
-  strcpy(symbols_table[count].name, token);
-  strcpy(symbols_table[count].attribute, attribute);
+  strcpy((*symbols_table)[count].name, token);
+  strcpy((*symbols_table)[count].attribute, attribute);
   if (address != BASE_DC && address != BASE_IC)
-    symbols_table[count].address = address + 1;
+    (*symbols_table)[count].address = address + 1;
   else
-    symbols_table[count].address = address;
-  symbols_table[count].base_address = base_address(address);
-  symbols_table[count].offset = (address % BASE_MODE);
+    (*symbols_table)[count].address = address;
+  (*symbols_table)[count].base_address = base_address(address);
+  (*symbols_table)[count].offset = (address % BASE_MODE);
 
-  if ((symbols_table =
-           realloc(symbols_table, array_size * sizeof(TypeLabel))) == NULL)
+  if (!(*symbols_table =
+            realloc(*symbols_table, array_size * sizeof(TypeLabel))))
   {
     fprintf(stderr, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
-  label_init(++count);
+  label_init(++count, symbols_table);
 }
-void add_entry_attribute(char *token)
+
+void add_entry_attribute(char *token, TypeLabel *symbols_table)
 {
   int i;
   char entry_attribute[] = ", entry";
@@ -229,7 +229,7 @@ void add_entry_attribute(char *token)
     if (!strcmp(symbols_table[i].name, token))
       strcat(symbols_table[i].attribute, entry_attribute);
 }
-void update_data_labels_address(int last_address)
+void update_data_labels_address(int last_address, TypeLabel *symbols_table)
 {
   int i = 0;
   while (strcmp(symbols_table[i].name, ""))
@@ -245,7 +245,7 @@ void update_data_labels_address(int last_address)
 }
 
 /*This function frees all the strings inside the symbol array*/
-void free_symbols()
+void free_symbols(TypeLabel *symbols_table)
 {
   int i = 0;
   while (strcmp(symbols_table[i].name, ""))
@@ -281,7 +281,7 @@ int is_valid_label_name(char *token)
 
 /*Function that checks if a given name of label is already exist in the symbols
  * array*/
-int is_label_exists(char *label_name)
+int is_label_exists(char *label_name, TypeLabel *symbols_table)
 {
   int i;
   for (i = 0; strcmp(symbols_table[i].name, ""); i++)
@@ -290,7 +290,7 @@ int is_label_exists(char *label_name)
 
   return 0;
 }
-int found_attribute(char *label_name, char *attribute)
+int found_attribute(char *label_name, char *attribute, TypeLabel *symbols_table)
 {
   int i;
   for (i = 0; strcmp(symbols_table[i].name, ""); i++)
@@ -300,7 +300,7 @@ int found_attribute(char *label_name, char *attribute)
   return 0;
 }
 int get_label_values(char *token, int *label_base_val, int *label_offset_val,
-                     ARE *are, int line_number)
+                     ARE *are, int line_number, TypeLabel *symbols_table)
 {
   int i;
   for (i = 0; strcmp(symbols_table[i].name, ""); i++)
@@ -319,7 +319,7 @@ int get_label_values(char *token, int *label_base_val, int *label_offset_val,
   return 1;
 }
 
-int found_label(char *line, char *token)
+int found_label(char *line, char *token, TypeLabel *symbols_table)
 {
   while (!is_empty_line(line))
   {
@@ -332,7 +332,7 @@ int found_label(char *line, char *token)
   return FALSE;
 }
 /*Function that prints labels(just for show).*/
-void print_labels()
+void print_labels(TypeLabel *symbols_table)
 {
   int i;
   printf("Name\t|\taddress\t|\tbase\t|\toffset\t|\tattributes\n");

@@ -1,7 +1,7 @@
 #include "assembler.h"
 
 int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
-                plw head_DC)
+                plw head_DC, TypeLabel *symbols_table)
 {
   int line_number = 1;
   int is_entry = FALSE;
@@ -29,7 +29,7 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
     {
       is_entry = TRUE;
       get_next_token(line, token);
-      error = process_entry_label(token, line_number);
+      error = process_entry_label(token, line_number, symbols_table);
     }
     else if (token[strlen(token) - 1] == ':')
       get_next_token(line, token);
@@ -39,10 +39,10 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
       get_next_token(line, token);
     }
 
-    if (!is_empty_line(line) && !error && found_label(line, token))
+    if (!is_empty_line(line) && !error && found_label(line, token, symbols_table))
     {
       error = get_label_values(token, &label_base_val, &label_offset_val,
-                               &label_are, line_number);
+                               &label_are, line_number, symbols_table);
       if (!error && label_are == E)
       {
         if (!externs_file_created)
@@ -106,11 +106,12 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
 
   return g_error;
 }
-int process_entry_label(char *token, int line_number)
+
+int process_entry_label(char *token, int line_number, TypeLabel *symbols_table)
 {
   int error = FALSE;
-  if (is_label_exists(token))
-    add_entry_attribute(token);
+  if (is_label_exists(token, symbols_table))
+    add_entry_attribute(token, symbols_table);
   else
   {
     error = TRUE;
