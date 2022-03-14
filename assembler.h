@@ -176,6 +176,7 @@ int get_length(plw);
 /*command_process*/
 
 #define SUM_OPERATIONS 16
+int is_special_char(char *);
 int is_only_digits(char *);
 int command_string_process(plw *, char *, int);
 int command_data_process(plw *, char *, int);

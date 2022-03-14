@@ -187,9 +187,10 @@ int add_parameters(plw *prv, char **comm, opcode opcod, Funct funct, Valid_opera
 
     if (size == 3 && *comm[1] == ',') /*case two operators*/
     {
+        
         error |= !set_sort_and_register(comm[0], &source_r, &source_sort, &are);
         error |= !set_sort_and_register(comm[2], &target_r, &target_sort, &are);
-
+        
         add_std_word(prv, are, funct, source_r, source_sort, target_r, target_sort);
 
         error |= add_word_by_source(prv, comm[0], source_sort, op, line_number);
@@ -215,7 +216,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
     switch (source_sort)
     {
     case immediate:
-        if (op == full_two_op || op == two_op)
+        if ((op == full_two_op || op == two_op) && is_only_digits(comm+1))
         {
             add_num_to_list(prv, A, atoi(comm + 1));
         }
@@ -268,7 +269,20 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
 
     return error;
 }
-
+int is_special_char(char *str)
+{
+    int result = 0;
+    int i = 0;
+    while(str[i] != '\0')
+    {
+        if(!isdigit(str[i]) && !isalpha(str[i]) && str[i] != '[' && str[i] != ']')
+        {
+            result = 1;
+        }
+        i++;
+    }
+    return result;
+}
 int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *are)
 {
 
@@ -292,8 +306,10 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
     else if (isalpha(operator[0]))
     {
         /*case illegal variable*/
-        if (isdigit(operator[0]) || is_operator(operator) >= 0)
+        if (isdigit(operator[0]) || is_operator(operator) >= 0 || is_special_char(operator))
+        {
             result = 0;
+        }
         else
         {
             int parenthesis = 0;
@@ -304,7 +320,7 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
                 if (parenthesis == 1 && operator[i] == 'r' &&(reg = atoi(operator+ i + 1)) <= r15 && reg >= r0)
                 {
                     /*TODO check if it's letter after the number like [r3A]*/
-
+                   
                     *r = reg;
                     *sort = index_sort;
 
@@ -321,6 +337,7 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
             }
             else if (parenthesis != 3)
                 result = 0;
+        
         }
     }
     else
