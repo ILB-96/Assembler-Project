@@ -11,11 +11,11 @@ int pre_assembler(FILE **exp_file_handler, char *file_name)
 {
   FILE *file_handler;
   int error = FALSE;
-  error = load_file(&file_handler, file_name, ".as", "r");
+  load_file(&file_handler, file_name, ".as", "r");
 
   if (!error)
   {
-    error = load_file(&*exp_file_handler, file_name, "_exp.as", "w+");
+    load_file(&*exp_file_handler, file_name, "_exp.as", "w+");
     expand_macros(file_handler, *exp_file_handler);
     fclose(file_handler);
     remove("macros_file.txt");
