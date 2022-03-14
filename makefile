@@ -24,4 +24,4 @@ test.o: test.c assembler.h
 clean:
 	rm -f core *.o main test
 fclean:
-	rm -f core *.ob *.ext *.ent *_exp.as
+	rm -f core *.ob *.ext *.ent *.am

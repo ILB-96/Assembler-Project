@@ -1,6 +1,5 @@
 ; file ps.as
 .entry LIST
-.extern W
 
 MAIN: add r3, LIST
 LOOP: prn #48
@@ -30,4 +29,3 @@ LIST: .data 6, -9
  .data -100
 .entry K
 K: .data 31
-.extern val1

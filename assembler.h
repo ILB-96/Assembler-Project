@@ -44,7 +44,7 @@ int is_operation_name(char *);
 void add_entry_attribute(char *);
 int is_label_exists(char *);
 void print_labels();
-int get_label_values(char *, int *, int *, ARE *);
+int get_label_values(char *, int *, int *, ARE *, int);
 int found_label(char *, char *);
 int found_attribute(char *, char *);
 /*Functions from second-pass.c*/

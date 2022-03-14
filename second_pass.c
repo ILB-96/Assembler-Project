@@ -9,52 +9,66 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
   int g_error = FALSE;
   int label_base_val = 0;
   int label_offset_val = 0;
+  int externs_file_created = FALSE;
+  int entries_file_created = FALSE;
   ARE label_are;
   char line[MAX_LINE];
-  char word[MAX_LINE];
+  char token[MAX_LINE];
   FILE *obj_file_handler;
   FILE *ent_file_handler;
   FILE *ext_file_handler;
 
   /*returns if failed to create an output file*/
-  if (load_file(&obj_file_handler, file_name, ".ob", "w") || load_file(&ent_file_handler, file_name, ".ent", "w") || load_file(&ext_file_handler, file_name, ".ext", "w"))
+  if (load_file(&obj_file_handler, file_name, ".ob", "w"))
     return 1;
 
   while (fgets(line, MAX_LINE, exp_file_handler))
   {
-    get_first_token(line, word);
-    if (!strcmp(word, ".entry"))
+    get_first_token(line, token);
+    if (!strcmp(token, ".entry"))
     {
       is_entry = TRUE;
-      get_next_token(line, word);
-      error = process_entry_label(word, line_number);
+      get_next_token(line, token);
+      error = process_entry_label(token, line_number);
     }
-    else if (word[strlen(word) - 1] == ':')
-      get_next_token(line, word);
-    else if (!strcmp(word, ".extern"))
+    else if (token[strlen(token) - 1] == ':')
+      get_next_token(line, token);
+    else if (!strcmp(token, ".extern"))
     {
-      get_next_token(line, word);
-      get_next_token(line, word);
+      get_next_token(line, token);
+      get_next_token(line, token);
     }
 
-    if (!is_empty_line(line) && !error && found_label(line, word))
+    if (!is_empty_line(line) && !error && found_label(line, token))
     {
-      error = get_label_values(word, &label_base_val, &label_offset_val,
-                               &label_are);
+      error = get_label_values(token, &label_base_val, &label_offset_val,
+                               &label_are, line_number);
       if (!error && label_are == E)
       {
-        fprintf(ext_file_handler, "%s BASE %d\n", word,
+        if (!externs_file_created)
+        {
+          if (load_file(&ext_file_handler, file_name, ".ext", "w"))
+            return 1;
+          externs_file_created = TRUE;
+        }
+        fprintf(ext_file_handler, "%s BASE %d\n", token,
                 set_next_empty(head_IC, label_are, label_base_val));
-        fprintf(ext_file_handler, "%s OFFSET %d\n\n", word,
+        fprintf(ext_file_handler, "%s OFFSET %d\n\n", token,
                 set_next_empty(head_IC, label_are, label_base_val));
       }
       else if (!error)
       {
         if (is_entry)
         {
-          fprintf(ent_file_handler, "%s, %d, %d\n", word, label_base_val,
+          if (!entries_file_created)
+          {
+            if (load_file(&ent_file_handler, file_name, ".ent", "w"))
+              return 1;
+            entries_file_created = TRUE;
+          }
+          fprintf(ent_file_handler, "%s, %d, %d\n", token, label_base_val,
                   label_offset_val);
-          get_next_token(line, word);
+          get_next_token(line, token);
           if (!is_empty_line(line))
           {
             error = TRUE;
@@ -85,21 +99,23 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
   load_obj_file(head_IC, obj_file_handler);
   load_obj_file(head_DC, obj_file_handler);
   fclose(obj_file_handler);
-  fclose(ent_file_handler);
-  fclose(ext_file_handler);
+  if (externs_file_created)
+    fclose(ext_file_handler);
+  if (entries_file_created)
+    fclose(ent_file_handler);
 
   return g_error;
 }
-int process_entry_label(char *word, int line_number)
+int process_entry_label(char *token, int line_number)
 {
   int error = FALSE;
-  if (is_label_exists(word))
-    add_entry_attribute(word);
+  if (is_label_exists(token))
+    add_entry_attribute(token);
   else
   {
     error = TRUE;
     fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n",
-            line_number, word);
+            line_number, token);
   }
   return error;
 }

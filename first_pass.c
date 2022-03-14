@@ -184,13 +184,13 @@ void label_init(int count)
 
   if ((symbols_table[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
   {
-    fprintf(stderr, "FAILED!\nError: Out of memory\n");
+    fprintf(stderr, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
   if ((symbols_table[count].attribute = (char *)malloc(MAX_LABEL_LENGTH)) ==
       NULL)
   {
-    fprintf(stderr, "FAILED!\nError: Out of memory\n");
+    fprintf(stderr, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
   strcpy(symbols_table[count].name, "");
@@ -216,7 +216,7 @@ void label_add(int count, char *token, int address, char *attribute,
   if ((symbols_table =
            realloc(symbols_table, array_size * sizeof(TypeLabel))) == NULL)
   {
-    fprintf(stderr, "FAILED!\nError: Out of memory\n");
+    fprintf(stderr, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
   label_init(++count);
@@ -269,17 +269,14 @@ int is_valid_label_name(char *token)
                                     "red", "prn", "rts", "stop"};
   int i;
   int arrays_length = 16;
-
-  if (!isalpha(token[0]))
-    return 0;
-  if (strlen(token) > MAX_LABEL_LENGTH)
-    return 0;
-  for (i = 0; i < arrays_length; i++)
+  int result = 1;
+  if (!isalpha(token[0]) || strlen(token) > MAX_LABEL_LENGTH || !strcmp(token, "A") ||
+      !strcmp(token, "R") || !strcmp(token, "E") || !strcmp(token, "macro") || !strcmp(token, "endm"))
+    result = 0;
+  for (i = 0; result && i < arrays_length; i++)
     if (!strcmp(token, registers_array[i]) || !strcmp(token, operations_array[i]))
-      return 0;
-  if (!strcmp(token, "A") || !strcmp(token, "R") || !strcmp(token, "E"))
-    return 0;
-  return 1;
+      result = 0;
+  return result;
 }
 
 /*Function that checks if a given name of label is already exist in the symbols
@@ -303,7 +300,7 @@ int found_attribute(char *label_name, char *attribute)
   return 0;
 }
 int get_label_values(char *token, int *label_base_val, int *label_offset_val,
-                     ARE *are)
+                     ARE *are, int line_number)
 {
   int i;
   for (i = 0; strcmp(symbols_table[i].name, ""); i++)
@@ -317,8 +314,11 @@ int get_label_values(char *token, int *label_base_val, int *label_offset_val,
         *are = R;
       return 0;
     }
+  fprintf(stderr, "Error at line %d: '%s' label not found\n",
+          line_number, token);
   return 1;
 }
+
 int found_label(char *line, char *token)
 {
   while (!is_empty_line(line))

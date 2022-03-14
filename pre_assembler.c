@@ -11,7 +11,7 @@ int pre_assembler(FILE **exp_file_handler, char *file_name)
 {
   FILE *file_handler;
   int error = FALSE;
-  if (load_file(&file_handler, file_name, ".as", "r") || load_file(&*exp_file_handler, file_name, "_exp.as", "w+"))
+  if (load_file(&file_handler, file_name, ".as", "r") || load_file(&*exp_file_handler, file_name, ".am", "w+"))
     return 1;
 
   error = expand_macros(file_handler, *exp_file_handler);
