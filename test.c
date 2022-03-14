@@ -100,7 +100,7 @@ void test_command_code_process(void)
 
     line = "cmp #123,array[r1]";
     TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
-                    (expected = 1),
+                    (expected = 0),
                 "'%s' invalid index Expected: %d Actual: %d", line, expected, actual);
 
     line = "clr array(5)";
