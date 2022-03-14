@@ -1,5 +1,5 @@
 #include "assembler.h"
-void load_file(FILE **file_handler, char *name, char *exten, char *mode)
+int load_file(FILE **file_handler, char *name, char *exten, char *mode)
 {
   char *file_name;
   if (!(file_name = (char *)malloc(strlen(name) + EXTEN_LEN)))
@@ -11,11 +11,12 @@ void load_file(FILE **file_handler, char *name, char *exten, char *mode)
   strcat(file_name, exten);
   if (!(*file_handler = fopen(file_name, mode)))
   {
-    fprintf(stderr, "Error: File '%s' open failed.\nAbort...\n", file_name);
+    fprintf(stderr, "Error: File '%s' open failed.\n", file_name);
     free(file_name);
-    exit(EXIT_FAILURE);
+    return 1;
   }
   free(file_name);
+  return 0;
 }
 int is_empty_line(char *line)
 {

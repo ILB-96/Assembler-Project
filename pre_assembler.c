@@ -1,7 +1,7 @@
 #include "assembler.h"
 #define AS ".as"
 
-void expand_macros(FILE *, FILE *);
+int expand_macros(FILE *, FILE *);
 int is_macro_name(char *, FILE *);
 void insert_macro(FILE *, FILE *, char *);
 void get_macro_name(char *, char *);
@@ -11,24 +11,23 @@ int pre_assembler(FILE **exp_file_handler, char *file_name)
 {
   FILE *file_handler;
   int error = FALSE;
-  load_file(&file_handler, file_name, ".as", "r");
+  if (load_file(&file_handler, file_name, ".as", "r") || load_file(&*exp_file_handler, file_name, "_exp.as", "w+"))
+    return 1;
 
-  if (!error)
-  {
-    load_file(&*exp_file_handler, file_name, "_exp.as", "w+");
-    expand_macros(file_handler, *exp_file_handler);
-    fclose(file_handler);
-    remove("macros_file.txt");
-  }
+  error = expand_macros(file_handler, *exp_file_handler);
+  fclose(file_handler);
+  remove("macros_file.txt");
+
   return error;
 }
 
-void expand_macros(FILE *file_handler, FILE *exp_file_handler)
+int expand_macros(FILE *file_handler, FILE *exp_file_handler)
 {
   FILE *macros_file_handler;
   char line[MAX_LINE] = "", word[MAX_LINE] = "";
   int is_part_of_macro = 0;
-  load_file(&macros_file_handler, "macros_file", ".txt", "w+");
+  if (load_file(&macros_file_handler, "macros_file", ".txt", "w+"))
+    return 1;
 
   while (fgets(line, sizeof(line), file_handler))
   {
@@ -50,6 +49,7 @@ void expand_macros(FILE *file_handler, FILE *exp_file_handler)
   }
 
   fclose(macros_file_handler);
+  return 0;
 }
 void process_macro(char *line, char *word, int *is_part_of_macro,
                    FILE *macros_file_handler)

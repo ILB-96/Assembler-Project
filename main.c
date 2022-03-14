@@ -34,8 +34,6 @@ void assembler(char *file_name)
   if (pre_assembler(&exp_file_handler, file_name))
   {
     puts("Abort...\n");
-    free_list(head_IC);
-    free_list(head_DC);
     return;
   }
 

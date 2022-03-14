@@ -16,9 +16,9 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
   FILE *ent_file_handler;
   FILE *ext_file_handler;
 
-  load_file(&obj_file_handler, file_name, ".ob", "w");
-  load_file(&ent_file_handler, file_name, ".ent", "w");
-  load_file(&ext_file_handler, file_name, ".ext", "w");
+  /*returns if failed to create an output file*/
+  if (load_file(&obj_file_handler, file_name, ".ob", "w") || load_file(&ent_file_handler, file_name, ".ent", "w") || load_file(&ext_file_handler, file_name, ".ext", "w"))
+    return 1;
 
   while (fgets(line, MAX_LINE, exp_file_handler))
   {
