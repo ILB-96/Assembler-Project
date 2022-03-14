@@ -27,9 +27,8 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
     get_first_token(line, token);
     if (!strcmp(token, ".entry"))
     {
-      is_entry = TRUE;
       get_next_token(line, token);
-      error = process_entry_label(token, line_number, symbols_table);
+      error = process_entry_label(token, line_number, symbols_table, &is_entry);
     }
     else if (token[strlen(token) - 1] == ':')
       get_next_token(line, token);
@@ -107,11 +106,17 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
   return g_error;
 }
 
-int process_entry_label(char *token, int line_number, TypeLabel *symbols_table)
+int process_entry_label(char *token, int line_number, TypeLabel *symbols_table, int *is_entry)
 {
   int error = FALSE;
   if (is_label_exists(token, symbols_table))
-    add_entry_attribute(token, symbols_table);
+  {
+    if (!is_defined_entry(token, symbols_table))
+    {
+      add_entry_attribute(token, symbols_table);
+      *is_entry = TRUE;
+    }
+  }
   else
   {
     error = TRUE;

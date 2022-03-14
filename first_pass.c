@@ -93,8 +93,6 @@ int process_extern(char *line, char *token, int line_number, int *label_counter,
   get_next_token(line, token);
   if (!is_valid_label_name(token))
   {
-    /*raises error flag but continue to search for more errors in
-     * the first pass*/
     error = TRUE;
     fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n",
             line_number, token);
@@ -128,6 +126,19 @@ int is_defined_external(char *token, TypeLabel *symbols_table)
     if (!strcmp(symbols_table[i].name, token) &&
         !strcmp(symbols_table[i].attribute, "external"))
       return 1;
+    i++;
+  }
+  return 0;
+}
+int is_defined_entry(char *token, TypeLabel *symbols_table)
+{
+  int i = 0;
+  while (strcmp(symbols_table[i].name, ""))
+  {
+    if (!strcmp(symbols_table[i].name, token) &&
+        strstr(symbols_table[i].attribute, "entry"))
+      return 1;
+    i++;
   }
   return 0;
 }

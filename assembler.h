@@ -43,9 +43,10 @@ void print_labels(TypeLabel *);
 int get_label_values(char *, int *, int *, ARE *, int, TypeLabel *);
 int found_label(char *, char *, TypeLabel *);
 int found_attribute(char *, char *, TypeLabel *);
+int is_defined_entry(char *, TypeLabel *);
 /*Functions from second-pass.c*/
 int second_pass(FILE *, char *, plw, plw, TypeLabel *);
-int process_entry_label(char *, int, TypeLabel *);
+int process_entry_label(char *, int, TypeLabel *, int *);
 
 /*General use functions from functions.c*/
 int load_file(FILE **, char *, char *, char *);
