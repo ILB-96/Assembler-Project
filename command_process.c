@@ -352,7 +352,7 @@ char **split_line(char *str)
     int i = 0;
     char *token;
 
-    token = strtok(str, " ");
+    token = strtok(str, " \t");
     while (token != NULL)
     {
         char *temp;
