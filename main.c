@@ -50,7 +50,7 @@ void assembler(char *file_name)
     free_symbols(symbols_table);
     return;
   }
-  
+
   fseek(exp_file_handler, 0, SEEK_SET);
 
   printf("Assembly Second Pass at work...\n");
