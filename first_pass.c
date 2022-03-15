@@ -221,7 +221,7 @@ void label_add(int count, char *token, int address, char *attribute,
   else
     (*symbols_table)[count].address = address;
   (*symbols_table)[count].base_address = base_address(address);
-  (*symbols_table)[count].offset = (address % BASE_MODE);
+  (*symbols_table)[count].offset = ((*symbols_table)[count].address % BASE_MODE);
 
   if (!(*symbols_table =
             realloc(*symbols_table, array_size * sizeof(TypeLabel))))

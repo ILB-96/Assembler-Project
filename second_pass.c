@@ -102,7 +102,6 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
     fclose(ext_file_handler);
   if (entries_file_created)
     fclose(ent_file_handler);
-
   return g_error;
 }
 
