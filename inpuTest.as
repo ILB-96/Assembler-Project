@@ -1,3 +1,4 @@
+.extern GGG
 mov #-17, val
 cmp r3   , r4
 .string "OMG"
@@ -35,4 +36,3 @@ mac2
 JERUS:  add #67       ,r1
 stop
 red r4
-.extern GGG

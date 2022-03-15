@@ -68,10 +68,12 @@ int get_next_token_index(char *line, int index)
   {
     index++;
   }
-  while (!isspace(line[index]) && line[index] != '\0')
+  while (!isspace(line[index]) && line[index] != '\0' && line[index] != ',')
   {
     index++;
   }
+  if (line[index] == ',')
+    index++;
   while (isspace(line[index]) && line[index] != '\0')
   {
     index++;
