@@ -97,17 +97,23 @@ int process_extern(char *line, char *token, int line_number, int *label_counter,
     fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n",
             line_number, token);
   }
-  else if (is_label_exists(token, *symbols_table) && !is_defined_external(token, *symbols_table))
+  else if (is_label_exists(token, *symbols_table))
   {
-    /*the file is allowed to define the same
-    external more than once without causing an error*/
-    error = TRUE;
-    fprintf(stderr, "Error at line %d: '%s' label already exists\n",
-            line_number, token);
+    if (!is_defined_external(token, *symbols_table))
+    {
+      /*the file is allowed to define the same
+      external more than once without causing an error*/
+      error = TRUE;
+      fprintf(stderr, "Error at line %d: '%s' label already exists\n",
+              line_number, token);
+    }
   }
-  /*If we reached here the label is a valid external label, and we can
-   * add it to the symbols array*/
-  label_add((*label_counter)++, token, 0, "external", ++(*array_size), symbols_table);
+  else
+  {
+    /*If we reached here the label is a valid external label, and we can
+     * add it to the symbols array*/
+    label_add((*label_counter)++, token, 0, "external", ++(*array_size), symbols_table);
+  }
   get_next_token(line, token);
   if (!is_empty_line(line))
   {
