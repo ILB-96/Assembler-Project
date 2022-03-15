@@ -53,7 +53,7 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
         fprintf(ext_file_handler, "%s BASE %d\n", token,
                 set_next_empty(head_IC, label_are, label_base_val));
         fprintf(ext_file_handler, "%s OFFSET %d\n\n", token,
-                set_next_empty(head_IC, label_are, label_base_val));
+                set_next_empty(head_IC, label_are, label_offset_val));
       }
       else if (!error)
       {
@@ -80,7 +80,7 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
         else
         {
           set_next_empty(head_IC, label_are, label_base_val);
-          set_next_empty(head_IC, label_are, label_base_val);
+          set_next_empty(head_IC, label_are, label_offset_val);
         }
       }
     }
@@ -102,7 +102,6 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
     fclose(ext_file_handler);
   if (entries_file_created)
     fclose(ent_file_handler);
-  print_listNode(head_IC);
   return g_error;
 }
 
