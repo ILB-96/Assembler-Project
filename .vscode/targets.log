@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Mar 13 17:03:27 2022
+# Make data base, printed on Tue Mar 15 15:16:07 2022
 
 # Variables
 
@@ -51,7 +51,7 @@ _ = /usr/share/code/code
 # makefile (from 'makefile', line 2)
 CFLAGS = -ansi -pedantic -Wall -g
 # environment
-JOURNAL_STREAM = 8:33119
+JOURNAL_STREAM = 8:31739
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'makefile', line 1)
@@ -69,7 +69,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 1113
+MANAGERPID = 1070
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -81,7 +81,7 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1407,unix/yoni-VirtualBox:/tmp/.ICE-unix/1407
+SESSION_MANAGER = local/yoni-VirtualBox:@/tmp/.ICE-unix/1363,unix/yoni-VirtualBox:/tmp/.ICE-unix/1363
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -91,7 +91,7 @@ VSCODE_LOG_STACK = false
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&iid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea&sid=d1b9ac48-6243-40a1-8dfe-bfa94b747aea","uploadToServer":true}
 # environment
-INVOCATION_ID = 89bf1852336d4e8287a389d2fb97eed6
+INVOCATION_ID = 8c2895465bb64e49a2ff3b14d3d09c11
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -101,7 +101,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 12755
+GIO_LAUNCHED_DESKTOP_FILE_PID = 2163
 # automatic
 %F = $(notdir $%)
 # environment
@@ -113,7 +113,7 @@ PWD = /home/yoni/Desktop/mm 14/5/Assembler-Project
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1346
+SSH_AGENT_PID = 1302
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -151,7 +151,7 @@ CC = gcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ebbd996c-f96e-4bc7-ad25-b3fa1283e4d2.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f10cf229-084b-4d71-85d7-bb9e6e5afa58.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -215,7 +215,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 12755
+VSCODE_PID = 2163
 # variable set hash-table stats:
 # Load=102/1024=10%, Rehash=0, Collisions=14/127=11%
 
@@ -225,9 +225,9 @@ VSCODE_PID = 12755
 
 # Directories
 
-# . (device 2053, inode 1316042): 34 files, no impossibilities.
+# . (device 2053, inode 1316232): 22 files, no impossibilities.
 
-# 34 files, no impossibilities in 1 directories.
+# 22 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -280,9 +280,9 @@ first_pass.o:
 #  Modification time never checked.
 #  File has not been updated.
 
- 
 # Not a target:
 second_pass.o:
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -317,7 +317,7 @@ test: test.o functions.o pre_assembler.o first_pass.o second_pass.o command_proc
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-03-13 15:39:33.181835291
+#  Last modified 2022-03-15 15:15:57.213701941
 #  File has been updated.
 #  Successfully updated.
 
@@ -326,7 +326,7 @@ fclean:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'makefile', line 27):
-	rm -f core *.ob *.ext *.ent *_exp.as
+	rm -f core *.ob *.ext *.ent *.am
 
 # Not a target:
 first_pass.c:
@@ -414,12 +414,12 @@ data_struct_words.o: data_struct_words.c assembler.h
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 44 / storage = 501 B / avg = 11 B
-# current buf: size = 8162 B / used = 501 B / count = 44 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 41 / storage = 460 B / avg = 11 B
+# current buf: size = 8162 B / used = 460 B / count = 41 / avg = 11 B
 
-# strcache performance: lookups = 97 / hit rate = 54%
+# strcache performance: lookups = 85 / hit rate = 51%
 # hash-table stats:
-# Load=44/8192=1%, Rehash=0, Collisions=1/97=1%
-# Finished Make data base on Sun Mar 13 17:03:27 2022
+# Load=41/8192=1%, Rehash=0, Collisions=1/85=1%
+# Finished Make data base on Tue Mar 15 15:16:07 2022
 
  

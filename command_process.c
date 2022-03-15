@@ -388,7 +388,8 @@ char **split_line(char *str)
         }
         token = strtok(NULL, " ");
     }
-
+    if(*s[i-1] == '\0')
+        s[i-1] = NULL;
     s[i] = NULL;
     return s;
 }
