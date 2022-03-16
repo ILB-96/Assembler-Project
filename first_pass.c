@@ -1,5 +1,5 @@
 #include "assembler.h"
-#define MAX_LABEL_LENGTH 32
+#define MAX_LABEL_LENGTH 31
 
 /*Inner functions that are meant to use only inside this source*/
 int is_valid_label_name(char *);
