@@ -36,22 +36,20 @@ int pre_assembler(FILE **, char *);
 /*Functions from first-pass.c*/
 int first_pass(FILE *, plw *, plw *, plw *, plw *, TypeLabel **);
 void free_symbols(TypeLabel *);
-int is_operation_name(char *);
 void add_entry_attribute(char *, TypeLabel *);
 int is_label_exists(char *, TypeLabel *);
 void print_labels(TypeLabel *);
-int get_label_values(char *, int *, int *, ARE *, int, TypeLabel *);
+int get_label_values(char *, int *, int *, int, TypeLabel *);
 int found_label(char *, char *, TypeLabel *);
-int found_attribute(char *, char *, TypeLabel *);
 int is_defined_entry(char *, TypeLabel *);
 /*Functions from second-pass.c*/
 int second_pass(FILE *, char *, plw, plw, TypeLabel *);
-int process_entry_label(char *, int, TypeLabel *, int *);
 
 /*General use functions from functions.c*/
 int load_file(FILE **, char *, char *, char *);
 int is_comment_line(char *);
 int is_empty_line(char *);
+int is_operation_name(char *);
 void get_first_token(char *, char *);
 int get_next_token_index(char *, int);
 void get_next_token(char *, char *);
