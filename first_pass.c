@@ -10,7 +10,6 @@ int add_binary_words(char *, char *, plw *, plw *, int);
 void update_data_labels_address(int, TypeLabel *);
 int process_extern(char *, char *, int, int *, size_t *, TypeLabel **);
 int process_label(char *, char *, int, int *, size_t *, plw, plw, TypeLabel **);
-int is_defined_external(char *, TypeLabel *);
 
 /*Defining and declaring the symbols table*/
 struct TypeLabel
@@ -144,7 +143,7 @@ int process_extern(char *line, char *token, int line_number, int *label_counter,
   }
   else if (is_label_exists(token, *symbols_table))
   {
-    if (!is_defined_external(token, *symbols_table))
+    if (!is_defined_ext(token, *symbols_table))
     {
       /*the file is allowed to define the same
       external more than once without causing an error*/
@@ -171,7 +170,7 @@ int process_extern(char *line, char *token, int line_number, int *label_counter,
 }
 
 /*Function that checks if inserted label name already have external attribute*/
-int is_defined_external(char *token, TypeLabel *symbols_table)
+int is_defined_ext(char *token, TypeLabel *symbols_table)
 {
   int i = 0;
   while (strcmp(symbols_table[i].name, ""))
@@ -185,7 +184,7 @@ int is_defined_external(char *token, TypeLabel *symbols_table)
 }
 
 /*Functions that checks if inserted label already have entry attribute*/
-int is_defined_entry(char *token, TypeLabel *symbols_table)
+int is_defined_ent(char *token, TypeLabel *symbols_table)
 {
   int i = 0;
   while (strcmp(symbols_table[i].name, ""))

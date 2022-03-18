@@ -95,8 +95,16 @@ int process_entry_label(char *line, char *token, int line_number, TypeLabel *sym
   int label_offset_val = 0;
   if (is_label_exists(token, symbols_table))
   {
-    if (!is_defined_entry(token, symbols_table))
+    if (is_defined_ext(token, symbols_table))
     {
+      error = TRUE;
+      fprintf(stderr,
+              "Error at line %d: label cannot be defined as external and as entry\n",
+              line_number);
+    }
+    else if (!is_defined_ent(token, symbols_table))
+    {
+
       add_entry_attribute(token, symbols_table);
       if (!(*is_file_created))
       {

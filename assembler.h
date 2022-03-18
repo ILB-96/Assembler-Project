@@ -41,7 +41,8 @@ int is_label_exists(char *, TypeLabel *);
 void print_labels(TypeLabel *);
 int get_label_values(char *, int *, int *, int, TypeLabel *);
 int found_label(char *, char *, TypeLabel *);
-int is_defined_entry(char *, TypeLabel *);
+int is_defined_ent(char *, TypeLabel *);
+int is_defined_ext(char *, TypeLabel *);
 /*Functions from second-pass.c*/
 int second_pass(FILE *, char *, plw, plw, TypeLabel *);
 
