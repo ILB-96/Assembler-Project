@@ -21,10 +21,9 @@ struct TypeLabel
   int offset;
   char *attribute;
 };
-
+/*First pass to process the labels and create the binary words image*/
 int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D, TypeLabel **symbols_table)
 {
-  /*Variables*/
   int label_counter = 0;
   int line_number = 1;
   int error = FALSE;

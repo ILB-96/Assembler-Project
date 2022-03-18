@@ -1,5 +1,6 @@
 #include "assembler.h"
 int process_entry_label(char *, char *, int, TypeLabel *, FILE **, int *, char *);
+/*Second pass to process entry labels and add the labels to their place in the binary words img*/
 int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
                 plw head_DC, TypeLabel *symbols_table)
 {
@@ -66,7 +67,6 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
         set_next_empty(head_IC, A, label_offset_val);
       }
     }
-
     if (error)
     {
       g_error = TRUE;
