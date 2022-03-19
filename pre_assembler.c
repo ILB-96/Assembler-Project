@@ -7,8 +7,11 @@ void insert_macro(FILE *, FILE *, char *);
 void get_macro_name(char *, char *);
 void process_macro(char *, char *, int *, FILE *);
 
-/*pre assembler to expand and refactor the original file into a new file
-to eas the assembly process*/
+/*
+ *Pre Assembler to expand and refactor the original file into a new file
+ *to eas the assembly process
+ *@return 1 if filed to process the inserted file.
+ */
 int pre_assembler(FILE **exp_file_handler, char *file_name)
 {
   FILE *file_handler;
@@ -23,8 +26,11 @@ int pre_assembler(FILE **exp_file_handler, char *file_name)
   return error;
 }
 
-/*Function to load the macros into the new file
-will also remove comment lines, space lines and leading spaces in line*/
+/*
+ *Expands the macros in a new file
+ *will also remove comment lines, space lines and leading spaces in line
+ *@return 1 if failed to create a macro file
+ */
 int expand_macros(FILE *file_handler, FILE *exp_file_handler)
 {
   FILE *macros_file_handler;
@@ -56,7 +62,9 @@ int expand_macros(FILE *file_handler, FILE *exp_file_handler)
   return 0;
 }
 
-/*Function that adds the macro and its content to the macros file*/
+/*
+ *Adds the macro and its content to the macros file
+ */
 void process_macro(char *line, char *word, int *is_part_of_macro,
                    FILE *macros_file_handler)
 {
@@ -77,7 +85,9 @@ void process_macro(char *line, char *word, int *is_part_of_macro,
       fprintf(macros_file_handler, "%s", line);
   }
 }
-/*Function that saves the macro name*/
+/*
+ *Saves the macro name
+ */
 void get_macro_name(char *line, char *word)
 {
   int i = 0, j = 0;
@@ -94,7 +104,10 @@ void get_macro_name(char *line, char *word)
   word[j] = '\0';
 }
 
-/*Function that checks if we found a macro name in a line*/
+/*
+ *Checks if we found a macro name in a line
+ *return 1 if found a macro name.
+ */
 int is_macro_name(char *word, FILE *macros_file_handler)
 {
   char line[MAX_LINE] = "", *macro_name;
@@ -116,7 +129,9 @@ int is_macro_name(char *word, FILE *macros_file_handler)
   return 0;
 }
 
-/*Function that adds the macro content to expanded file in the necessary location*/
+/*
+ *Adds macro content to expanded file in the correct location
+ */
 void insert_macro(FILE *exp_file_handler, FILE *macros_file_handler,
                   char *word)
 {

@@ -1,9 +1,16 @@
 #include "assembler.h"
-/*Function that creates a file with a given extension and points a file handler to it*/
+/*
+ *Creates a file with a given extension and points a file handler to it
+ *@exten char pointer to the name of the extension of the file
+ *@name char pointer to the original file name.
+ *@mode char pointer to the type of open needed for the file
+ *@file_handler pointer to a file pointer that reference to the file.
+ *@return 1 if could not command fopen on the file.
+ */
 int load_file(FILE **file_handler, char *name, char *exten, char *mode)
 {
   char *file_name;
-  if (!(file_name = (char *)malloc(strlen(name) + EXTEN_LEN)))
+  if (!(file_name = (char *)malloc(strlen(name) + MAX_EXTEN_LEN)))
   {
     fprintf(stderr, "Error: Out of memory\nAbort...\n");
     exit(EXIT_FAILURE);
@@ -23,7 +30,10 @@ int load_file(FILE **file_handler, char *name, char *exten, char *mode)
  * The next functions check the state of a current line or token.
  * *****************************************************************/
 
-/*Function that checks if current line is an empty line(can contain spaces)*/
+/*
+ *Checks if current line is an empty line(can contain spaces)
+ *@return 1 if line is
+ */
 int is_empty_line(char *line)
 {
   int i = 0;
@@ -32,7 +42,11 @@ int is_empty_line(char *line)
       return 0;
   return 1;
 }
-/*Function that checks if current line is a comment line*/
+
+/*
+*Checks if current line is a comment line
+@return 1 if line is a comment line
+*/
 int is_comment_line(char *line)
 {
   int i = 0;
@@ -43,7 +57,10 @@ int is_comment_line(char *line)
   return 0;
 }
 
-/*Function that checks if a given token is an operation*/
+/*
+ *Checks if a given token is an operation command
+ *@return 1 if the token is an operation command.
+ */
 int is_operation_name(char *token)
 {
   const char *operations_array[] = {"mov", "cmp", "add", "sub", "lea", "clr",
@@ -63,7 +80,9 @@ int is_operation_name(char *token)
  * The next functions are used to change and alternate the tokens and the lines
  * from the file to meet our needs.
  * ****************************************************************************/
-/*removes leading spaces in line and gets first token in line*/
+/*r
+ *Removes leading spaces in line and gets first token in line
+ */
 void get_first_token(char *line, char *token)
 {
   int i = 0, j = 0;
@@ -84,7 +103,9 @@ void get_first_token(char *line, char *token)
 
   token[j] = '\0';
 }
-/*Function that returns the index of the next token in line*/
+/*
+ *Returns the index of the next token in line
+ */
 int get_next_token_index(char *line, int index)
 {
   while (isspace(line[index]) && line[index] != '\0')
@@ -104,8 +125,9 @@ int get_next_token_index(char *line, int index)
   return index;
 }
 
-/*Function that moves the line to the next token and insert the next token inside
- * a variable(token)*/
+/*
+ *Moves the line to the next token and gets the next token
+ */
 void get_next_token(char *line, char *token)
 {
 
@@ -122,7 +144,9 @@ void get_next_token(char *line, char *token)
   token[j] = '\0';
 }
 
-/*Function that removes the ":" sign from a token*/
+/*
+ *Removes the ":" sign from a token
+ */
 void remove_colon(char *token)
 {
   int i = 0;
@@ -131,7 +155,10 @@ void remove_colon(char *token)
   token[--i] = '\0';
 }
 
-/*remove all excessive signs("',','[',']'") from a given token needed to find labels in line*/
+/*
+ *remove all excessive signs("',','[',']'") from a given token
+ *needed to find labels in line
+ */
 void remove_signs(char *token)
 {
   int i = 0;

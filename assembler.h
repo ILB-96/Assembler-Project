@@ -1,3 +1,4 @@
+
 #ifndef ASSEMBLER_DOT_H
 #define ASSEMBLER_DOT_H
 #include <ctype.h>
@@ -8,12 +9,19 @@
 
 #define MAX_LINE 81
 #define MAX_ADDRESS 8191
-#define EXTEN_LEN 13
+#define MAX_EXTEN_LEN 5
 #define BASE_MODE 16
 #define BASE_IC 100
 #define BASE_DC 0
 #define TRUE 1
 #define FALSE 0
+#define SUM_OPERATIONS 16
+#define WORD_SIZE 1 << 19
+#define SET_TARG_R(x) x = x << 2
+#define SET_SOUR_SORT(x) x = x << 6
+#define SET_SOUR_R(x) x = x << 8
+#define SET_FUNCT(x) x = x << 12
+#define SET_ARE(x) x = x << 16
 
 typedef struct TypeLabel TypeLabel;
 typedef struct link_words *plw;
@@ -30,33 +38,6 @@ typedef enum
   R = 2,
   E = 1
 } ARE;
-
-/*Functions from pre-assembler.c*/
-int pre_assembler(FILE **, char *);
-/*Functions from first-pass.c*/
-int first_pass(FILE *, plw *, plw *, plw *, plw *, TypeLabel **);
-void free_symbols(TypeLabel *);
-void add_entry_attribute(char *, TypeLabel *);
-int is_label_exists(char *, TypeLabel *);
-void print_labels(TypeLabel *);
-int get_label_values(char *, int *, int *, int, TypeLabel *);
-int found_label(char *, char *, TypeLabel *);
-int is_defined_ent(char *, TypeLabel *);
-int is_defined_ext(char *, TypeLabel *);
-/*Functions from second-pass.c*/
-int second_pass(FILE *, char *, plw, plw, TypeLabel *);
-
-/*General use functions from functions.c*/
-int load_file(FILE **, char *, char *, char *);
-int is_comment_line(char *);
-int is_empty_line(char *);
-int is_operation_name(char *);
-void get_first_token(char *, char *);
-int get_next_token_index(char *, int);
-void get_next_token(char *, char *);
-void remove_colon(char *);
-void remove_signs(char *);
-
 /*WORD-LIST*/
 #define IS_NULL(x)            \
   if (x == NULL)              \
@@ -64,15 +45,6 @@ void remove_signs(char *);
     puts("index not exists"); \
     exit(0);                  \
   }
-
-#define WORD_SIZE 1 << 19
-#define BASE_STOCK 100
-
-#define SET_TARG_R(x) x = x << 2
-#define SET_SOUR_SORT(x) x = x << 6
-#define SET_SOUR_R(x) x = x << 8
-#define SET_FUNCT(x) x = x << 12
-#define SET_ARE(x) x = x << 16
 
 typedef enum
 {
@@ -131,6 +103,7 @@ typedef enum
   index_sort,
   register_direct
 } sortType;
+
 typedef enum
 {
   r0,
@@ -151,6 +124,31 @@ typedef enum
   r15
 } registers;
 
+/*Functions from pre-assembler.c*/
+int pre_assembler(FILE **, char *);
+/*Functions from first-pass.c*/
+int first_pass(FILE *, plw *, plw *, plw *, plw *, TypeLabel **);
+void free_symbols(TypeLabel *);
+void add_entry_attribute(char *, TypeLabel *);
+int is_label_exists(char *, TypeLabel *);
+void print_labels(TypeLabel *);
+int get_label_values(char *, int *, int *, int, TypeLabel *);
+int found_label(char *, char *, TypeLabel *);
+int is_defined_ent(char *, TypeLabel *);
+int is_defined_ext(char *, TypeLabel *);
+/*Functions from second-pass.c*/
+int second_pass(FILE *, char *, plw, plw, TypeLabel *);
+/*General use functions from functions.c*/
+int load_file(FILE **, char *, char *, char *);
+int is_comment_line(char *);
+int is_empty_line(char *);
+int is_operation_name(char *);
+void get_first_token(char *, char *);
+int get_next_token_index(char *, int);
+void get_next_token(char *, char *);
+void remove_colon(char *);
+void remove_signs(char *);
+/*Functions from data_struct_words.c*/
 void initialize_list(plw *h, plw *p, int);
 void add_to_list(plw *prv, int n);
 int get_word(plw h, int index);
@@ -168,10 +166,7 @@ void add_num_to_list(plw *, ARE, int);
 void update_address(plw, int);
 int set_next_empty(plw, ARE, int);
 int get_length(plw);
-
-/*command_process*/
-
-#define SUM_OPERATIONS 16
+/*Functions from command_process.c*/
 int is_special_char(char *);
 int is_only_digits(char *);
 int command_string_process(plw *, char *, int);

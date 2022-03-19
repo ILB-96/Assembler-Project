@@ -1,6 +1,10 @@
 #include "assembler.h"
 int process_entry_label(char *, char *, int, TypeLabel *, FILE **, int *, char *);
-/*Second pass to process entry labels and add the labels to their place in the binary words img*/
+
+/*
+ *Second Pass to process entry labels and add the labels to their place in the binary words img
+ *@return 1 if found an error in the process
+ */
 int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
                 plw head_DC, TypeLabel *symbols_table)
 {
@@ -87,7 +91,10 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
   return g_error;
 }
 
-/*Function adds entry attribute to label and raises entry flag if needed*/
+/*
+Adds entry attribute to label and adds the label to file.ent
+*return 1 if found an error in the process
+*/
 int process_entry_label(char *line, char *token, int line_number, TypeLabel *symbols_table, FILE **ent_file_handler, int *is_file_created, char *file_name)
 {
   int error = FALSE;
