@@ -77,7 +77,7 @@ int is_operation_name(char *token)
 }
 
 /*******************************************************************************
- * The next functions are used to change and alternate the tokens and the lines
+ * The next functions are used to change and alternate the tokens and the  lines
  * from the file to meet our needs.
  * ****************************************************************************/
 /*r
@@ -165,4 +165,107 @@ void remove_signs(char *token)
   while (isalnum(token[i++]))
     ;
   token[--i] = '\0';
+}
+/*******************************************************************************
+ * The next functions are used for help the command_process file
+ * ****************************************************************************/
+
+/*
+  split the line to string array by the apace and the char ',' 
+*/
+char **split_line(char *str)
+{
+    char **s = malloc(sizeof(char *));
+    int i = 0;
+    char *token;
+
+    token = strtok(str, " \t");
+    while (token != NULL)
+    {
+        char *temp;
+        char *c;
+        int j = 0;
+        while (token[j] != '\0')
+        {
+            while (token[j] != ',' && token[j] != '\0' && token[j] != '\n')
+                j++;
+            if (token[j] == ',')
+            {
+                temp = token;
+                token[j] = '\0';
+                c = ",";
+                token = token + j + 1;
+                if (temp[0] != '\0')
+                {
+                    s[i++] = temp;
+                    s = (char **)realloc(s, sizeof(char *) * i + 1);
+                }
+                s[i++] = c;
+                s = (char **)realloc(s, sizeof(char *) * i + 1);
+
+                j = 0;
+            }
+            else
+            {
+                if (token[j] == '\n')
+                    token[j] = '\0';
+                s[i++] = token;
+                s = (char **)realloc(s, sizeof(char *) * i + 1);
+            }
+        }
+        token = strtok(NULL, " ");
+    }
+    if(*s[i-1] == '\0')
+        s[i-1] = NULL;
+    s[i] = NULL;
+    return s;
+}
+
+
+int is_sub_digits(char *str ,char c)
+{
+    int result = 0;
+    for(str++; *str != c && *str != '\0'; str++)
+    {
+        if(!isdigit(*str))
+        {
+            result = 1;
+        }
+    }
+    return result;
+}
+
+
+int is_special_char(char *str)
+{
+    int result = 0;
+    int i = 0;
+    while(str[i] != '\0')
+    {
+        if(!isdigit(str[i]) && !isalpha(str[i]) && str[i] != '[' && str[i] != ']')
+        {
+            result = 1;
+        }
+        i++;
+    }
+    return result;
+}
+
+int is_only_digits(char *num)
+{
+    int i;
+    int result = 1;
+    for (i = 0; num[i] != '\0'; i++)
+    {
+
+        if (isdigit(num[i]) == 0)
+            result = 0;
+        if (i == 0 && (num[i] == '+' || num[i] == '-'))
+            result = 1;
+        if (isdigit(num[i]) == 0)
+            result = 0;
+        if (i == 0 && (num[i] == '+' || num[i] == '-'))
+            result = 1;
+    }
+    return result;
 }
