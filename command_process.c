@@ -283,6 +283,18 @@ int is_special_char(char *str)
     }
     return result;
 }
+int is_sub_digits(char *str ,char c)
+{
+    int result = 0;
+    for(str++; *str != c && *str != '\0'; str++)
+    {
+        if(!isdigit(*str))
+        {
+            result = 1;
+        }
+    }
+    return result;
+}
 int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *are)
 {
 
@@ -291,7 +303,7 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
     *are = A;
     /*case it's register*/
     temp = atoi(operator+ 1);
-    if (operator[0] == 'r' && operator[1] != '\0' && is_only_digits(operator+ 1) && temp >= r0 && temp <= r15)
+    if (operator[0] == 'r' && operator[1] != '\0' && is_only_digits(operator+ 1) && temp >= r0 && temp <= r15 )
     {
         *r = temp;
         *sort = register_direct;
@@ -317,7 +329,7 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
             int i = 0;
             while (operator[i] != '\0')
             {
-                if (parenthesis == 1 && operator[i] == 'r' &&(reg = atoi(operator+ i + 1)) <= r15 && reg >= r0)
+                if (parenthesis == 1 && operator[i] == 'r' && is_sub_digits(operator+i,']') == 0  && (reg = atoi(operator+ i + 1)) <= r15 && reg >= r0 )
                 {
                     /*TODO check if it's letter after the number like [r3A]*/
                    
