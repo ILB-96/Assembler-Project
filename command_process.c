@@ -60,24 +60,7 @@ int command_data_process(plw *prv_DC, char *line, int line_number)
     return error;
 }
 
-int is_only_digits(char *num)
-{
-    int i;
-    int result = 1;
-    for (i = 0; num[i] != '\0'; i++)
-    {
 
-        if (isdigit(num[i]) == 0)
-            result = 0;
-        if (i == 0 && (num[i] == '+' || num[i] == '-'))
-            result = 1;
-        if (isdigit(num[i]) == 0)
-            result = 0;
-        if (i == 0 && (num[i] == '+' || num[i] == '-'))
-            result = 1;
-    }
-    return result;
-}
 
 int is_operator(char *op)
 {
@@ -269,20 +252,7 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
 
     return error;
 }
-int is_special_char(char *str)
-{
-    int result = 0;
-    int i = 0;
-    while(str[i] != '\0')
-    {
-        if(!isdigit(str[i]) && !isalpha(str[i]) && str[i] != '[' && str[i] != ']')
-        {
-            result = 1;
-        }
-        i++;
-    }
-    return result;
-}
+
 int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *are)
 {
 
@@ -291,7 +261,7 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
     *are = A;
     /*case it's register*/
     temp = atoi(operator+ 1);
-    if (operator[0] == 'r' && operator[1] != '\0' && is_only_digits(operator+ 1) && temp >= r0 && temp <= r15)
+    if (operator[0] == 'r' && operator[1] != '\0' && is_only_digits(operator+ 1) && temp >= r0 && temp <= r15 )
     {
         *r = temp;
         *sort = register_direct;
@@ -317,13 +287,10 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
             int i = 0;
             while (operator[i] != '\0')
             {
-                if (parenthesis == 1 && operator[i] == 'r' &&(reg = atoi(operator+ i + 1)) <= r15 && reg >= r0)
+                if (parenthesis == 1 && operator[i] == 'r' && is_sub_digits(operator+i,']') == 0  && (reg = atoi(operator+ i + 1)) <= r15 && reg >= r0 )
                 {
-                    /*TODO check if it's letter after the number like [r3A]*/
-                   
                     *r = reg;
                     *sort = index_sort;
-
                     parenthesis++;
                 }
                 if (operator[i] == '[' || operator[i] == ']')
@@ -337,7 +304,6 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
             }
             else if (parenthesis != 3)
                 result = 0;
-        
         }
     }
     else
@@ -346,50 +312,4 @@ int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *ar
     return result;
 }
 
-char **split_line(char *str)
-{
-    char **s = malloc(sizeof(char *));
-    int i = 0;
-    char *token;
 
-    token = strtok(str, " \t");
-    while (token != NULL)
-    {
-        char *temp;
-        char *c;
-        int j = 0;
-        while (token[j] != '\0')
-        {
-            while (token[j] != ',' && token[j] != '\0' && token[j] != '\n')
-                j++;
-            if (token[j] == ',')
-            {
-                temp = token;
-                token[j] = '\0';
-                c = ",";
-                token = token + j + 1;
-                if (temp[0] != '\0')
-                {
-                    s[i++] = temp;
-                    s = (char **)realloc(s, sizeof(char *) * i + 1);
-                }
-                s[i++] = c;
-                s = (char **)realloc(s, sizeof(char *) * i + 1);
-
-                j = 0;
-            }
-            else
-            {
-                if (token[j] == '\n')
-                    token[j] = '\0';
-                s[i++] = token;
-                s = (char **)realloc(s, sizeof(char *) * i + 1);
-            }
-        }
-        token = strtok(NULL, " ");
-    }
-    if(*s[i-1] == '\0')
-        s[i-1] = NULL;
-    s[i] = NULL;
-    return s;
-}

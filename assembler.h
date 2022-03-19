@@ -167,6 +167,7 @@ void update_address(plw, int);
 int set_next_empty(plw, ARE, int);
 int get_length(plw);
 /*Functions from command_process.c*/
+int is_sub_digits(char * ,char);
 int is_special_char(char *);
 int is_only_digits(char *);
 int command_string_process(plw *, char *, int);

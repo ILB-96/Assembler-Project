@@ -61,17 +61,17 @@ void test_command_code_process(void)
     plw head_DC;
     plw prv_DC;
     initialize_list(&head_DC, &prv_DC, 0);
-    initialize_list(&head_IC, &prv_IC, BASE_STOCK);
+    initialize_list(&head_IC, &prv_IC, BASE_DC);
 
     line = "add r3, LIST";
     TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
                     (expected = 0),
                 "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
-    TEST_CHECK_((actual = get_current_address(prv_IC) - BASE_STOCK) ==
+    TEST_CHECK_((actual = get_current_address(prv_IC) - BASE_DC) ==
                     (expected = 3),
                 "'%s' number of binary words Expected: %d Actual: %d", line,
                 expected, actual);
-    initialize_list(&head_IC, &prv_IC, BASE_STOCK);
+    initialize_list(&head_IC, &prv_IC, BASE_DC);
 
     /*this test wrong because of the command_code_process assumes to get the line without the label
     line = "MAIN : add r3, LIST";
@@ -97,6 +97,17 @@ void test_command_code_process(void)
     TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
                     (expected = 0),
                 "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+
+                 line = "cmp #48,str[r3q]";
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
+                    (expected = 1),
+                "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+
+ line = "cmp #48,str[r33]";
+    TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
+                    (expected = 1),
+                "'%s' inserted Expected: %d Actual: %d", line, expected, actual);
+
     line = "add array[r2],r1";
     TEST_CHECK_((actual = command_code_process(&prv_IC, line, line_number)) ==
                     (expected = 0),
@@ -157,6 +168,8 @@ void test_command_code_process(void)
                     (expected = 1),
                 "'%s', illegal comma location. Expected: %d Actual: %d", line,
                 expected, actual);
+
+
 }
 void test_command_data_process(void)
 {
@@ -169,7 +182,7 @@ void test_command_data_process(void)
     plw head_DC;
     plw prv_DC;
     initialize_list(&head_DC, &prv_DC, 0);
-    initialize_list(&head_IC, &prv_IC, BASE_STOCK);
+    initialize_list(&head_IC, &prv_IC, BASE_DC);
 
     line = ".data 6, -9";
     TEST_CHECK_((actual = command_data_process(&prv_DC, line, line_number)) ==
@@ -182,7 +195,7 @@ void test_command_data_process(void)
 
     line = ".data 66666";
     TEST_CHECK_((actual = command_data_process(&prv_DC, line, line_number)) ==
-                    (expected = 1),
+                    (expected = 0),
                 "'%s', data overflow. Expected: %d Actual: %d", line, expected,
                 actual);
     line = ".data 6, -9";
@@ -223,7 +236,7 @@ void test_command_string_process(void)
     plw head_DC;
     plw prv_DC;
     initialize_list(&head_DC, &prv_DC, 0);
-    initialize_list(&head_IC, &prv_IC, BASE_STOCK);
+    initialize_list(&head_IC, &prv_IC, BASE_DC);
 
     line = ".string \"abcd\"";
     TEST_CHECK_((actual = command_string_process(&prv_DC, line, line_number)) ==
