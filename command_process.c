@@ -247,6 +247,14 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
         add_to_list(prv, 0);
         add_to_list(prv, 0);
         break;
+    case register_direct:
+        if (op == min_target_op && target_sort == register_direct) 
+        {
+            error = TRUE;
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
+                    line_number, comm);
+        }
+        break;
     }
 
     return error;
