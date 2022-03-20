@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define STRING_LENGTH 7
 #define MAX_LINE 81
 #define MAX_ADDRESS 8191
 #define MAX_EXTEN_LEN 5
@@ -145,6 +146,7 @@ typedef enum
   r15
 } registers;
 
+typedef enum{convert_A = 16, convert_B = 12, convert_C = 8, convert_D = 4}converts;
 /*Functions from pre-assembler.c*/
 int pre_assembler(FILE **, char *);
 /*Functions from first-pass.c*/

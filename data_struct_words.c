@@ -1,12 +1,16 @@
 #include "assembler.h"
 
+
+/*initialize data strct befor use*/
 void initialize_list(plw *h, plw *p, int stock)
 {
   *h = (plw)malloc(sizeof(wordsNode));
+  IS_NULL(*h)
   *p = *h;
   (*p)->word = -1;
   (*p)->stock_index = stock;
 }
+/*get ARE val and number n and combine them to 'word'*/
 int create_stdnum(ARE are, int n)
 {
   int word;
@@ -17,12 +21,13 @@ int create_stdnum(ARE are, int n)
   mask = ~mask;
   return (mask & n) | are;
 }
-
+/*get prv of stract and ARE , int parameters to add to the stract*/
 void add_num_to_list(plw *prv, ARE are, int n)
 {
   int word = create_stdnum(are, n);
   add_to_list(prv, word);
 }
+/*add simpal number to the stract*/
 void add_to_list(plw *prv, int n)
 {
   if ((*prv)->word == -1)
@@ -33,6 +38,7 @@ void add_to_list(plw *prv, int n)
   else
   {
     plw temp = (plw)malloc(sizeof(wordsNode));
+    IS_NULL(temp)
     temp->word = n;
     temp->next = NULL;
     temp->stock_index = (*prv)->stock_index + 1;
@@ -41,7 +47,7 @@ void add_to_list(plw *prv, int n)
     *prv = temp;
   }
 }
-
+/*geting function to word in index*/
 int get_word(plw h, int index)
 {
   int i;
@@ -52,6 +58,7 @@ int get_word(plw h, int index)
   IS_NULL(h)
   return h->word;
 }
+/*adding word to the stract in base format ARE and opcode*/
 int add_base_word(plw *p, ARE are, opcode o)
 {
   int word = 1 << o;
@@ -61,6 +68,7 @@ int add_base_word(plw *p, ARE are, opcode o)
   add_to_list(p, word);
   return word;
 }
+/*add standart word*/
 int add_std_word(plw *prv, ARE are, Funct funct, registers source_r,
                  sortType source_sort, registers target_r,
                  sortType target_sort)
@@ -78,16 +86,18 @@ int add_std_word(plw *prv, ARE are, Funct funct, registers source_r,
   add_to_list(prv, word);
   return word;
 }
+/*convert word to spacial format*/
 int convert_word(int n, FILE *file_handler)
 {
   int masc = 15;
-  int a = (n >> 16) & masc;
-  int b = (n >> 12) & masc;
-  int c = (n >> 8) & masc;
-  int d = (n >> 4) & masc;
+  int a = (n >> convert_A) & masc;
+  int b = (n >> convert_B) & masc;
+  int c = (n >> convert_C) & masc;
+  int d = (n >> convert_D) & masc;
   int e = n & masc;
   fprintf(file_handler, " A%x-B%x-C%x-D%x-E%x\n", a, b, c, d, e);
 }
+/*load the converted words to the obj file*/
 void load_obj_file(plw h, FILE *file_handler)
 {
   while (h != NULL)
@@ -121,6 +131,7 @@ void print_word(int word)
     mask >>= 1;
   }
 }
+/*get the length of the stract*/
 int get_length(plw h)
 {
   int length = 0;
@@ -132,6 +143,7 @@ int get_length(plw h)
   return length;
 }
 int get_current_address(plw prv) { return prv->stock_index; }
+/*update the address section by the num n*/
 void update_address(plw head, int n)
 {
   while (head != NULL)
@@ -141,6 +153,7 @@ void update_address(plw head, int n)
     head = head->next;
   }
 }
+/*finde the next 0 node and set the ARE and num n*/
 int set_next_empty(plw p, ARE are, int num)
 {
   int result = -1;
