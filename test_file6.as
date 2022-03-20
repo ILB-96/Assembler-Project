@@ -15,3 +15,11 @@ bne r3
 jsr #2
 jsr r6
 red #2
+rts #1
+rts r1
+rts Label
+rts label[r3]
+stop #1
+stop r1
+stop Label
+label[r3]

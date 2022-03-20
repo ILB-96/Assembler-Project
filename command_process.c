@@ -154,7 +154,6 @@ int add_parameters(plw *prv, char **comm, opcode opcode, Funct funct, Valid_oper
     registers source_r = 0, target_r = 0;
     sortType source_sort = 0, target_sort = 0;
     ARE are = 0;
-
     /*1) get the size of element*/
     int i = 0, size = 0;
     add_base_word(prv, A, opcode);
@@ -215,7 +214,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         add_to_list(prv, 0);
         add_to_list(prv, 0);
     case register_direct:
-        if (op == min_two_op && source_sort == register_direct) 
+        if ((op == min_two_op || op == no_op) && source_sort == register_direct) 
         {
             error = TRUE;
             fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
@@ -244,11 +243,20 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
         break;
     case direct:
     case index_sort:
-        add_to_list(prv, 0);
-        add_to_list(prv, 0);
+        if(op != no_op)
+        {
+            add_to_list(prv, 0);
+            add_to_list(prv, 0);
+        }
+        else
+        {
+            error = TRUE;
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
+                    line_number, comm);
+        }
         break;
     case register_direct:
-        if (op == min_target_op && target_sort == register_direct) 
+        if ((op == min_target_op || op == no_op) && target_sort == register_direct) 
         {
             error = TRUE;
             fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
