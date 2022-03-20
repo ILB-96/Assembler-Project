@@ -1,6 +1,7 @@
 #include "assembler.h"
 #define AS ".as"
 
+/*inner functions in use only at pre_assembler.c*/
 int expand_macros(FILE *, FILE *);
 int is_macro_name(char *, FILE *);
 void insert_macro(FILE *, FILE *, char *);
@@ -34,23 +35,23 @@ int pre_assembler(FILE **exp_file_handler, char *file_name)
 int expand_macros(FILE *file_handler, FILE *exp_file_handler)
 {
   FILE *macros_file_handler;
-  char line[MAX_LINE] = "", word[MAX_LINE] = "";
+  char line[MAX_LINE] = "\0", token[MAX_LINE] = "\0";
   int is_part_of_macro = 0;
   if (load_file(&macros_file_handler, "macros_file", ".txt", "w+"))
     return 1;
 
   while (fgets(line, sizeof(line), file_handler))
   {
-    get_first_token(line, word);
-    if (!strcmp(word, "macro") || is_part_of_macro)
+    get_first_token(line, token);
+    if (!strcmp(token, "macro") || is_part_of_macro)
     {
-      process_macro(line, word, &is_part_of_macro, macros_file_handler);
+      process_macro(line, token, &is_part_of_macro, macros_file_handler);
     }
     else
     {
-      if (is_macro_name(word, macros_file_handler))
+      if (is_macro_name(token, macros_file_handler))
       {
-        insert_macro(exp_file_handler, macros_file_handler, word);
+        insert_macro(exp_file_handler, macros_file_handler, token);
       }
       else if (!is_empty_line(line) && !is_comment_line(line))
         fprintf(exp_file_handler, "%s", line);
@@ -65,30 +66,31 @@ int expand_macros(FILE *file_handler, FILE *exp_file_handler)
 /*
  *Adds the macro and its content to the macros file
  */
-void process_macro(char *line, char *word, int *is_part_of_macro,
+void process_macro(char *line, char *token, int *is_part_of_macro,
                    FILE *macros_file_handler)
 {
-  if (!strcmp(word, "endm"))
+  if (!strcmp(token, "endm"))
   {
     *is_part_of_macro = 0;
-    fprintf(macros_file_handler, "%s\n", word);
+    fprintf(macros_file_handler, "%s\n", token);
   }
   else
   {
-    if (!strcmp(word, "macro"))
+    if (!strcmp(token, "macro"))
     {
       *is_part_of_macro = 1;
-      get_macro_name(line, word);
-      fprintf(macros_file_handler, "%s\n", word);
+      get_macro_name(line, token);
+      fprintf(macros_file_handler, "%s\n", token);
     }
     else if (!is_empty_line(line) && !is_comment_line(line))
       fprintf(macros_file_handler, "%s", line);
   }
 }
+
 /*
  *Saves the macro name
  */
-void get_macro_name(char *line, char *word)
+void get_macro_name(char *line, char *token)
 {
   int i = 0, j = 0;
   while (isspace(line[i]) && line[i] != '\0')
@@ -98,19 +100,19 @@ void get_macro_name(char *line, char *word)
   i = get_next_token_index(line, i);
   while (!isspace(line[i]) && line[i] != '0')
   {
-    word[j++] = line[i++];
+    token[j++] = line[i++];
   }
 
-  word[j] = '\0';
+  token[j] = '\0';
 }
 
 /*
  *Checks if we found a macro name in a line
  *return 1 if found a macro name.
  */
-int is_macro_name(char *word, FILE *macros_file_handler)
+int is_macro_name(char *token, FILE *macros_file_handler)
 {
-  char line[MAX_LINE] = "", *macro_name;
+  char line[MAX_LINE] = "\0", *macro_name;
   int next_is_macro = 1;
   fseek(macros_file_handler, 0, SEEK_SET);
   while (fgets(line, MAX_LINE, macros_file_handler) != NULL)
@@ -118,7 +120,7 @@ int is_macro_name(char *word, FILE *macros_file_handler)
     macro_name = strtok(line, " \n");
     if (next_is_macro)
     {
-      if (!strcmp(macro_name, word))
+      if (!strcmp(macro_name, token))
         return 1;
       else
         next_is_macro = 0;
@@ -133,15 +135,15 @@ int is_macro_name(char *word, FILE *macros_file_handler)
  *Adds macro content to expanded file in the correct location
  */
 void insert_macro(FILE *exp_file_handler, FILE *macros_file_handler,
-                  char *word)
+                  char *token)
 {
-  char line[MAX_LINE] = "", fword[MAX_LINE] = "";
+  char line[MAX_LINE] = "\0", file_token[MAX_LINE] = "\0";
   int inserted = 0, insert = 0;
   fseek(macros_file_handler, 0, SEEK_SET);
   while (fgets(line, MAX_LINE, macros_file_handler) != NULL && !inserted)
   {
-    get_first_token(line, fword);
-    if (!strcmp(fword, "endm") && insert)
+    get_first_token(line, file_token);
+    if (!strcmp(file_token, "endm") && insert)
     {
       insert = 0;
       inserted = 1;
@@ -150,7 +152,7 @@ void insert_macro(FILE *exp_file_handler, FILE *macros_file_handler,
     {
       fprintf(exp_file_handler, "%s", line);
     }
-    if (!strcmp(fword, word) && !insert)
+    if (!strcmp(file_token, token) && !insert)
       insert = 1;
   }
 }

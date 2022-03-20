@@ -59,7 +59,8 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
             return 1;
           ext_file_created = TRUE;
         }
-        /*Here we input to file.ext the values of an extern label*/
+        /*Here we output to file.ext the values of an extern label
+        and add extern values to the next empty couple of binary words*/
         fprintf(ext_file_handler, "%s BASE %d\n", token,
                 set_next_empty(head_IC, E, label_base_val));
         fprintf(ext_file_handler, "%s OFFSET %d\n\n", token,
