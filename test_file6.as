@@ -23,3 +23,13 @@ stop #1
 stop r1
 stop Label
 label[r3]
+clr r3, r3
+not label, r3
+inc label, r3
+dec label, r3
+jmp label, r3
+bne label, r3
+jsr label, r3
+rts #1, r3
+
+
