@@ -206,7 +206,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         switch (source_sort)
         {
         case immediate:
-            if (op == full_two_op && is_only_digits(comm + 1))
+            if (op == full_two_op || op == two_op && is_only_digits(comm + 1))
             {
                 add_num_to_list(prv, A, atoi(comm + 1));
             }
