@@ -1,7 +1,7 @@
 #include "assembler.h"
 
 
-
+/*get line of string process the line and add the string to DC*/
 int command_string_process(plw *prv_DC, char *line, int line_number)
 {
     int error = FALSE;
@@ -30,7 +30,7 @@ int command_string_process(plw *prv_DC, char *line, int line_number)
 
     return error;
 }
-
+/*get data line to add the values to DC*/
 int command_data_process(plw *prv_DC, char *line, int line_number)
 {
     int i = 0;
@@ -61,7 +61,7 @@ int command_data_process(plw *prv_DC, char *line, int line_number)
     free(s_line);
     return error;
 }
-
+/*check if the op char is one of the operators*/
 int is_operator(char *op)
 {
     int result = -1;
@@ -74,7 +74,7 @@ int is_operator(char *op)
     }
     return result;
 }
-
+/*process the line of code type */
 int command_code_process(plw *prv_IC, char *line, int line_number)
 {
     int i;
@@ -147,7 +147,7 @@ int command_code_process(plw *prv_IC, char *line, int line_number)
     free(s_line);
     return error;
 }
-
+/*process the parameters of the operators*/
 int add_parameters(plw *prv, char **comm, opcode opcode, Funct funct, Valid_operator op, int line_number)
 {
     int error = FALSE;
@@ -192,6 +192,7 @@ int add_parameters(plw *prv, char **comm, opcode opcode, Funct funct, Valid_oper
 
     return error;
 }
+/*for adding words for the source*/
 int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operator op, int line_number)
 {
     int error = FALSE;
@@ -224,7 +225,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
     }
     return error;
 }
-
+/*for adding words for the target*/
 int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operator op, int line_number)
 {
     int error = FALSE;
@@ -250,7 +251,7 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
 
     return error;
 }
-
+/*process the sort type and the registrs*/
 int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *are)
 {
 
