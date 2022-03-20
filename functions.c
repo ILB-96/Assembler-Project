@@ -12,14 +12,14 @@ int load_file(FILE **file_handler, char *name, char *exten, char *mode)
   char *file_name;
   if (!(file_name = (char *)malloc(strlen(name) + MAX_EXTEN_LEN)))
   {
-    fprintf(stderr, "Error: Out of memory\nAbort...\n");
+    fprintf(stdout, "Error: Out of memory\nAbort...\n");
     exit(EXIT_FAILURE);
   }
   strcpy(file_name, name);
   strcat(file_name, exten);
   if (!(*file_handler = fopen(file_name, mode)))
   {
-    fprintf(stderr, "Error: File '%s' open failed.\n", file_name);
+    fprintf(stdout, "Error: File '%s' open failed.\n", file_name);
     free(file_name);
     return 1;
   }
@@ -171,101 +171,99 @@ void remove_signs(char *token)
  * ****************************************************************************/
 
 /*
-  split the line to string array by the apace and the char ',' 
+  split the line to string array by the apace and the char ','
 */
 char **split_line(char *str)
 {
-    char **s = malloc(sizeof(char *));
-    int i = 0;
-    char *token;
+  char **s = malloc(sizeof(char *));
+  int i = 0;
+  char *token;
 
-    token = strtok(str, " \t");
-    while (token != NULL)
+  token = strtok(str, " \t");
+  while (token != NULL)
+  {
+    char *temp;
+    char *c;
+    int j = 0;
+    while (token[j] != '\0')
     {
-        char *temp;
-        char *c;
-        int j = 0;
-        while (token[j] != '\0')
+      while (token[j] != ',' && token[j] != '\0' && token[j] != '\n')
+        j++;
+      if (token[j] == ',')
+      {
+        temp = token;
+        token[j] = '\0';
+        c = ",";
+        token = token + j + 1;
+        if (temp[0] != '\0')
         {
-            while (token[j] != ',' && token[j] != '\0' && token[j] != '\n')
-                j++;
-            if (token[j] == ',')
-            {
-                temp = token;
-                token[j] = '\0';
-                c = ",";
-                token = token + j + 1;
-                if (temp[0] != '\0')
-                {
-                    s[i++] = temp;
-                    s = (char **)realloc(s, sizeof(char *) * i + 1);
-                }
-                s[i++] = c;
-                s = (char **)realloc(s, sizeof(char *) * i + 1);
-
-                j = 0;
-            }
-            else
-            {
-                if (token[j] == '\n')
-                    token[j] = '\0';
-                s[i++] = token;
-                s = (char **)realloc(s, sizeof(char *) * i + 1);
-            }
+          s[i++] = temp;
+          s = (char **)realloc(s, sizeof(char *) * i + 1);
         }
-        token = strtok(NULL, " ");
+        s[i++] = c;
+        s = (char **)realloc(s, sizeof(char *) * i + 1);
+
+        j = 0;
+      }
+      else
+      {
+        if (token[j] == '\n')
+          token[j] = '\0';
+        s[i++] = token;
+        s = (char **)realloc(s, sizeof(char *) * i + 1);
+      }
     }
-    if(*s[i-1] == '\0')
-        s[i-1] = NULL;
-    s[i] = NULL;
-    return s;
+    token = strtok(NULL, " ");
+  }
+  if (*s[i - 1] == '\0')
+    s[i - 1] = NULL;
+  s[i] = NULL;
+  return s;
 }
 
-
-int is_sub_digits(char *str ,char c)
+int is_sub_digits(char *str, char c)
 {
-    int result = 0;
-    for(str++; *str != c && *str != '\0'; str++)
+  int result = 0;
+  for (str++; *str != c && *str != '\0'; str++)
+  {
+    if (!isdigit(*str))
     {
-        if(!isdigit(*str))
-        {
-            result = 1;
-        }
+      result = 1;
     }
-    return result;
+  }
+  return result;
 }
-
 
 int is_special_char(char *str)
 {
-    int result = 0;
-    int i = 0;
-    while(str[i] != '\0')
+  int result = 0;
+  int i = 0;
+  while (str[i] != '\0')
+  {
+    if (!isdigit(str[i]) && !isalpha(str[i]) && str[i] != '[' && str[i] != ']')
     {
-        if(!isdigit(str[i]) && !isalpha(str[i]) && str[i] != '[' && str[i] != ']')
-        {
-            result = 1;
-        }
-        i++;
+      result = 1;
     }
-    return result;
+    i++;
+  }
+  return result;
 }
 
 int is_only_digits(char *num)
 {
-    int i;
-    int result = 1;
-    for (i = 0; num[i] != '\0'; i++)
-    {
+  int i;
+  int result = 1;
+  for (i = 0; num[i] != '\0'; i++)
+  {
 
-        if (isdigit(num[i]) == 0)
-            result = 0;
-        if (i == 0 && (num[i] == '+' || num[i] == '-'))
-            result = 1;
-        if (isdigit(num[i]) == 0)
-            result = 0;
-        if (i == 0 && (num[i] == '+' || num[i] == '-'))
-            result = 1;
-    }
-    return result;
+    if (isdigit(num[i]) == 0)
+      result = 0;
+    if (i == 0 && (num[i] == '+' || num[i] == '-'))
+      result = 1;
+    if (isdigit(num[i]) == 0)
+      result = 0;
+    if (i == 0 && (num[i] == '+' || num[i] == '-'))
+      result = 1;
+  }
+  return result;
 }

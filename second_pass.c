@@ -8,7 +8,7 @@ int process_entry_label(char *, char *, int, TypeLabel *, FILE **, int *, char *
 int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
                 plw head_DC, TypeLabel *symbols_table)
 {
-  int line_number = 1;          /*count lines in file.am*/
+  int line_number = FIRST_LINE; /*count lines in file.am*/
   int error = FALSE;            /*error flag that resets every line*/
   int g_error = FALSE;          /*TRUE if found error in atleast one line*/
   int label_base_val = 0;       /*stores the base value of label*/
@@ -105,7 +105,7 @@ int process_entry_label(char *line, char *token, int line_number, TypeLabel *sym
     if (is_defined_ext(token, symbols_table))
     {
       error = TRUE;
-      fprintf(stderr,
+      fprintf(stdout,
               "Error at line %d: label cannot be defined as external and as entry\n",
               line_number);
     }
@@ -127,7 +127,7 @@ int process_entry_label(char *line, char *token, int line_number, TypeLabel *sym
       if (!is_empty_line(line))
       {
         error = TRUE;
-        fprintf(stderr,
+        fprintf(stdout,
                 "Error at line %d: Extended text after entry variable\n",
                 line_number);
       }
@@ -136,7 +136,7 @@ int process_entry_label(char *line, char *token, int line_number, TypeLabel *sym
   else
   {
     error = TRUE;
-    fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n",
+    fprintf(stdout, "Error at line %d: '%s' is an illegal label name\n",
             line_number, token);
   }
   return error;

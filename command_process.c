@@ -21,7 +21,7 @@ int command_string_process(plw *prv_DC, char *line, int line_number)
     }
     else if (!is_empty_line(line))
     {
-        fprintf(stderr, "Error at line %d: '%s' is an illegal string\n",
+        fprintf(stdout, "Error at line %d: '%s' is an illegal string\n",
                 line_number, line);
         error = TRUE;
     }
@@ -47,13 +47,13 @@ int command_data_process(plw *prv_DC, char *line, int line_number)
         else if ((i % 2 == 0 && strcmp(s_line[i], ",") != 0) || (i % 2 != 0 && is_only_digits(s_line[i]) == 0))
         {
             error = TRUE;
-            fprintf(stderr, "Error at line %d: '%s' is an illegal operator\n",
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operator\n",
                     line_number, s_line[i]);
         }
     }
     if (strcmp(s_line[i - 1], ",") == 0)
     {
-        fprintf(stderr, "Error at line %d: Illegal extended text\n", line_number);
+        fprintf(stdout, "Error at line %d: Illegal extended text\n", line_number);
         error = TRUE;
     }
     free(s_line);
@@ -138,7 +138,7 @@ int command_code_process(plw *prv_IC, char *line, int line_number)
         break;
     default:
         error = TRUE;
-        fprintf(stderr, "Error at line %d: '%s' is an illegal command\n",
+        fprintf(stdout, "Error at line %d: '%s' is an illegal command\n",
                 line_number, *s_line);
         break;
     }
@@ -185,7 +185,7 @@ int add_parameters(plw *prv, char **comm, opcode opcode, Funct funct, Valid_oper
     }
     else if (size != 0)
     {
-        fprintf(stderr, "Error at line %d: Illegal command\n", line_number);
+        fprintf(stdout, "Error at line %d: Illegal command\n", line_number);
         error = TRUE;
     }
 
@@ -204,7 +204,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         else
         {
             error = TRUE;
-            fprintf(stderr, "Error at line %d: '%s' is an illegal operation\n",
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
                     line_number, comm);
         }
         break;
@@ -216,7 +216,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         if (op == min_two_op && source_sort == register_direct) /*why the 'case' don't do it's work???*/
         {
             error = TRUE;
-            fprintf(stderr, "Error at line %d: '%s' is an illegal operation\n",
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
                     line_number, comm);
         }
         break;
@@ -232,13 +232,12 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
     case immediate:
         if ((op == full_two_op || op == full_target_op) && is_only_digits(comm + 1))
         {
-
             add_num_to_list(prv, A, atoi(comm + 1));
         }
         else
         {
             error = TRUE;
-            fprintf(stderr, "Error at line %d: Illegal operation\n", line_number);
+            fprintf(stdout, "Error at line %d: Illegal operation\n", line_number);
         }
         break;
     case direct:

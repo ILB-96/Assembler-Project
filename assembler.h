@@ -10,6 +10,7 @@
 #define MAX_LINE 81
 #define MAX_ADDRESS 8191
 #define MAX_EXTEN_LEN 5
+#define FIRST_LINE 1
 #define BASE_MODE 16
 #define BASE_IC 100
 #define BASE_DC 0
@@ -33,6 +34,7 @@ typedef struct link_words
 
   int stock_index;
 } wordsNode;
+
 typedef enum
 {
   A = 4,
@@ -43,7 +45,7 @@ typedef enum
 #define IS_NULL(x)                                \
   if (x == NULL)                                  \
   {                                               \
-    fprintf(stderr, "Error: index not exists\n"); \
+    fprintf(stdout, "Error: index not exists\n"); \
     exit(EXIT_FAILURE);                           \
   }
 
@@ -76,6 +78,7 @@ typedef enum
   f_prn = 0
 
 } Funct;
+
 typedef enum
 {
   mov,
@@ -93,6 +96,7 @@ typedef enum
   red,
   prn
 } operations;
+
 typedef enum
 {
   o_mov = 0,

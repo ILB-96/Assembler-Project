@@ -27,7 +27,7 @@ struct TypeLabel
 int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D, TypeLabel **symbols_table)
 {
   int label_counter = 0;
-  int line_number = 1;
+  int line_number = FIRST_LINE;
   int error = FALSE;
   int g_error = FALSE;
   size_t array_size = 1;
@@ -63,7 +63,7 @@ int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D, T
     if (get_current_address(prv_IC) + get_current_address(prv_DC) + 1 >
         MAX_ADDRESS)
     {
-      fprintf(stderr, "Error: Out of memory\n");
+      fprintf(stdout, "Error: Out of memory\n");
       exit(EXIT_FAILURE);
     }
     line_number++;
@@ -102,13 +102,13 @@ int process_label(char *line, char *token, int line_number,
   if (!is_valid_label_name(label_name))
   {
     error = TRUE;
-    fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n",
+    fprintf(stdout, "Error at line %d: '%s' is an illegal label name\n",
             line_number, label_name);
   }
   else if (is_label_exists(label_name, *symbols_table))
   {
     error = TRUE;
-    fprintf(stderr, "Error at line %d: '%s' label already exists\n",
+    fprintf(stdout, "Error at line %d: '%s' label already exists\n",
             line_number, label_name);
   }
   get_next_token(line, token);
@@ -119,7 +119,7 @@ int process_label(char *line, char *token, int line_number,
   }
   else if (!strcmp(token, ".entry") || !strcmp(token, ".extern"))
   {
-    fprintf(stderr, "Warning at line %d: undefined attribute to label.\n",
+    fprintf(stdout, "Warning at line %d: undefined attribute to label.\n",
             line_number);
     label_add((*label_counter)++, label_name, get_current_address(prv_DC),
               "undef", ++(*array_size), symbols_table);
@@ -130,7 +130,7 @@ int process_label(char *line, char *token, int line_number,
   else
   {
     error = TRUE;
-    fprintf(stderr, "Error at line %d: undefined operation.\n",
+    fprintf(stdout, "Error at line %d: undefined operation.\n",
             line_number);
   }
   return error;
@@ -147,7 +147,7 @@ int process_extern(char *line, char *token, int line_number, int *label_counter,
   if (!is_valid_label_name(token))
   {
     error = TRUE;
-    fprintf(stderr, "Error at line %d: '%s' is an illegal label name\n",
+    fprintf(stdout, "Error at line %d: '%s' is an illegal label name\n",
             line_number, token);
   }
   else if (is_label_exists(token, *symbols_table))
@@ -157,7 +157,7 @@ int process_extern(char *line, char *token, int line_number, int *label_counter,
       /*the file is allowed to define the same
       external more than once without causing an error*/
       error = TRUE;
-      fprintf(stderr, "Error at line %d: '%s' label already exists\n",
+      fprintf(stdout, "Error at line %d: '%s' label already exists\n",
               line_number, token);
     }
   }
@@ -171,7 +171,7 @@ int process_extern(char *line, char *token, int line_number, int *label_counter,
   if (!is_empty_line(line))
   {
     error = TRUE;
-    fprintf(stderr,
+    fprintf(stdout,
             "Error at line %d: Extended text after extern variable\n",
             line_number);
   }
@@ -220,19 +220,19 @@ void label_init(int count, TypeLabel **symbols_table)
   if (count == 0)
     if ((*symbols_table = calloc(1, sizeof(TypeLabel))) == NULL)
     {
-      fprintf(stderr, "FAILED!\nError: Out of memory\n");
+      fprintf(stdout, "FAILED!\nError: Out of memory\n");
       exit(EXIT_FAILURE);
     }
 
   if (((*symbols_table)[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
   {
-    fprintf(stderr, "Error: Out of memory\n");
+    fprintf(stdout, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
   if (((*symbols_table)[count].attribute = (char *)malloc(MAX_LABEL_LENGTH)) ==
       NULL)
   {
-    fprintf(stderr, "Error: Out of memory\n");
+    fprintf(stdout, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
   strcpy((*symbols_table)[count].name, "");
@@ -260,7 +260,7 @@ void label_add(int i, char *label_name, int address, char *attribute,
   if (!(*symbols_table =
             realloc(*symbols_table, array_size * sizeof(TypeLabel))))
   {
-    fprintf(stderr, "Error: Out of memory\n");
+    fprintf(stdout, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
   label_init(++i, symbols_table);
@@ -370,7 +370,7 @@ int get_label_values(char *token, int *label_base_val, int *label_offset_val, in
       *label_offset_val = symbols_table[i].offset;
       return 0;
     }
-  fprintf(stderr, "Error at line %d: '%s' label not found\n",
+  fprintf(stdout, "Error at line %d: '%s' label not found\n",
           line_number, token);
   return 1;
 }
