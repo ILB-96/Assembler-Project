@@ -1,9 +1,11 @@
 #include "assembler.h"
 
+
+
 int command_string_process(plw *prv_DC, char *line, int line_number)
 {
     int error = FALSE;
-    int i = 7, j = strlen(line) - 1;
+    int i = STRING_LENGTH, j = strlen(line) - 1;
     while (line[i] == ' ')
         i++;
     while (line[j] == ' ' || line[j] == '\n')
@@ -84,7 +86,6 @@ int command_code_process(plw *prv_IC, char *line, int line_number)
 
     operator= is_operator(s_line[0]);
 
-    /*TODO - enum of operators*/
     switch (operator)
     {
     case mov:
@@ -213,7 +214,7 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
         add_to_list(prv, 0);
         add_to_list(prv, 0);
     case register_direct:
-        if (op == min_two_op && source_sort == register_direct) /*why the 'case' don't do it's work???*/
+        if (op == min_two_op && source_sort == register_direct) 
         {
             error = TRUE;
             fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",

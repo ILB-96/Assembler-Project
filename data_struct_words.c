@@ -1,8 +1,11 @@
 #include "assembler.h"
 
+
+
 void initialize_list(plw *h, plw *p, int stock)
 {
   *h = (plw)malloc(sizeof(wordsNode));
+  IS_NULL(*h)
   *p = *h;
   (*p)->word = -1;
   (*p)->stock_index = stock;
@@ -33,6 +36,7 @@ void add_to_list(plw *prv, int n)
   else
   {
     plw temp = (plw)malloc(sizeof(wordsNode));
+    IS_NULL(temp)
     temp->word = n;
     temp->next = NULL;
     temp->stock_index = (*prv)->stock_index + 1;
@@ -78,13 +82,14 @@ int add_std_word(plw *prv, ARE are, Funct funct, registers source_r,
   add_to_list(prv, word);
   return word;
 }
+
 int convert_word(int n, FILE *file_handler)
 {
   int masc = 15;
-  int a = (n >> 16) & masc;
-  int b = (n >> 12) & masc;
-  int c = (n >> 8) & masc;
-  int d = (n >> 4) & masc;
+  int a = (n >> convert_A) & masc;
+  int b = (n >> convert_B) & masc;
+  int c = (n >> convert_C) & masc;
+  int d = (n >> convert_D) & masc;
   int e = n & masc;
   fprintf(file_handler, " A%x-B%x-C%x-D%x-E%x\n", a, b, c, d, e);
 }

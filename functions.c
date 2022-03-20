@@ -175,9 +175,11 @@ void remove_signs(char *token)
 */
 char **split_line(char *str)
 {
-  char **s = malloc(sizeof(char *));
   int i = 0;
   char *token;
+  char **s = malloc(sizeof(char *));
+  IS_NULL(s)
+  
 
   token = strtok(str, " \t");
   while (token != NULL)
