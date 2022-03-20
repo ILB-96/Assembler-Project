@@ -31,8 +31,8 @@ int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D, T
   int error = FALSE;
   int g_error = FALSE;
   size_t array_size = 1;
-  char line[MAX_LINE];
-  char token[MAX_LINE];
+  char line[MAX_LINE] = '\0';
+  char token[MAX_LINE] = '\0';
 
   /*Initialize labels, IC and DC*/
   plw head_IC;
@@ -96,7 +96,7 @@ int process_label(char *line, char *token, int line_number,
                   int *label_counter, size_t *array_size, plw prv_IC, plw prv_DC, TypeLabel **symbols_table)
 {
   int error = FALSE;
-  char label_name[MAX_LINE];
+  char label_name[MAX_LINE] = '\0';
   strcpy(label_name, token);
   remove_colon(label_name);
   if (!is_valid_label_name(label_name))
@@ -391,22 +391,6 @@ int found_label(char *line, char *token, TypeLabel *symbols_table)
       return TRUE;
   }
   return FALSE;
-}
-
-/*prints the labels(just for show).*/
-void print_labels(TypeLabel *symbols_table)
-{
-  int i;
-  printf("Name\t|\taddress\t|\tbase\t|\toffset\t|\tattributes\n");
-  printf(
-      "--------|---------------|---------------|---------------|-------------"
-      "------\n");
-  for (i = 0; strcmp(symbols_table[i].name, ""); i++)
-  {
-    printf("%s\t|\t%d\t|\t%d\t|\t%d\t|\t%s\n", symbols_table[i].name,
-           symbols_table[i].address, symbols_table[i].base_address,
-           symbols_table[i].offset, symbols_table[i].attribute);
-  }
 }
 
 /********************************************************************************************

@@ -79,7 +79,7 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
     line_number++;
   }
 
-  fprintf(obj_file_handler, "\t\t\t%d\t%d\n", get_length(head_IC),
+  fprintf(obj_file_handler, "\t%d %d\n", get_length(head_IC),
           get_length(head_DC));
   load_obj_file(head_IC, obj_file_handler);
   load_obj_file(head_DC, obj_file_handler);

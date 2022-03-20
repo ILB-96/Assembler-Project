@@ -13,7 +13,7 @@ int create_stdnum(ARE are, int n)
   SET_ARE(are);
   int mask = 0;
   mask = ~mask;
-  mask <<= 16;
+  mask <<= BASE_MODE;
   mask = ~mask;
   return (mask & n) | are;
 }
@@ -86,13 +86,13 @@ int convert_word(int n, FILE *file_handler)
   int c = (n >> 8) & masc;
   int d = (n >> 4) & masc;
   int e = n & masc;
-  fprintf(file_handler, "A%x-B%x-C%x-D%x-E%x\n", a, b, c, d, e);
+  fprintf(file_handler, " A%x-B%x-C%x-D%x-E%x\n", a, b, c, d, e);
 }
 void load_obj_file(plw h, FILE *file_handler)
 {
   while (h != NULL)
   {
-    fprintf(file_handler, "%04d\t\t", get_current_address(h));
+    fprintf(file_handler, "%04d", get_current_address(h));
     convert_word(h->word, file_handler);
     h = h->next;
   }

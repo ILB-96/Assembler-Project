@@ -39,11 +39,11 @@ typedef enum
   E = 1
 } ARE;
 /*WORD-LIST*/
-#define IS_NULL(x)            \
-  if (x == NULL)              \
-  {                           \
-    puts("index not exists"); \
-    exit(0);                  \
+#define IS_NULL(x)                                \
+  if (x == NULL)                                  \
+  {                                               \
+    fprintf(stderr, "Error: index not exists\n"); \
+    exit(EXIT_FAILURE);                           \
   }
 
 typedef enum
@@ -75,7 +75,23 @@ typedef enum
   f_prn = 0
 
 } Funct;
-
+typedef enum
+{
+  mov,
+  cmp,
+  add,
+  sub,
+  lea,
+  clr,
+  not,
+  inc,
+  dec,
+  jmp,
+  bne,
+  jsr,
+  red,
+  prn
+} operations;
 typedef enum
 {
   o_mov = 0,
@@ -167,7 +183,7 @@ void update_address(plw, int);
 int set_next_empty(plw, ARE, int);
 int get_length(plw);
 /*Functions from command_process.c*/
-int is_sub_digits(char * ,char);
+int is_sub_digits(char *, char);
 int is_special_char(char *);
 int is_only_digits(char *);
 int command_string_process(plw *, char *, int);
