@@ -239,7 +239,7 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
         else
         {
             error = TRUE;
-            fprintf(stdout, "Error at line %d: Illegal operation\n", line_number);
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",line_number, comm);
         }
         break;
     case direct:
