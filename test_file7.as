@@ -1,0 +1,48 @@
+mov #-1 ,label
+mov #23 ,label[r4]
+mov #-45,r4
+mov label,label
+mov label,label[r4]
+mov label,r4
+mov label[r4],label
+mov label[r4],label[r4]
+mov label[r4],r4
+mov r1,label
+mov r1,label[r4]
+mov r1,r4
+cmp #-1 ,label
+cmp #23 ,label[r4]
+cmp #-45,r4
+cmp #78, #21
+cmp label,label
+cmp label,label[r4]
+cmp label,r4
+cmp label, #78
+cmp label[r4],label
+cmp label[r4],label[r4]
+cmp label[r4],r4
+cmp label[r4]
+cmp r1,label
+cmp r1,label[r4]
+cmp r1,r4
+cmp r1, #78
+lea label, label
+lea label, label[r5]
+lea label ,r3
+lea label[r4], label
+lea label[r4], label[r7]
+lea label[r4], r2
+clr label
+clr label[r9]
+clr r8
+jmp label
+jmp label[r2]
+red label
+red label[r2]
+red r4
+prn #-99
+prn label
+prn label[r3]
+prn r11
+
+label: .data 12
