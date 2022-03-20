@@ -67,8 +67,8 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
       }
       else if (!error)
       {
-        set_next_empty(head_IC, A, label_base_val);
-        set_next_empty(head_IC, A, label_offset_val);
+        set_next_empty(head_IC, R, label_base_val);
+        set_next_empty(head_IC, R, label_offset_val);
       }
     }
     if (error)

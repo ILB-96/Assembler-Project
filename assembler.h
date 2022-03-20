@@ -15,6 +15,7 @@
 #define BASE_DC 0
 #define TRUE 1
 #define FALSE 0
+#define EXTERN_VAL 0
 #define SUM_OPERATIONS 16
 #define WORD_SIZE 1 << 19
 #define SET_TARG_R(x) x = x << 2

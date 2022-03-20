@@ -3,6 +3,7 @@
 
 /*Private functions meant to be used only inside this source*/
 void assembler(char *);
+void compfiles();
 int main(int argc, char *argv[])
 {
 
@@ -72,4 +73,33 @@ void assembler(char *file_name)
   fclose(exp_file_handler);
   free_list(head_IC);
   free_list(head_DC);
+}
+
+void compfiles()
+{
+  char line1[MAX_LINE] = "\0";
+  char line2[MAX_LINE] = "\0";
+  char token1[MAX_LINE] = "\0";
+  char token2[MAX_LINE] = "\0";
+  int line_num = 1;
+  FILE *before = fopen("beforemacro.ob", "r");
+  FILE *after = fopen("inpuTest.ob", "r");
+  while (fgets(line1, MAX_LINE, before))
+  {
+    if (fgets(line2, MAX_LINE, after))
+    {
+      get_first_token(line1, token1);
+      get_first_token(line2, token2);
+      if (strcmp(token1, token2) != 0)
+        printf("not matching at line %d\n", line_num);
+      else
+      {
+        get_next_token(line1, token1);
+        get_next_token(line2, token2);
+        if (strcmp(token1, token2) != 0)
+          printf("not matching at line %d\n", line_num);
+      }
+    }
+    line_num++;
+  }
 }
