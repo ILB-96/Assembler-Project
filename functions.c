@@ -179,7 +179,6 @@ char **split_line(char *str)
   char *token;
   char **s = malloc(sizeof(char *));
   IS_NULL(s)
-  
 
   token = strtok(str, " \t");
   while (token != NULL)

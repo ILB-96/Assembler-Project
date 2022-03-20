@@ -48,7 +48,7 @@ void assembler(char *file_name)
     fclose(exp_file_handler);
     free_list(head_IC);
     free_list(head_DC);
-    free_symbols(symbols_table);
+    free(symbols_table);
     return;
   }
 
@@ -62,14 +62,14 @@ void assembler(char *file_name)
     fclose(exp_file_handler);
     free_list(head_IC);
     free_list(head_DC);
-    free_symbols(symbols_table);
+    free(symbols_table);
     return;
   }
 
   printf("===Assembly process for %s.as finished===\n\n", file_name);
 
   /*Frees every allocated memory and close the file handler*/
-  free_symbols(symbols_table);
+  free(symbols_table);
   fclose(exp_file_handler);
   free_list(head_IC);
   free_list(head_DC);

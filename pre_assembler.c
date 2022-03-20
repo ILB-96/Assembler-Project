@@ -1,13 +1,18 @@
 #include "assembler.h"
-#define AS ".as"
 
+#define MAX_MACRO_LENGTH 31
+#define MAX_MACRO_LINES 6
 /*inner functions in use only at pre_assembler.c*/
-int expand_macros(FILE *, FILE *);
-int is_macro_name(char *, FILE *);
-void insert_macro(FILE *, FILE *, char *);
-void get_macro_name(char *, char *);
-void process_macro(char *, char *, int *, FILE *);
-
+void expand_macros(FILE *, FILE *);
+int is_macro_name(char *, TypeMacro *);
+void insert_macro(FILE *, TypeMacro *, char *, int);
+void macros_init(int, TypeMacro **);
+void macro_add(char *, char *, int, size_t *, FILE *, TypeMacro **);
+struct TypeMacro
+{
+  char name[MAX_MACRO_LENGTH];
+  char expand[MAX_MACRO_LINES][MAX_LINE];
+};
 /*
  *Pre Assembler to expand and refactor the original file into a new file
  *to eas the assembly process
@@ -16,15 +21,13 @@ void process_macro(char *, char *, int *, FILE *);
 int pre_assembler(FILE **exp_file_handler, char *file_name)
 {
   FILE *file_handler;
-  int error = FALSE;
   if (load_file(&file_handler, file_name, ".as", "r") || load_file(&*exp_file_handler, file_name, ".am", "w+"))
     return 1;
 
-  error = expand_macros(file_handler, *exp_file_handler);
+  expand_macros(file_handler, *exp_file_handler);
   fclose(file_handler);
-  remove("macros_file.txt");
 
-  return error;
+  return 0;
 }
 
 /*
@@ -32,127 +35,110 @@ int pre_assembler(FILE **exp_file_handler, char *file_name)
  *will also remove comment lines, space lines and leading spaces in line
  *@return 1 if failed to create a macro file
  */
-int expand_macros(FILE *file_handler, FILE *exp_file_handler)
+void expand_macros(FILE *file_handler, FILE *exp_file_handler)
 {
-  FILE *macros_file_handler;
+  TypeMacro *macros_table;
+  int macros_counter = 0;
+  size_t array_size = 3;
   char line[MAX_LINE] = "\0", token[MAX_LINE] = "\0";
-  int is_part_of_macro = 0;
-  if (load_file(&macros_file_handler, "macros_file", ".txt", "w+"))
-    return 1;
+  int macro_number = 0;
+  macros_init(0, &macros_table);
 
   while (fgets(line, sizeof(line), file_handler))
   {
     get_first_token(line, token);
-    if (!strcmp(token, "macro") || is_part_of_macro)
+    if (!strcmp(token, "macro"))
     {
-      process_macro(line, token, &is_part_of_macro, macros_file_handler);
+      get_next_token(line, token);
+      macro_add(line, token, macros_counter++, &array_size, file_handler, &macros_table);
     }
     else
     {
-      if (is_macro_name(token, macros_file_handler))
+      if ((macro_number = is_macro_name(token, macros_table)) >= 0)
       {
-        insert_macro(exp_file_handler, macros_file_handler, token);
+        insert_macro(exp_file_handler, macros_table, token, macro_number);
       }
       else if (!is_empty_line(line) && !is_comment_line(line))
         fprintf(exp_file_handler, "%s", line);
-      fseek(macros_file_handler, 0, SEEK_END);
     }
   }
-
-  fclose(macros_file_handler);
-  return 0;
-}
-
-/*
- *Adds the macro and its content to the macros file
- */
-void process_macro(char *line, char *token, int *is_part_of_macro,
-                   FILE *macros_file_handler)
-{
-  if (!strcmp(token, "endm"))
-  {
-    *is_part_of_macro = 0;
-    fprintf(macros_file_handler, "%s\n", token);
-  }
-  else
-  {
-    if (!strcmp(token, "macro"))
-    {
-      *is_part_of_macro = 1;
-      get_macro_name(line, token);
-      fprintf(macros_file_handler, "%s\n", token);
-    }
-    else if (!is_empty_line(line) && !is_comment_line(line))
-      fprintf(macros_file_handler, "%s", line);
-  }
-}
-
-/*
- *Saves the macro name
- */
-void get_macro_name(char *line, char *token)
-{
-  int i = 0, j = 0;
-  while (isspace(line[i]) && line[i] != '\0')
-  {
-    i++;
-  }
-  i = get_next_token_index(line, i);
-  while (!isspace(line[i]) && line[i] != '0')
-  {
-    token[j++] = line[i++];
-  }
-
-  token[j] = '\0';
+  free(macros_table);
 }
 
 /*
  *Checks if we found a macro name in a line
- *return 1 if found a macro name.
+ *return the location of the macro in the macros table
  */
-int is_macro_name(char *token, FILE *macros_file_handler)
+int is_macro_name(char *token, TypeMacro *macros_table)
 {
-  char line[MAX_LINE] = "\0", *macro_name;
-  int next_is_macro = 1;
-  fseek(macros_file_handler, 0, SEEK_SET);
-  while (fgets(line, MAX_LINE, macros_file_handler) != NULL)
+  int i = 0;
+  while (strcmp(macros_table[i].name, ""))
   {
-    macro_name = strtok(line, " \n");
-    if (next_is_macro)
-    {
-      if (!strcmp(macro_name, token))
-        return 1;
-      else
-        next_is_macro = 0;
-    }
-    if (!strcmp(macro_name, "endm"))
-      next_is_macro = 1;
+    if (!strcmp(macros_table[i].name, token))
+      return i;
+    i++;
   }
-  return 0;
+  return -1;
 }
 
 /*
  *Adds macro content to expanded file in the correct location
  */
-void insert_macro(FILE *exp_file_handler, FILE *macros_file_handler,
-                  char *token)
+void insert_macro(FILE *exp_file_handler, TypeMacro *macros_table, char *token, int i)
 {
-  char line[MAX_LINE] = "\0", file_token[MAX_LINE] = "\0";
-  int inserted = 0, insert = 0;
-  fseek(macros_file_handler, 0, SEEK_SET);
-  while (fgets(line, MAX_LINE, macros_file_handler) != NULL && !inserted)
+  int j = 0;
+  while (j <= MAX_MACRO_LINES && strcmp(macros_table[i].expand[j], ""))
+    fprintf(exp_file_handler, "%s", macros_table[i].expand[j++]);
+}
+
+/*
+ *Initializes the macro array with 3 array members
+ */
+void macros_init(int count, TypeMacro **macros_table)
+{
+  if (count == 0)
+    if ((*macros_table = calloc(3, sizeof(TypeMacro))) == NULL)
+    {
+      fprintf(stdout, "Error: Out of memory\n");
+      exit(EXIT_FAILURE);
+    }
+
+  strcpy((*macros_table)[count].name, "");
+  strcpy((*macros_table)[count].expand[0], "");
+}
+
+/*
+ *adds a macro name and its content to the macros table
+ */
+void macro_add(char *line, char *token, int count, size_t *array_size, FILE *file_handler, TypeMacro **macros_table)
+{
+  int j = 0;
+  int end_of_macro = 0;
+  strcpy((*macros_table)[count].name, token);
+  while (!end_of_macro && fgets(line, MAX_LINE, file_handler))
   {
-    get_first_token(line, file_token);
-    if (!strcmp(file_token, "endm") && insert)
+    get_first_token(line, token);
+    if (strcmp(token, "endm"))
     {
-      insert = 0;
-      inserted = 1;
+      if (j >= MAX_MACRO_LINES)
+      {
+        fprintf(stdout, "Error: According to instruction macro max number of lines is 6\n");
+        exit(EXIT_FAILURE);
+      }
+      else if (!is_empty_line(line) && !is_comment_line(line))
+        strcpy((*macros_table)[count].expand[j++], line);
     }
-    if (insert)
-    {
-      fprintf(exp_file_handler, "%s", line);
-    }
-    if (!strcmp(file_token, token) && !insert)
-      insert = 1;
+    else
+      end_of_macro = 1;
   }
+  if (count == *array_size - 1)
+  {
+    *array_size *= 2;
+    if (!(*macros_table = realloc(*macros_table, *array_size * sizeof(TypeMacro))))
+    {
+      fprintf(stdout, "Error: Out of memory\n");
+      exit(EXIT_FAILURE);
+    }
+  }
+  macros_init(++count, macros_table);
 }

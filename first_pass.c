@@ -1,11 +1,11 @@
 #include "assembler.h"
-#define MAX_LABEL_LENGTH 31
-
+#define MAX_LABEL_LEN 31
+#define MAX_ATTRIBUTE_LEN 16
 /*Inner functions that are meant to use only inside this source*/
 int is_valid_label_name(char *);
 int base_address(int);
 void label_init(int, TypeLabel **);
-void label_add(int, char *, int, char *, size_t, TypeLabel **);
+void label_add(int, char *, int, char *, size_t *, TypeLabel **);
 int add_binary_words(char *, char *, plw *, plw *, int);
 void update_data_labels_address(int, TypeLabel *);
 int process_extern(char *, char *, int, int *, size_t *, TypeLabel **);
@@ -14,11 +14,11 @@ int process_label(char *, char *, int, int *, size_t *, plw, plw, TypeLabel **);
 /*Defining and declaring the symbols table*/
 struct TypeLabel
 {
-  char *name;
+  char name[MAX_LABEL_LEN];
   int address;
   int base_address;
   int offset;
-  char *attribute;
+  char attribute[MAX_ATTRIBUTE_LEN];
 };
 /*
  *First Pass process the labels and create the binary words image.
@@ -30,7 +30,7 @@ int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D, T
   int line_number = FIRST_LINE;
   int error = FALSE;
   int g_error = FALSE;
-  size_t array_size = 1;
+  size_t array_size = 3;
   char line[MAX_LINE] = "\0";
   char token[MAX_LINE] = "\0";
 
@@ -115,18 +115,18 @@ int process_label(char *line, char *token, int line_number,
   if (!strcmp(token, ".data") || !strcmp(token, ".string"))
   {
     label_add((*label_counter)++, label_name, get_current_address(prv_DC),
-              "data", ++(*array_size), symbols_table);
+              "data", array_size, symbols_table);
   }
   else if (!strcmp(token, ".entry") || !strcmp(token, ".extern"))
   {
     fprintf(stdout, "Warning at line %d: undefined attribute to label.\n",
             line_number);
     label_add((*label_counter)++, label_name, get_current_address(prv_DC),
-              "undef", ++(*array_size), symbols_table);
+              "undef", array_size, symbols_table);
   }
   else if (is_operation_name(token))
     label_add((*label_counter)++, label_name, get_current_address(prv_IC),
-              "code", ++(*array_size), symbols_table);
+              "code", array_size, symbols_table);
   else
   {
     error = TRUE;
@@ -165,7 +165,7 @@ int process_extern(char *line, char *token, int line_number, int *label_counter,
   {
     /*If we reached here the label is a valid external label, and we can
      * add it to the symbols array*/
-    label_add((*label_counter)++, token, EXTERN_VAL, "external", ++(*array_size), symbols_table);
+    label_add((*label_counter)++, token, EXTERN_VAL, "external", array_size, symbols_table);
   }
   get_next_token(line, token);
   if (!is_empty_line(line))
@@ -218,23 +218,12 @@ int is_defined_ent(char *token, TypeLabel *symbols_table)
 void label_init(int count, TypeLabel **symbols_table)
 {
   if (count == 0)
-    if ((*symbols_table = calloc(1, sizeof(TypeLabel))) == NULL)
+    if ((*symbols_table = calloc(3, sizeof(TypeLabel))) == NULL)
     {
-      fprintf(stdout, "FAILED!\nError: Out of memory\n");
+      fprintf(stdout, "Error: Out of memory\n");
       exit(EXIT_FAILURE);
     }
 
-  if (((*symbols_table)[count].name = (char *)malloc(MAX_LABEL_LENGTH)) == NULL)
-  {
-    fprintf(stdout, "Error: Out of memory\n");
-    exit(EXIT_FAILURE);
-  }
-  if (((*symbols_table)[count].attribute = (char *)malloc(MAX_LABEL_LENGTH)) ==
-      NULL)
-  {
-    fprintf(stdout, "Error: Out of memory\n");
-    exit(EXIT_FAILURE);
-  }
   strcpy((*symbols_table)[count].name, "");
   strcpy((*symbols_table)[count].attribute, "");
   (*symbols_table)[count].address = 0;
@@ -246,7 +235,7 @@ void label_init(int count, TypeLabel **symbols_table)
  *Adds new symbol and initialize a new symbol in the next address
  */
 void label_add(int i, char *label_name, int address, char *attribute,
-               size_t array_size, TypeLabel **symbols_table)
+               size_t *array_size, TypeLabel **symbols_table)
 {
   strcpy((*symbols_table)[i].name, label_name);
   strcpy((*symbols_table)[i].attribute, attribute);
@@ -256,12 +245,14 @@ void label_add(int i, char *label_name, int address, char *attribute,
     (*symbols_table)[i].address = address;
   (*symbols_table)[i].base_address = base_address(address);
   (*symbols_table)[i].offset = ((*symbols_table)[i].address % BASE_MODE);
-
-  if (!(*symbols_table =
-            realloc(*symbols_table, array_size * sizeof(TypeLabel))))
+  if (i == *array_size - 1)
   {
-    fprintf(stdout, "Error: Out of memory\n");
-    exit(EXIT_FAILURE);
+    *array_size *= 2;
+    if (!(*symbols_table = realloc(*symbols_table, *array_size * sizeof(TypeLabel))))
+    {
+      fprintf(stdout, "Error: Out of memory\n");
+      exit(EXIT_FAILURE);
+    }
   }
   label_init(++i, symbols_table);
 }
@@ -299,7 +290,7 @@ void update_data_labels_address(int last_address, TypeLabel *symbols_table)
 
 /*
  *Frees all the strings inside the symbol array(and the array itself)
- */
+
 void free_symbols(TypeLabel *symbols_table)
 {
   int i = 0;
@@ -311,7 +302,7 @@ void free_symbols(TypeLabel *symbols_table)
   free(symbols_table[i].name);
   free(symbols_table[i].attribute);
   free(symbols_table);
-}
+}*/
 
 /*
 Checks if a given name of label is a valid name
@@ -329,7 +320,7 @@ int is_valid_label_name(char *token)
 
   int i;
   int result = 1;
-  if (!isalpha(token[0]) || strlen(token) > MAX_LABEL_LENGTH || !strcmp(token, "A") ||
+  if (!isalpha(token[0]) || strlen(token) > MAX_LABEL_LEN || !strcmp(token, "A") ||
       !strcmp(token, "R") || !strcmp(token, "E") || !strcmp(token, "macro") || !strcmp(token, "endm") || !strcmp(token, "data") ||
       !strcmp(token, "string") || !strcmp(token, "entry") || !strcmp(token, "extern"))
     result = 0;

@@ -121,8 +121,9 @@ int process_entry_label(char *line, char *token, int line_number, TypeLabel *sym
         *is_file_created = TRUE;
       }
       error = get_label_values(token, &label_base_val, &label_offset_val, line_number, symbols_table);
-      fprintf(*ent_file_handler, "%s, %d, %d\n", token, label_base_val,
-              label_offset_val);
+      if (!error)
+        fprintf(*ent_file_handler, "%s, %d, %d\n", token, label_base_val,
+                label_offset_val);
 
       get_next_token(line, token);
       if (!is_empty_line(line))

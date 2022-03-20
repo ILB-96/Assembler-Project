@@ -25,7 +25,7 @@
 #define SET_SOUR_R(x) x = x << 8
 #define SET_FUNCT(x) x = x << 12
 #define SET_ARE(x) x = x << 16
-
+typedef struct TypeMacro TypeMacro;
 typedef struct TypeLabel TypeLabel;
 typedef struct link_words *plw;
 typedef struct link_words
@@ -146,12 +146,17 @@ typedef enum
   r15
 } registers;
 
-typedef enum{convert_A = 16, convert_B = 12, convert_C = 8, convert_D = 4}converts;
+typedef enum
+{
+  convert_A = 16,
+  convert_B = 12,
+  convert_C = 8,
+  convert_D = 4
+} converts;
 /*Functions from pre-assembler.c*/
 int pre_assembler(FILE **, char *);
 /*Functions from first-pass.c*/
 int first_pass(FILE *, plw *, plw *, plw *, plw *, TypeLabel **);
-void free_symbols(TypeLabel *);
 void add_entry_attribute(char *, TypeLabel *);
 int is_label_exists(char *, TypeLabel *);
 void print_labels(TypeLabel *);
