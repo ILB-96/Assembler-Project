@@ -154,7 +154,6 @@ int add_parameters(plw *prv, char **comm, opcode opcode, Funct funct, Valid_oper
     registers source_r = 0, target_r = 0;
     sortType source_sort = 0, target_sort = 0;
     ARE are = 0;
-
     /*1) get the size of element*/
     int i = 0, size = 0;
     add_base_word(prv, A, opcode);
@@ -196,32 +195,41 @@ int add_parameters(plw *prv, char **comm, opcode opcode, Funct funct, Valid_oper
 int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operator op, int line_number)
 {
     int error = FALSE;
-    switch (source_sort)
+    if(op >= target_op )
     {
-    case immediate:
-        if ((op == full_two_op || op == two_op) && is_only_digits(comm + 1))
+        error = TRUE;
+        fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
+        line_number, comm);
+    }
+    else
+    {
+        switch (source_sort)
         {
-            add_num_to_list(prv, A, atoi(comm + 1));
-        }
-        else
-        {
-            error = TRUE;
-            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
+        case immediate:
+            if (op == full_two_op && is_only_digits(comm + 1))
+            {
+                add_num_to_list(prv, A, atoi(comm + 1));
+            }
+            else
+            {
+                error = TRUE;
+                fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
                     line_number, comm);
-        }
-        break;
-    case direct:
-    case index_sort:
-        add_to_list(prv, 0);
-        add_to_list(prv, 0);
-    case register_direct:
-        if (op == min_two_op && source_sort == register_direct) 
-        {
-            error = TRUE;
-            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
+            }
+            break;
+            case direct:
+            case index_sort:
+                add_to_list(prv, 0);
+                add_to_list(prv, 0);
+            case register_direct:
+                if (op == min_two_op  && source_sort == register_direct) 
+                {
+                    error = TRUE;
+                    fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
                     line_number, comm);
+                }
+                break;
         }
-        break;
     }
     return error;
 }
@@ -239,13 +247,30 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
         else
         {
             error = TRUE;
-            fprintf(stdout, "Error at line %d: Illegal operation\n", line_number);
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",line_number, comm);
         }
         break;
     case direct:
     case index_sort:
-        add_to_list(prv, 0);
-        add_to_list(prv, 0);
+        if(op != no_op )
+        {
+            add_to_list(prv, 0);
+            add_to_list(prv, 0);
+        }
+        else
+        {
+            error = TRUE;
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
+                    line_number, comm);
+        }
+        break;
+    case register_direct:
+        if ((op == min_target_op || op == no_op) && target_sort == register_direct) 
+        {
+            error = TRUE;
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
+                    line_number, comm);
+        }
         break;
     }
 
