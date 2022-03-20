@@ -138,7 +138,7 @@ int process_entry_label(char *line, char *token, int line_number, TypeLabel *sym
   else
   {
     error = TRUE;
-    fprintf(stdout, "Error at line %d: '%s' is an illegal label name\n",
+    fprintf(stdout, "Error at line %d: '%s' label not found\n",
             line_number, token);
   }
   return error;

@@ -1,6 +1,5 @@
 #include "assembler.h"
 
-
 /*get line of string process the line and add the string to DC*/
 int command_string_process(plw *prv_DC, char *line, int line_number)
 {
@@ -195,11 +194,11 @@ int add_parameters(plw *prv, char **comm, opcode opcode, Funct funct, Valid_oper
 int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operator op, int line_number)
 {
     int error = FALSE;
-    if(op >= target_op )
+    if (op >= target_op)
     {
         error = TRUE;
-        fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
-        line_number, comm);
+        fprintf(stdout, "Error at line %d: '%s' is an illegal operand\n",
+                line_number, comm);
     }
     else
     {
@@ -213,22 +212,22 @@ int add_word_by_source(plw *prv, char *comm, sortType source_sort, Valid_operato
             else
             {
                 error = TRUE;
-                fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
-                    line_number, comm);
+                fprintf(stdout, "Error at line %d: '%s' is an illegal operand\n",
+                        line_number, comm);
             }
             break;
-            case direct:
-            case index_sort:
-                add_to_list(prv, 0);
-                add_to_list(prv, 0);
-            case register_direct:
-                if (op == min_two_op  && source_sort == register_direct) 
-                {
-                    error = TRUE;
-                    fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
-                    line_number, comm);
-                }
-                break;
+        case direct:
+        case index_sort:
+            add_to_list(prv, 0);
+            add_to_list(prv, 0);
+        case register_direct:
+            if (op == min_two_op && source_sort == register_direct)
+            {
+                error = TRUE;
+                fprintf(stdout, "Error at line %d: '%s' is an illegal operand\n",
+                        line_number, comm);
+            }
+            break;
         }
     }
     return error;
@@ -247,12 +246,12 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
         else
         {
             error = TRUE;
-            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",line_number, comm);
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operand\n", line_number, comm);
         }
         break;
     case direct:
     case index_sort:
-        if(op != no_op )
+        if (op != no_op)
         {
             add_to_list(prv, 0);
             add_to_list(prv, 0);
@@ -260,15 +259,15 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
         else
         {
             error = TRUE;
-            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operand\n",
                     line_number, comm);
         }
         break;
     case register_direct:
-        if ((op == min_target_op || op == no_op) && target_sort == register_direct) 
+        if ((op == min_target_op || op == no_op) && target_sort == register_direct)
         {
             error = TRUE;
-            fprintf(stdout, "Error at line %d: '%s' is an illegal operation\n",
+            fprintf(stdout, "Error at line %d: '%s' is an illegal operand\n",
                     line_number, comm);
         }
         break;
@@ -276,7 +275,7 @@ int add_word_by_target(plw *prv, char *comm, sortType target_sort, Valid_operato
 
     return error;
 }
-/*process the sort type and the registrs*/
+/*process the sort type and the registers*/
 int set_sort_and_register(char *operator, registers * r, sortType *sort, ARE *are)
 {
 
