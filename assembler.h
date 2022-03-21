@@ -154,16 +154,28 @@ typedef enum
   convert_C = 8,
   convert_D = 4
 } converts;
+
+/*Functions from macros_struct.c*/
+int is_macro_name(char *, TypeMacro *);
+void insert_macro(FILE *, TypeMacro *, char *, int);
+void macros_init(int, TypeMacro **);
+void macro_add(char *, char *, int, size_t *, FILE *, TypeMacro **);
 /*Functions from pre-assembler.c*/
 int pre_assembler(FILE **, char *);
-/*Functions from first-pass.c*/
-int first_pass(FILE *, plw *, plw *, plw *, plw *, TypeLabel **);
+/*Functions label_struct.c*/
+int is_valid_label_name(char *);
+int base_address(int);
+void label_init(int, TypeLabel **);
+void label_add(int, char *, int, char *, size_t *, TypeLabel **);
+void update_data_labels_address(int, TypeLabel *);
 void add_entry_attribute(char *, TypeLabel *);
 int is_label_exists(char *, TypeLabel *);
 int get_label_values(char *, int *, int *, int, TypeLabel *);
 int found_label(char *, char *, TypeLabel *);
 int is_defined_ent(char *, TypeLabel *);
 int is_defined_ext(char *, TypeLabel *);
+/*Functions from first-pass.c*/
+int first_pass(FILE *, plw *, plw *, plw *, plw *, TypeLabel **);
 /*Functions from second-pass.c*/
 int second_pass(FILE *, char *, plw, plw, TypeLabel *);
 /*General use functions from functions.c*/
