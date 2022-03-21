@@ -13,14 +13,10 @@ first-pass.o: first_pass.c assembler.h
 second-pass.o: second_pass.c assembler.h
 	$(CC) $(CFLAGS) -c second_pass.c
 command_process.o: command_process.c assembler.h
-	gcc -c command_process.c -o command_process.o
+	$(CC) $(CFLAGS) -c command_process.c
 data_struct_words.o: data_struct_words.c assembler.h
-	gcc -c data_struct_words.c -o data_struct_words.o
+	$(CC) $(CFLAGS) -c data_struct_words.c
 
-test: test.o functions.o pre_assembler.o first_pass.o second_pass.o command_process.o data_struct_words.o
-	$(CC) $(TFLAGS) -o test command_process.o data_struct_words.o test.o functions.o pre_assembler.o first_pass.o second_pass.o
-test.o: test.c assembler.h
-	$(CC) $(TFLAGS) -c test.c
 clean:
 	rm -f core *.o main test
 fclean:
