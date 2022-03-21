@@ -8,6 +8,7 @@ void initialize_list(plw *h, plw *p, int stock)
   *p = *h;
   (*p)->word = -1;
   (*p)->stock_index = stock;
+  (*p)->next = NULL;
 }
 /*get ARE val and number n and combine them to 'word'*/
 int create_stdnum(ARE are, int n)
@@ -110,7 +111,7 @@ void load_obj_file(plw h, FILE *file_handler)
 int get_length(plw h)
 {
   int length = 0;
-  while (h != NULL)
+  while (h != NULL && h->word != -1)
   {
     length++;
     h = h->next;
