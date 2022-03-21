@@ -188,7 +188,7 @@ int add_std_word(plw *, ARE are, Funct funct, registers source_r,
                  sortType source_sort, registers target_r,
                  sortType target_sort);
 
-int convert_word(int, FILE *);
+void convert_word(int, FILE *);
 void load_obj_file(plw, FILE *);
 void free_list(plw);
 int add_base_word(plw *, ARE, opcode);

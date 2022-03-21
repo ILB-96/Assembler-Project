@@ -12,9 +12,8 @@ void initialize_list(plw *h, plw *p, int stock)
 /*get ARE val and number n and combine them to 'word'*/
 int create_stdnum(ARE are, int n)
 {
-  int word;
-  SET_ARE(are);
   int mask = 0;
+  SET_ARE(are);
   mask = ~mask;
   mask <<= BASE_MODE;
   mask = ~mask;
@@ -86,7 +85,7 @@ int add_std_word(plw *prv, ARE are, Funct funct, registers source_r,
   return word;
 }
 /*convert word to spacial format*/
-int convert_word(int n, FILE *file_handler)
+void convert_word(int n, FILE *file_handler)
 {
   int masc = 15;
   int a = (n >> convert_A) & masc;
