@@ -1,7 +1,6 @@
 #include "assembler.h"
 
-
-/*initialize data strct befor use*/
+/*initialize data struct befor use*/
 void initialize_list(plw *h, plw *p, int stock)
 {
   *h = (plw)malloc(sizeof(wordsNode));
@@ -107,30 +106,7 @@ void load_obj_file(plw h, FILE *file_handler)
     h = h->next;
   }
 }
-void print_listNode(plw h)
-{
-  while (h != NULL)
-  {
-    print_node(h);
-    h = h->next;
-  }
-}
-void print_node(plw p)
-{
-  printf("\n%d\t", p->stock_index);
-  print_word(p->word);
-}
 
-void print_word(int word)
-{
-  int mask = WORD_SIZE;
-
-  while (mask != 0)
-  {
-    printf("%d", (mask & word) > 0);
-    mask >>= 1;
-  }
-}
 /*get the length of the stract*/
 int get_length(plw h)
 {
@@ -142,8 +118,10 @@ int get_length(plw h)
   }
   return length;
 }
+
+/*returns the value of the last IC or DC address*/
 int get_current_address(plw prv) { return prv->stock_index; }
-/*update the address section by the num n*/
+/*Updates the address section by the num n*/
 void update_address(plw head, int n)
 {
   while (head != NULL)
@@ -153,7 +131,7 @@ void update_address(plw head, int n)
     head = head->next;
   }
 }
-/*finde the next 0 node and set the ARE and num n*/
+/*Finds the next 0 node and set the ARE and num n*/
 int set_next_empty(plw p, ARE are, int num)
 {
   int result = -1;

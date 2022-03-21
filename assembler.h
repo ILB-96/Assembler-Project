@@ -12,6 +12,7 @@
 #define MAX_ADDRESS 8191
 #define MAX_EXTEN_LEN 5
 #define FIRST_LINE 1
+#define BASE_ARR_SIZE 3
 #define BASE_MODE 16
 #define BASE_IC 100
 #define BASE_DC 0
@@ -159,7 +160,6 @@ int pre_assembler(FILE **, char *);
 int first_pass(FILE *, plw *, plw *, plw *, plw *, TypeLabel **);
 void add_entry_attribute(char *, TypeLabel *);
 int is_label_exists(char *, TypeLabel *);
-void print_labels(TypeLabel *);
 int get_label_values(char *, int *, int *, int, TypeLabel *);
 int found_label(char *, char *, TypeLabel *);
 int is_defined_ent(char *, TypeLabel *);
@@ -176,6 +176,10 @@ int get_next_token_index(char *, int);
 void get_next_token(char *, char *);
 void remove_colon(char *);
 void remove_signs(char *);
+char **split_line(char *);
+int is_sub_digits(char *, char);
+int is_special_char(char *);
+int is_only_digits(char *);
 /*Functions from data_struct_words.c*/
 void initialize_list(plw *h, plw *p, int);
 void add_to_list(plw *prv, int n);
@@ -183,9 +187,7 @@ int get_word(plw h, int index);
 int add_std_word(plw *, ARE are, Funct funct, registers source_r,
                  sortType source_sort, registers target_r,
                  sortType target_sort);
-void print_listNode(plw h);
-void print_node(plw p);
-void print_word(int word);
+
 int convert_word(int, FILE *);
 void load_obj_file(plw, FILE *);
 void free_list(plw);
@@ -195,13 +197,9 @@ void update_address(plw, int);
 int set_next_empty(plw, ARE, int);
 int get_length(plw);
 /*Functions from command_process.c*/
-int is_sub_digits(char *, char);
-int is_special_char(char *);
-int is_only_digits(char *);
 int command_string_process(plw *, char *, int);
 int command_data_process(plw *, char *, int);
 int command_code_process(plw *, char *, int);
-char **split_line(char *);
 int add_parameters(plw *, char **, opcode, Funct, Valid_operator, int);
 int set_sort_and_register(char *, registers *, sortType *, ARE *);
 int add_word_by_target(plw *, char *, sortType, Valid_operator, int);

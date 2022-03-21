@@ -222,6 +222,9 @@ char **split_line(char *str)
   return s;
 }
 
+/*
+Checks if a string contains the specified char
+*/
 int is_sub_digits(char *str, char c)
 {
   int result = 0;
@@ -235,6 +238,9 @@ int is_sub_digits(char *str, char c)
   return result;
 }
 
+/*
+Checks if a string contains a special character(symbol).
+*/
 int is_special_char(char *str)
 {
   int result = 0;
@@ -250,6 +256,9 @@ int is_special_char(char *str)
   return result;
 }
 
+/*
+Checks if an string contains only digits
+*/
 int is_only_digits(char *num)
 {
   int i;

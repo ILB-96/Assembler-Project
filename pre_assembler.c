@@ -39,7 +39,7 @@ void expand_macros(FILE *file_handler, FILE *exp_file_handler)
 {
   TypeMacro *macros_table;
   int macros_counter = 0;
-  size_t array_size = 3;
+  size_t array_size = BASE_ARR_SIZE;
   char line[MAX_LINE] = "\0", token[MAX_LINE] = "\0";
   int macro_number = 0;
   macros_init(0, &macros_table);
@@ -97,7 +97,7 @@ void insert_macro(FILE *exp_file_handler, TypeMacro *macros_table, char *token, 
 void macros_init(int count, TypeMacro **macros_table)
 {
   if (count == 0)
-    if ((*macros_table = calloc(3, sizeof(TypeMacro))) == NULL)
+    if ((*macros_table = calloc(BASE_ARR_SIZE, sizeof(TypeMacro))) == NULL)
     {
       fprintf(stdout, "Error: Out of memory\n");
       exit(EXIT_FAILURE);

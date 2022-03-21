@@ -30,7 +30,7 @@ int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D, T
   int line_number = FIRST_LINE;
   int error = FALSE;
   int g_error = FALSE;
-  size_t array_size = 3;
+  size_t array_size = BASE_ARR_SIZE;
   char line[MAX_LINE] = "\0";
   char token[MAX_LINE] = "\0";
 
@@ -218,7 +218,7 @@ int is_defined_ent(char *token, TypeLabel *symbols_table)
 void label_init(int count, TypeLabel **symbols_table)
 {
   if (count == 0)
-    if ((*symbols_table = calloc(3, sizeof(TypeLabel))) == NULL)
+    if ((*symbols_table = calloc(BASE_ARR_SIZE, sizeof(TypeLabel))) == NULL)
     {
       fprintf(stdout, "Error: Out of memory\n");
       exit(EXIT_FAILURE);
@@ -234,18 +234,18 @@ void label_init(int count, TypeLabel **symbols_table)
 /*
  *Adds new symbol and initialize a new symbol in the next address
  */
-void label_add(int i, char *label_name, int address, char *attribute,
+void label_add(int count, char *label_name, int address, char *attribute,
                size_t *array_size, TypeLabel **symbols_table)
 {
-  strcpy((*symbols_table)[i].name, label_name);
-  strcpy((*symbols_table)[i].attribute, attribute);
+  strcpy((*symbols_table)[count].name, label_name);
+  strcpy((*symbols_table)[count].attribute, attribute);
   if (address != BASE_DC && address != BASE_IC)
-    (*symbols_table)[i].address = address + 1;
+    (*symbols_table)[count].address = address + 1;
   else
-    (*symbols_table)[i].address = address;
-  (*symbols_table)[i].base_address = base_address(address);
-  (*symbols_table)[i].offset = ((*symbols_table)[i].address % BASE_MODE);
-  if (i == *array_size - 1)
+    (*symbols_table)[count].address = address;
+  (*symbols_table)[count].base_address = base_address(address);
+  (*symbols_table)[count].offset = ((*symbols_table)[count].address % BASE_MODE);
+  if (count == *array_size - 1)
   {
     *array_size *= 2;
     if (!(*symbols_table = realloc(*symbols_table, *array_size * sizeof(TypeLabel))))
@@ -254,7 +254,7 @@ void label_add(int i, char *label_name, int address, char *attribute,
       exit(EXIT_FAILURE);
     }
   }
-  label_init(++i, symbols_table);
+  label_init(++count, symbols_table);
 }
 
 /*
@@ -287,22 +287,6 @@ void update_data_labels_address(int last_address, TypeLabel *symbols_table)
     i++;
   }
 }
-
-/*
- *Frees all the strings inside the symbol array(and the array itself)
-
-void free_symbols(TypeLabel *symbols_table)
-{
-  int i = 0;
-  while (strcmp(symbols_table[i].name, ""))
-  {
-    free(symbols_table[i].name);
-    free(symbols_table[i++].attribute);
-  }
-  free(symbols_table[i].name);
-  free(symbols_table[i].attribute);
-  free(symbols_table);
-}*/
 
 /*
 Checks if a given name of label is a valid name
@@ -382,22 +366,6 @@ int found_label(char *line, char *token, TypeLabel *symbols_table)
       return TRUE;
   }
   return FALSE;
-}
-
-/*prints the labels(just for show).*/
-void print_labels(TypeLabel *symbols_table)
-{
-  int i;
-  printf("Name\t|\taddress\t|\tbase\t|\toffset\t|\tattributes\n");
-  printf(
-      "--------|---------------|---------------|---------------|-------------"
-      "------\n");
-  for (i = 0; strcmp(symbols_table[i].name, ""); i++)
-  {
-    printf("%s\t|\t%d\t|\t%d\t|\t%d\t|\t%s\n", symbols_table[i].name,
-           symbols_table[i].address, symbols_table[i].base_address,
-           symbols_table[i].offset, symbols_table[i].attribute);
-  }
 }
 
 /********************************************************************************************
