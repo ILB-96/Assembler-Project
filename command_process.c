@@ -36,8 +36,9 @@ int command_data_process(plw *prv_DC, char *line, int line_number)
     int i = 0;
     int error = FALSE;
     char command[MAX_LINE] = "";
+    char **s_line;
     strcat(command, line);
-    char **s_line = split_line(command);
+    s_line = split_line(command);
 
     while (s_line[++i] != NULL && !error) /*start the loop from i=1 because the the numbers in the data start from 1*/
     {
@@ -79,12 +80,12 @@ int is_operator(char *op)
 /*process the line of code type */
 int command_code_process(plw *prv_IC, char *line, int line_number)
 {
-    int i;
     int error = FALSE;
     int operator;
+    char **s_line;
     char command[MAX_LINE] = "";
     strcat(command, line);
-    char **s_line = split_line(command);
+    s_line = split_line(command);
 
     operator= is_operator(s_line[0]);
 
