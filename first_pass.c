@@ -61,7 +61,15 @@ int first_pass(FILE *exp_file_handler, plw *h_I, plw *p_I, plw *h_D, plw *p_D, T
   }
 
   update_data_labels_address(prv_IC->stock_index, *symbols_table);
-  update_address(head_DC, prv_IC->stock_index);
+  if(prv_IC->word != -1)
+  {
+    update_address(head_DC, prv_IC->stock_index);
+  }
+  else
+  {
+    update_address(head_DC, BASE_IC-1);
+  }
+
   *h_I = head_IC;
   *p_I = prv_IC;
   *h_D = head_DC;

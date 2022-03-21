@@ -82,8 +82,8 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
       return 1;
     fprintf(obj_file_handler, "\t%d %d\n", get_length(head_IC),
             get_length(head_DC));
-    load_obj_file(head_IC, obj_file_handler);
-    load_obj_file(head_DC, obj_file_handler);
+    if(head_IC->word != -1) load_obj_file(head_IC, obj_file_handler);
+    if(head_DC->word != -1) load_obj_file(head_DC, obj_file_handler);
     fclose(obj_file_handler);
   }
   if (ext_file_created)
