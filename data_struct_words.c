@@ -123,11 +123,14 @@ int get_current_address(plw prv) { return prv->stock_index; }
 /*Updates the address section by the num n*/
 void update_address(plw head, int n)
 {
-  while (head != NULL)
+  if(get_length(head) != 0)
   {
-    head->stock_index = n + 1;
-    n++;
-    head = head->next;
+    while (head != NULL)
+    {
+      head->stock_index = n + 1;
+      n++;
+      head = head->next;
+    }
   }
 }
 /*Finds the next 0 node and set the ARE and num n*/
