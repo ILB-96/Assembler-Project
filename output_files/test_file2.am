@@ -1,0 +1,33 @@
+.extern GGG
+mov #-17, val
+cmp r3   , r4
+.string "OMG"
+label2: .data 4,6,-19,78
+label1: add r4,YUV
+sub YUV[r14] ,r2
+lea val , r6
+sub r5, JERUS
+rts
+.entry JERUS
+clr MAIN
+not r8
+inc r15
+dec val
+MAIN: jmp YUV
+NY: .string "abagada"
+miami: bne val[r15]
+red r9
+.entry val
+clr MAIN
+jsr	miami
+sub r5, JERUS
+rts
+YUV: .string "beni"
+prn GGG
+bne val
+val: rts
+sub r5, JERUS
+rts
+JERUS:  add #67       ,r1
+stop
+red r4
