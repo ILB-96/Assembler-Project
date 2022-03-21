@@ -31,5 +31,3 @@ jmp label, r3
 bne label, r3
 jsr label, r3
 rts #1, r3
-
-

@@ -21,10 +21,6 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
   FILE *ent_file_handler = NULL;
   FILE *ext_file_handler = NULL;
 
-  /*creates an objects file*/
-  if (load_file(&obj_file_handler, file_name, ".ob", "w"))
-    return 1;
-
   while (fgets(line, MAX_LINE, exp_file_handler))
   {
     get_first_token(line, token);
@@ -79,16 +75,30 @@ int second_pass(FILE *exp_file_handler, char *file_name, plw head_IC,
     }
     line_number++;
   }
-
-  fprintf(obj_file_handler, "\t%d %d\n", get_length(head_IC),
-          get_length(head_DC));
-  load_obj_file(head_IC, obj_file_handler);
-  load_obj_file(head_DC, obj_file_handler);
-  fclose(obj_file_handler);
+  if (!g_error)
+  {
+    /*creates an objects file*/
+    if (load_file(&obj_file_handler, file_name, ".ob", "w"))
+      return 1;
+    fprintf(obj_file_handler, "\t%d %d\n", get_length(head_IC),
+            get_length(head_DC));
+    load_obj_file(head_IC, obj_file_handler);
+    load_obj_file(head_DC, obj_file_handler);
+    fclose(obj_file_handler);
+  }
   if (ext_file_created)
+  {
     fclose(ext_file_handler);
+    if (g_error)
+      remove_file(file_name, ".ext");
+  }
   if (ent_file_created)
+  {
     fclose(ent_file_handler);
+    if (g_error)
+      remove_file(file_name, ".ent");
+  }
+
   return g_error;
 }
 

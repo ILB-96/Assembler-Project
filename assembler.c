@@ -46,6 +46,7 @@ void assembler(char *file_name)
   {
     puts("Abort...\n");
     fclose(exp_file_handler);
+    remove_file(file_name, ".am");
     free_list(head_IC);
     free_list(head_DC);
     free(symbols_table);
@@ -60,6 +61,7 @@ void assembler(char *file_name)
   {
     puts("Abort...\n");
     fclose(exp_file_handler);
+    remove_file(file_name, ".am");
     free_list(head_IC);
     free_list(head_DC);
     free(symbols_table);

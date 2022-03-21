@@ -180,6 +180,7 @@ int first_pass(FILE *, plw *, plw *, plw *, plw *, TypeLabel **);
 int second_pass(FILE *, char *, plw, plw, TypeLabel *);
 /*General use functions from functions.c*/
 int load_file(FILE **, char *, char *, char *);
+void remove_file(char *, char *);
 int is_comment_line(char *);
 int is_empty_line(char *);
 int is_operation_name(char *);

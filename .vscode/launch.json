@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/${fileBasenameNoExtension}",
-      "args": ["test_file1", "inpuTest"],
+      "args": ["operand_errors", "inpuTest"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],

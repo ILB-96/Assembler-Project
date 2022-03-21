@@ -12,7 +12,7 @@ int load_file(FILE **file_handler, char *name, char *exten, char *mode)
   char *file_name;
   if (!(file_name = (char *)malloc(strlen(name) + MAX_EXTEN_LEN)))
   {
-    fprintf(stdout, "Error: Out of memory\nAbort...\n");
+    fprintf(stdout, "Error: Out of memory\n");
     exit(EXIT_FAILURE);
   }
   strcpy(file_name, name);
@@ -25,6 +25,19 @@ int load_file(FILE **file_handler, char *name, char *exten, char *mode)
   }
   free(file_name);
   return 0;
+}
+void remove_file(char *name, char *exten)
+{
+  char *file_name;
+  if (!(file_name = (char *)malloc(strlen(name) + MAX_EXTEN_LEN)))
+  {
+    fprintf(stdout, "Error: Out Of Memory\n");
+    exit(EXIT_FAILURE);
+  }
+  strcpy(file_name, name);
+  strcat(file_name, exten);
+  remove(file_name);
+  free(file_name);
 }
 /********************************************************************
  * The next functions check the state of a current line or token.
